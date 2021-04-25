@@ -1,0 +1,56 @@
+.flx-icons {
+  display: inline-block;
+  overflow: hidden;
+  background-repeat: no-repeat;
+  background-image: url(img/icons.png);
+}
+
+.flx-icons-hand {
+  width: 23px;
+  height: 33px;
+  background-position: -0px -0px;
+}
+.flx-icons-keeper {
+  width: 23px;
+  height: 33px;
+  background-position: -23px -0px;
+}
+.flx-icons-creeper {
+  width: 23px;
+  height: 33px;
+  background-position: -46px -0px;
+}
+.flx-board {
+  margin-top: 5px;
+
+  .flx-board-icons > div {
+    display: inline-block;
+    margin-right: 10px;
+  }
+  .flx-board-keepers {
+    div {
+      display: inline-block;
+      margin-right: 2px;
+    }
+  }
+}
+
+.flx-keeper-panel-placeholder {
+  display: none;
+
+  div {
+    display: inline-block;
+    margin-right: 2px;
+  }
+}
+
+.flx-board-panel-keeper {
+  height: 33px;
+  width: 28px;
+  background-image: url("img/keepers_panel_icons.png");
+  background-size: 830px 33px;
+}
+
+.no-creepers {
+  display: none !important;
+}

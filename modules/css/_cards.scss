@@ -1,0 +1,292 @@
+$font-stack-default: "Helvetica Neue", "Open Sans", sans-serif;
+$font-stack-title-base: "Brown", "Futura", sans-serif;
+$font-stack-title-creepers: "Bernard MT Condensed", "Bernard MT Condensed Web",
+  sans-serif-condensed;
+$card-height: 233px;
+$card-width: 150px;
+$card-height-title: 26px;
+$card-margin-left: 36px;
+$card-margin-right: 8px;
+$card-margin-top: 14px;
+$card-margin-bottom: 14px;
+$card-width-inner: $card-width - $card-margin-left - $card-margin-right;
+$card-height-inner: $card-height - $card-height-title - $card-margin-top -
+  $card-margin-bottom;
+$color-cardwhite: #eff0f0;
+$color-keeper: #9dc139;
+$color-creeper: #000000;
+$color-action: #0099cd;
+$color-goal: #d23f7f;
+$color-rule: #d7b424;
+$color-flx-blue: #00b1e3;
+$color-flx-yellow: #fee800;
+$color-flx-brown: #f6821f;
+
+.newDrawnCard {
+  outline-color: $color-flx-yellow;
+  outline-style: solid;
+  outline-width: medium;
+}
+
+.stockitem_selected {
+  border: 3px solid $color-flx-blue !important;
+}
+
+.flx-card-tooltip {
+  display: block;
+
+  .card-name {
+    display: inline-block;
+    font-weight: bold;
+    font-size: 20px;
+  }
+
+  .card-type {
+    display: inline-block;
+    margin-left: 20px;
+    font-weight: bolder;
+    font-size: 18px;
+    font-style: italic;
+  }
+
+  .card-subtitle {
+    font-weight: bolder;
+    font-size: 16px;
+  }
+
+  .card-description {
+    font-weight: normal;
+    font-size: 14px;
+  }
+}
+
+.flx-card-tooltip-keeper {
+  .card-type {
+    color: $color-keeper;
+  }
+}
+
+.flx-card-tooltip-creeper {
+  .card-type {
+    color: $color-creeper;
+  }
+}
+
+.flx-card-tooltip-action {
+  .card-type {
+    color: $color-action;
+  }
+}
+
+.flx-card-tooltip-goal {
+  .card-type {
+    color: $color-goal;
+  }
+}
+
+.flx-card-tooltip-rule {
+  .card-type {
+    color: $color-rule;
+  }
+}
+
+.flx-card-title-base {
+  font-family: $font-stack-title-base;
+}
+.flx-card-title-creeperpack {
+  font-family: $font-stack-title-creepers;
+}
+
+.card-overlay-title {
+  display: block;
+  margin-left: $card-margin-left;
+  margin-right: $card-margin-right;
+  width: $card-width-inner;
+  height: $card-height-title;
+  background-color: $color-cardwhite;
+  font-size: 16px;
+
+  .card-type {
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-top: $card-margin-top;
+    // 18/16
+    width: 100% * 16/18;
+    transform: scale(1.125);
+    transform-origin: top left;
+  }
+}
+
+.flx-card {
+  font-family: $font-stack-default;
+}
+
+.card-overlay {
+  display: block;
+  margin-left: $card-margin-left;
+  margin-right: $card-margin-right;
+  width: $card-width-inner;
+  background-color: transparent;
+  font-size: 16px;
+
+  .card-name {
+    font-weight: bold;
+    // 14/16
+    width: 100% * 16/14;
+    transform: scale(0.875);
+    transform-origin: top left;
+  }
+
+  .card-name-long {
+    // 12/16
+    width: 100% * 16/12;
+    transform: scale(0.75);
+  }
+
+  .card-subtitle {
+    font-weight: bolder;
+    margin-bottom: 2px;
+    // 9/16
+    width: 100% * 16/9;
+    transform: scale(0.5625);
+    transform-origin: top left;
+  }
+
+  .card-description {
+    font-weight: normal;
+    line-height: 110%;
+    // 8/16
+    width: 100% * 16/8;
+    transform: scale(0.5);
+    transform-origin: top left;
+  }
+
+  .card-desc-long {
+    // 7/16
+    width: 100% * 16/7;
+    transform: scale(0.4375);
+  }
+}
+
+.flx-card-action {
+  .card-overlay {
+    height: $card-height-inner - 5px;
+  }
+  .card-name {
+    margin-top: 5px;
+  }
+}
+
+.flx-card-goal {
+  .card-name {
+    margin-top: 5px;
+  }
+}
+
+.flx-card-keeper {
+  .card-name {
+    margin-top: $card-height-inner - 20px;
+  }
+}
+
+.flx-card-rule {
+  .card-overlay {
+    height: $card-height-inner * 0.55;
+  }
+  .card-name {
+    margin-top: $card-height-inner * 0.45;
+  }
+  .card-description {
+    margin-top: -5px;
+  }
+}
+
+.flx-card-creeper {
+  .card-name {
+    margin-top: 5px;
+  }
+  .card-description {
+    margin-top: 46px;
+  }
+}
+
+.flx-keepers {
+  .card-overlay-title {
+    margin-left: 20px;
+    margin-right: 0px;
+    height: 14px;
+    width: 58px;
+
+    .card-type {
+      margin-top: 8px;
+      // 12/16
+      width: 100% * 16/12;
+      transform: scale(0.75);
+      transform-origin: top left;
+    }
+  }
+  .card-overlay {
+    margin-left: 20px;
+    margin-right: 0px;
+    width: 58px;
+
+    .card-name {
+      margin-top: 2px;
+      // 10/16
+      width: 100% * 16/10;
+      transform: scale(0.625);
+      transform-origin: top left;
+    }
+    .card-subtitle {
+      // 5/16
+      width: 100% * 16/5;
+      transform: scale(0.3125);
+      transform-origin: top left;
+    }
+    .card-description {
+      // 4/16
+      width: 100% * 16/4;
+      transform: scale(0.25); // 4/16
+      transform-origin: top left;
+      line-height: 100%;
+    }
+  }
+
+  .flx-card-keeper {
+    .card-name {
+      margin-top: 88px;
+    }
+  }
+
+  .flx-card-title-creeperpack {
+    .card-overlay-title {
+      .card-type {
+        margin-top: 6px;
+      }
+    }
+  }
+  .flx-card-creeper {
+    .card-subtitle {
+      margin-top: -6px;
+      margin-bottom: -46px;
+    }
+  }
+}
+
+#flx-win-dialog-goal {
+  height: $card-height + 20px;
+  display: flex;
+  justify-content: space-evenly;
+
+  .stockitem {
+    position: relative !important;
+    margin-top: 10px;
+    top: 0px !important;
+    left: 0px !important;
+  }
+}
+
+.flx-warn-inflation {
+  margin-left: 2px;
+  color: $color-rule;
+}

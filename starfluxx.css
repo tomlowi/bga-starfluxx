@@ -1,0 +1,822 @@
+@charset "UTF-8";
+/**
+ *------
+ * BGA framework: © Gregory Isabelli <gisabelli@boardgamearena.com> & Emmanuel Colin <ecolin@boardgamearena.com>
+ * starfluxx implementation : © Iwan Tomlow <iwan.tomlow@gmail.com>
+ *
+ * This code has been produced on the BGA studio platform for use on http://boardgamearena.com.
+ * See http://en.boardgamearena.com/#!doc/Studio for more information.
+ * -----
+ *
+ * starfluxx.css
+ *
+ * starfluxx stylesheet
+ *
+ */
+/*
+    This is the CSS stylesheet of your game User Interface.
+    
+    Styles defined on this file will be applied to the HTML elements you define in your
+    HTML template (starfluxx_starfluxx.tpl), and to HTML elements you create dynamically
+    (in starfluxx.js).
+    
+    Usually, you are using CSS to:
+    
+    1°) define the overall layout of your game
+        (ex: place the board on the top left, place player's hand beside, place the deck on the right, ...).
+
+    2°) create your CSS-sprites:
+        All images of your games should be gathered into a small number of image files. Then, using
+        background-image and background-position CSS properties, you create HTML blocks that can 
+        display these images correctly (see example below).
+    
+    3°) ... anything else:
+        It is really easy to add and remove CSS classes dynamically from your Javascript with
+        dojo.addClass and dojo.removeClass. It is also easy to check if an element has a class
+        (dojo.hasClass) or to get all elements with a specific class (dojo.query). This is why,
+        very often, using CSS classes for the logic of your user interface allow you to do complex
+        thing easily.
+        
+        
+     Note: on the production platform, this file will be compressed and comments will be removed.
+           Consequently, don't hesitate to put as many comments as necessary.
+*/
+/* Note: you must not use any @import directive */
+/********* You can start writing your CSS below this line: **********/
+body {
+  background-image: url(img/background.jpg);
+  background-repeat: repeat;
+}
+
+/* Bernard MT Condensed web font */
+@font-face {
+  font-family: "Bernard MT Condensed Web";
+  src: url("//db.onlinewebfonts.com/t/eceba41a00b4b94ea2965371c8dda96c.eot");
+  src: url("//db.onlinewebfonts.com/t/eceba41a00b4b94ea2965371c8dda96c.eot?#iefix")
+      format("embedded-opentype"),
+    url("//db.onlinewebfonts.com/t/eceba41a00b4b94ea2965371c8dda96c.woff2")
+      format("woff2"),
+    url("//db.onlinewebfonts.com/t/eceba41a00b4b94ea2965371c8dda96c.woff")
+      format("woff"),
+    url("//db.onlinewebfonts.com/t/eceba41a00b4b94ea2965371c8dda96c.ttf")
+      format("truetype"),
+    url("//db.onlinewebfonts.com/t/eceba41a00b4b94ea2965371c8dda96c.svg#Bernard MT Condensed")
+      format("svg");
+}
+
+/* Free Alternative for Helvetica Neue */
+/* latin-ext */
+@font-face {
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Open Sans"), local("OpenSans"),
+    url(https://fonts.gstatic.com/s/opensans/v13/u-WUoqrET9fUeobQW7jkRYX0hVgzZQUfRDuZrPvH3D8.woff2)
+      format("woff2");
+  unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F,
+    U+A720-A7FF;
+}
+
+/* latin */
+@font-face {
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Open Sans"), local("OpenSans"),
+    url(https://fonts.gstatic.com/s/opensans/v13/cJZKeOuBrn4kERxqtaUH3ZBw1xU1rKptJj_0jans920.woff2)
+      format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC,
+    U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+
+/* latin-ext */
+@font-face {
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 700;
+  src: local("Open Sans Bold"), local("OpenSans-Bold"),
+    url(https://fonts.gstatic.com/s/opensans/v13/k3k702ZOKiLJc3WVjuplzIjoYw3YTyktCCer_ilOlhE.woff2)
+      format("woff2");
+  unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F,
+    U+A720-A7FF;
+}
+
+/* latin */
+@font-face {
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 700;
+  src: local("Open Sans Bold"), local("OpenSans-Bold"),
+    url(https://fonts.gstatic.com/s/opensans/v13/k3k702ZOKiLJc3WVjuplzBampu5_7CjHW5spxoeN3Vs.woff2)
+      format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC,
+    U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+
+.newDrawnCard {
+  outline-color: #fee800;
+  outline-style: solid;
+  outline-width: medium;
+}
+
+.stockitem_selected {
+  border: 3px solid #00b1e3 !important;
+}
+
+.flx-card-tooltip {
+  display: block;
+}
+
+.flx-card-tooltip .card-name {
+  display: inline-block;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.flx-card-tooltip .card-type {
+  display: inline-block;
+  margin-left: 20px;
+  font-weight: bolder;
+  font-size: 18px;
+  font-style: italic;
+}
+
+.flx-card-tooltip .card-subtitle {
+  font-weight: bolder;
+  font-size: 16px;
+}
+
+.flx-card-tooltip .card-description {
+  font-weight: normal;
+  font-size: 14px;
+}
+
+.flx-card-tooltip-keeper .card-type {
+  color: #9dc139;
+}
+
+.flx-card-tooltip-creeper .card-type {
+  color: #000000;
+}
+
+.flx-card-tooltip-action .card-type {
+  color: #0099cd;
+}
+
+.flx-card-tooltip-goal .card-type {
+  color: #d23f7f;
+}
+
+.flx-card-tooltip-rule .card-type {
+  color: #d7b424;
+}
+
+.flx-card-title-base {
+  font-family: "Brown", "Futura", sans-serif;
+}
+
+.flx-card-title-creeperpack {
+  font-family: "Bernard MT Condensed", "Bernard MT Condensed Web",
+    sans-serif-condensed;
+}
+
+.card-overlay-title {
+  display: block;
+  margin-left: 36px;
+  margin-right: 8px;
+  width: 106px;
+  height: 26px;
+  background-color: #eff0f0;
+  font-size: 16px;
+}
+
+.card-overlay-title .card-type {
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-top: 14px;
+  width: 88.88889%;
+  -webkit-transform: scale(1.125);
+  transform: scale(1.125);
+  -webkit-transform-origin: top left;
+  transform-origin: top left;
+}
+
+.flx-card {
+  font-family: "Helvetica Neue", "Open Sans", sans-serif;
+}
+
+.card-overlay {
+  display: block;
+  margin-left: 36px;
+  margin-right: 8px;
+  width: 106px;
+  background-color: transparent;
+  font-size: 16px;
+}
+
+.card-overlay .card-name {
+  font-weight: bold;
+  width: 114.28571%;
+  -webkit-transform: scale(0.875);
+  transform: scale(0.875);
+  -webkit-transform-origin: top left;
+  transform-origin: top left;
+}
+
+.card-overlay .card-name-long {
+  width: 133.33333%;
+  -webkit-transform: scale(0.75);
+  transform: scale(0.75);
+}
+
+.card-overlay .card-subtitle {
+  font-weight: bolder;
+  margin-bottom: 2px;
+  width: 177.77778%;
+  -webkit-transform: scale(0.5625);
+  transform: scale(0.5625);
+  -webkit-transform-origin: top left;
+  transform-origin: top left;
+}
+
+.card-overlay .card-description {
+  font-weight: normal;
+  line-height: 110%;
+  width: 200%;
+  -webkit-transform: scale(0.5);
+  transform: scale(0.5);
+  -webkit-transform-origin: top left;
+  transform-origin: top left;
+}
+
+.card-overlay .card-desc-long {
+  width: 228.57143%;
+  -webkit-transform: scale(0.4375);
+  transform: scale(0.4375);
+}
+
+.flx-card-action .card-overlay {
+  height: 174px;
+}
+
+.flx-card-action .card-name {
+  margin-top: 5px;
+}
+
+.flx-card-goal .card-name {
+  margin-top: 5px;
+}
+
+.flx-card-keeper .card-name {
+  margin-top: 159px;
+}
+
+.flx-card-rule .card-overlay {
+  height: 98.45px;
+}
+
+.flx-card-rule .card-name {
+  margin-top: 80.55px;
+}
+
+.flx-card-rule .card-description {
+  margin-top: -5px;
+}
+
+.flx-card-creeper .card-name {
+  margin-top: 5px;
+}
+
+.flx-card-creeper .card-description {
+  margin-top: 46px;
+}
+
+.flx-keepers .card-overlay-title {
+  margin-left: 20px;
+  margin-right: 0px;
+  height: 14px;
+  width: 58px;
+}
+
+.flx-keepers .card-overlay-title .card-type {
+  margin-top: 8px;
+  width: 133.33333%;
+  -webkit-transform: scale(0.75);
+  transform: scale(0.75);
+  -webkit-transform-origin: top left;
+  transform-origin: top left;
+}
+
+.flx-keepers .card-overlay {
+  margin-left: 20px;
+  margin-right: 0px;
+  width: 58px;
+}
+
+.flx-keepers .card-overlay .card-name {
+  margin-top: 2px;
+  width: 160%;
+  -webkit-transform: scale(0.625);
+  transform: scale(0.625);
+  -webkit-transform-origin: top left;
+  transform-origin: top left;
+}
+
+.flx-keepers .card-overlay .card-subtitle {
+  width: 320%;
+  -webkit-transform: scale(0.3125);
+  transform: scale(0.3125);
+  -webkit-transform-origin: top left;
+  transform-origin: top left;
+}
+
+.flx-keepers .card-overlay .card-description {
+  width: 400%;
+  -webkit-transform: scale(0.25);
+  transform: scale(0.25);
+  -webkit-transform-origin: top left;
+  transform-origin: top left;
+  line-height: 100%;
+}
+
+.flx-keepers .flx-card-keeper .card-name {
+  margin-top: 88px;
+}
+
+.flx-keepers .flx-card-title-creeperpack .card-overlay-title .card-type {
+  margin-top: 6px;
+}
+
+.flx-keepers .flx-card-creeper .card-subtitle {
+  margin-top: -6px;
+  margin-bottom: -46px;
+}
+
+#flx-win-dialog-goal {
+  height: 253px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: space-evenly;
+  -ms-flex-pack: space-evenly;
+  justify-content: space-evenly;
+}
+
+#flx-win-dialog-goal .stockitem {
+  position: relative !important;
+  margin-top: 10px;
+  top: 0px !important;
+  left: 0px !important;
+}
+
+.flx-warn-inflation {
+  margin-left: 2px;
+  color: #d7b424;
+}
+
+.flx-tmp-hand:empty {
+  display: none;
+}
+
+.flx-spectator {
+  display: none;
+}
+
+.flx-player {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.flx-player .flx-hand {
+  margin-right: 10px;
+  -webkit-box-flex: 3;
+  -ms-flex: 3 0;
+  flex: 3 0;
+}
+
+.flx-player .flx-keepers {
+  -webkit-box-flex: 1;
+  -ms-flex: 1 0;
+  flex: 1 0;
+}
+
+.flx-notification-bubble {
+  opacity: 0;
+  background: white;
+  border-radius: 18px/15px;
+  top: 50px;
+  color: #000;
+  font-weight: normal;
+  left: 50px;
+  padding: 5px 15px;
+  position: absolute;
+  z-index: 100;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.5) 2px 2px 7px;
+  box-shadow: rgba(0, 0, 0, 0.5) 2px 2px 7px;
+  font-size: 16px;
+  -webkit-transition: opacity 0.5s ease-in;
+  transition: opacity 0.5s ease-in;
+  min-width: 40px;
+  pointer-events: none;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.flx-notification-bubble:after {
+  border-color: #ffffff transparent;
+  border-style: solid;
+  border-width: 0 15px 15px;
+  top: -10px;
+  content: "";
+  display: block;
+  left: 30px;
+  position: absolute;
+  width: 0;
+}
+
+.flx-notification-bubble:hover {
+  opacity: 0.3;
+}
+
+.flx-notification-bubble--visible {
+  opacity: 1;
+  display: block;
+  pointer-events: all;
+}
+
+.flx_help_msg_wrapper {
+  text-align: center;
+  display: inline-block;
+  width: 100%;
+}
+
+.flx_help_msg_wrapper .flx_help {
+  font-size: 105%;
+  font-weight: bold;
+  font-style: italic;
+}
+
+.flx_help_msg_wrapper .flx_help .help_txt {
+  border-style: solid;
+  border-width: 1px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.flx_help_msg_wrapper .flx_help .help_txt_action {
+  border-color: #0099cd;
+}
+
+.flx_help_msg_wrapper .flx_help .help_txt_creeper {
+  border-color: #000000;
+}
+
+.flx_help_msg_wrapper .flx_help .help_txt_freerule {
+  border-color: #d7b424;
+}
+
+.flx-table {
+  position: relative;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.flx-table .flx-card,
+.flx-table .flx-discard {
+  width: 150px;
+  height: 233px;
+}
+
+.flx-table .flx-card-stock {
+  margin-left: 5px;
+}
+
+.flx-table .flx-goal {
+  position: relative;
+}
+
+.flx-table .flx-deck {
+  min-width: 305px;
+}
+
+.flx-table .flx-deck .flx-deck-wrap {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: distribute;
+  justify-content: space-around;
+}
+
+.flx-table .flx-deck .flx-deck-wrap .flx-discard-deck {
+  position: relative;
+}
+
+.flx-table .flx-deck .flx-deck-wrap .flx-deck-card {
+  position: absolute;
+  left: 0px;
+  background-image: url("img/cards.png");
+  background-position: -900% -600%;
+}
+
+.flx-table .flx-deck .flx-deck-wrap .flx-deck-card.flx-deck-empty {
+  background-position: -1000% -600%;
+}
+
+.flx-table .flx-deck .flx-deck-wrap .flx-discard {
+  -webkit-transition: left 1s;
+  transition: left 1s;
+  position: absolute;
+  left: -152px;
+  border: 1px;
+}
+
+.flx-table .flx-deck .flx-deck-wrap .flx-toggle {
+  position: absolute;
+  z-index: 200;
+  background: #fff8;
+  bottom: 5px;
+  left: 5px;
+}
+
+.flx-table .flx-deck .flx-deck-wrap .flx-card-count {
+  position: absolute;
+  z-index: 200;
+  bottom: 5px;
+  right: 5px;
+  text-align: center;
+  font-size: 19px;
+  font-weight: bold;
+  width: 30px;
+  height: 25px;
+  line-height: 25px;
+  background: #fff8;
+}
+
+.flx-table .flx-rules-basic .flx-rules-basic-wrap {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: distribute;
+  justify-content: space-around;
+}
+
+.flx-table .flx-rules-basic .flx-rules-basic-wrap .flx-card-stack {
+  position: relative;
+}
+
+.flx-table
+  .flx-rules-basic
+  .flx-rules-basic-wrap
+  .flx-card-stack
+  .flx-card-stack-center {
+  left: 0px;
+}
+
+.flx-table
+  .flx-rules-basic
+  .flx-rules-basic-wrap
+  .flx-card-stack
+  .flx-card-stack-left {
+  position: absolute;
+  top: 4px;
+  left: 2px;
+}
+
+.flx-table
+  .flx-rules-basic
+  .flx-rules-basic-wrap
+  .flx-card-stack
+  .flx-card-stack-right {
+  position: absolute;
+  top: 4px;
+  left: 164px;
+}
+
+.flx-table #baseRuleCard {
+  width: 318px;
+  height: 240px;
+  margin-bottom: 2px;
+  background-image: url("img/basicrule.png");
+  background-repeat: no-repeat;
+  position: relative;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.flx-table #baseRuleCard #baseRuleDraw {
+  position: absolute;
+  top: 40px;
+  width: 150px;
+  left: 2px;
+  text-align: center;
+}
+
+.flx-table #baseRuleCard #baseRulePlay {
+  position: absolute;
+  top: 40px;
+  width: 150px;
+  left: 164px;
+  text-align: center;
+}
+
+.flx-table {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 1fr 2fr 1fr;
+  grid-template-columns: 1fr 2fr 1fr;
+  -ms-grid-rows: auto auto;
+  grid-template-rows: auto auto;
+  grid-gap: 8px;
+}
+
+.flx-table .flx-table-section {
+  border-radius: 15px;
+  border-style: solid;
+  padding-left: 2px;
+}
+
+.flx-table .flx-table-section h3 {
+  margin-left: 10px;
+  color: #f6821f;
+}
+
+.flx-table .flx-goal {
+  -ms-grid-column: 1;
+  grid-column: 1;
+  -ms-grid-row: 1;
+  grid-row: 1;
+  border-color: #d23f7f;
+}
+
+.flx-table .flx-deck {
+  -ms-grid-column: 1;
+  grid-column: 1;
+  -ms-grid-row: 2;
+  grid-row: 2;
+  border-color: #0099cd;
+}
+
+.flx-table .flx-rules-basic {
+  -ms-grid-column: 2;
+  grid-column: 2;
+  -ms-grid-row: 1;
+  grid-row: 1;
+  border-color: #d7b424;
+}
+
+.flx-table .flx-rules-limits {
+  -ms-grid-column: 3;
+  grid-column: 3;
+  -ms-grid-row: 1;
+  grid-row: 1;
+  border-color: #d7b424;
+}
+
+.flx-table .flx-rules-other {
+  -ms-grid-column: 2;
+  -ms-grid-column-span: 2;
+  grid-column: 2 / 4;
+  -ms-grid-row: 2;
+  grid-row: 2;
+  border-color: #d7b424;
+}
+
+@media (max-width: 1024px) {
+  .flx-table .flx-rules {
+    grid-gap: 4px;
+  }
+  .flx-table .flx-deck {
+    min-width: 200px;
+  }
+  .flx-table .flx-deck .flx-deck-wrap .flx-deck-card {
+    left: -48px;
+  }
+  .flx-table .flx-deck .flx-deck-wrap .flx-discard {
+    left: -102px;
+  }
+}
+
+.flx-rps-animation {
+  height: 178px;
+  width: 178px;
+  background-image: url("img/rock-paper-scissors.png");
+}
+
+.flx-rps-animation-1 {
+  background-position: 0;
+}
+
+.flx-rps-animation-2 {
+  background-position: -100%;
+}
+
+.flx-rps-animation-3 {
+  background-position: -200%;
+}
+
+.flx-rps-animation-player {
+  text-align: center;
+  color: white;
+  margin-top: 5px;
+}
+
+.flx-other-players {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.flx-other-players .flx-keepers {
+  -webkit-box-flex: 1;
+  -ms-flex: 1 0;
+  flex: 1 0;
+  margin-right: 10px;
+}
+
+.flx-other-players .flx-keepers:last-child {
+  margin-right: 0px;
+}
+
+.flx-other-players .flx-keepers-my {
+  min-width: 320px;
+  /* workaround: discard pile hidden height sometimes prevents keeper tooltips/selection? */
+  /* but be sure to stay under the z-index of the BGA zoom icon (949) */
+  z-index: 99;
+}
+
+.flx-other-players .flx-keepers-other {
+  min-width: 320px;
+  max-width: 440px;
+}
+
+.flx-icons {
+  display: inline-block;
+  overflow: hidden;
+  background-repeat: no-repeat;
+  background-image: url(img/icons.png);
+}
+
+.flx-icons-hand {
+  width: 23px;
+  height: 33px;
+  background-position: -0px -0px;
+}
+
+.flx-icons-keeper {
+  width: 23px;
+  height: 33px;
+  background-position: -23px -0px;
+}
+
+.flx-icons-creeper {
+  width: 23px;
+  height: 33px;
+  background-position: -46px -0px;
+}
+
+.flx-board {
+  margin-top: 5px;
+}
+
+.flx-board .flx-board-icons > div {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.flx-board .flx-board-keepers div {
+  display: inline-block;
+  margin-right: 2px;
+}
+
+.flx-keeper-panel-placeholder {
+  display: none;
+}
+
+.flx-keeper-panel-placeholder div {
+  display: inline-block;
+  margin-right: 2px;
+}
+
+.flx-board-panel-keeper {
+  height: 33px;
+  width: 28px;
+  background-image: url("img/keepers_panel_icons.png");
+  background-size: 830px 33px;
+}
+
+.no-creepers {
+  display: none !important;
+}
+/*# sourceMappingURL=starfluxx.css.map */

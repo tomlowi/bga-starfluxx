@@ -1,0 +1,8 @@
+In order to limit style mismatch, we use Prettier to format all documents.
+
+Please refer to `.prettierrc` for the configuration.
+
+You can simply run prettier in place with: 
+```
+prettier -w *
+```

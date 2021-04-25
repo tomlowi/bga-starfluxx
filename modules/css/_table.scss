@@ -1,0 +1,239 @@
+.flx_help_msg_wrapper {
+  text-align: center;
+  display: inline-block;
+  width: 100%;
+
+  .flx_help {
+    font-size: 105%;
+    font-weight: bold;
+    font-style: italic;
+
+    .help_txt {
+      border-style: solid;
+      border-width: 1px;
+      padding-left: 8px;
+      padding-right: 8px;
+    }
+    .help_txt_action {
+      border-color: $color-action;
+    }
+    .help_txt_creeper {
+      border-color: $color-creeper;
+    }
+    .help_txt_freerule {
+      border-color: $color-rule;
+    }
+  }
+}
+
+.flx-table {
+  position: relative;
+  justify-content: center;
+
+  .flx-card,
+  .flx-discard {
+    width: $card-width;
+    height: $card-height;
+  }
+
+  .flx-card-stock {
+    margin-left: 5px;
+  }
+
+  .flx-goal {
+    position: relative;
+  }
+
+  .flx-deck {
+    min-width: $card-width * 2 + 5px;
+
+    .flx-deck-wrap {
+      display: flex;
+      justify-content: space-around;
+
+      .flx-discard-deck {
+        position: relative;
+      }
+
+      .flx-deck-card {
+        position: absolute;
+        left: 0px;
+
+        background-image: url("img/cards.png");
+        background-position: -900% -600%;
+
+        &.flx-deck-empty {
+          background-position: -1000% -600%;
+        }
+      }
+
+      .flx-discard {
+        transition: left 1s;
+        position: absolute;
+        left: -($card-width + 2px);
+        border: 1px;
+      }
+
+      .flx-toggle {
+        position: absolute;
+        z-index: 200;
+        background: #fff8;
+        bottom: 5px;
+        left: 5px;
+      }
+
+      .flx-card-count {
+        position: absolute;
+        z-index: 200;
+        bottom: 5px;
+        right: 5px;
+        text-align: center;
+
+        font-size: 19px;
+        font-weight: bold;
+
+        width: 30px;
+        height: 25px;
+        line-height: 25px;
+        background: #fff8;
+      }
+    }
+  }
+
+  .flx-rules-basic {
+    .flx-rules-basic-wrap {
+      display: flex;
+      justify-content: space-around;
+
+      .flx-card-stack {
+        position: relative;
+
+        .flx-card-stack-center {
+          left: 0px;
+        }
+        .flx-card-stack-left {
+          position: absolute;
+          top: 4px;
+          left: 2px;
+        }
+        .flx-card-stack-right {
+          position: absolute;
+          top: 4px;
+          left: 164px;
+        }
+      }
+    }
+  }
+
+  #baseRuleCard {
+    width: 318px;
+    height: 240px;
+    margin-bottom: 2px;
+    background-image: url("img/basicrule.png");
+    background-repeat: no-repeat;
+    position: relative;
+
+    font-weight: bold;
+    font-size: 16px;
+
+    #baseRuleDraw {
+      position: absolute;
+      top: 40px;
+      width: $card-width;
+      left: 2px;
+      text-align: center;
+    }
+    #baseRulePlay {
+      position: absolute;
+      top: 40px;
+      width: $card-width;
+      left: 164px;
+      text-align: center;
+    }
+  }
+}
+
+.flx-table {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-rows: auto auto;
+  grid-gap: 8px;
+
+  .flx-table-section {
+    border-radius: 15px;
+    border-style: solid;
+    padding-left: 2px;
+
+    h3 {
+      margin-left: 10px;
+      color: $color-flx-brown;
+    }
+  }
+
+  .flx-goal {
+    grid-column: 1;
+    grid-row: 1;
+    border-color: $color-goal;
+  }
+
+  .flx-deck {
+    grid-column: 1;
+    grid-row: 2;
+    border-color: $color-action;
+  }
+
+  .flx-rules-basic {
+    grid-column: 2;
+    grid-row: 1;
+    border-color: $color-rule;
+  }
+  .flx-rules-limits {
+    grid-column: 3;
+    grid-row: 1;
+    border-color: $color-rule;
+  }
+  .flx-rules-other {
+    grid-column: 2 / 4;
+    grid-row: 2;
+    border-color: $color-rule;
+  }
+
+  @media (max-width: 1024px) {
+    .flx-rules {
+      grid-gap: 4px;
+    }
+
+    .flx-deck {
+      min-width: 200px;
+      .flx-deck-wrap {
+        .flx-deck-card {
+          left: -48px;
+        }
+        .flx-discard {
+          left: -102px;
+        }
+      }
+    }
+  }
+}
+
+.flx-rps-animation {
+  height: 178px;
+  width: 178px;
+  background-image: url("img/rock-paper-scissors.png");
+}
+
+.flx-rps-animation-1 {
+  background-position: 0;
+}
+.flx-rps-animation-2 {
+  background-position: -100%;
+}
+.flx-rps-animation-3 {
+  background-position: -200%;
+}
+.flx-rps-animation-player {
+  text-align: center;
+  color: white;
+  margin-top: 5px;
+}

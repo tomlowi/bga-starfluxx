@@ -1,0 +1,61 @@
+.flx-tmp-hand:empty {
+  display: none;
+}
+
+.flx-spectator {
+  display: none;
+}
+
+.flx-player {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  .flx-hand {
+    margin-right: 10px;
+    flex: 3 0;
+  }
+
+  .flx-keepers {
+    flex: 1 0;
+  }
+}
+
+.flx-notification-bubble {
+  opacity: 0;
+  background: white;
+  border-radius: 18px/15px;
+  top: 50px;
+  color: #000;
+  font-weight: normal;
+  left: 50px;
+  padding: 5px 15px;
+  position: absolute;
+  z-index: 100;
+  box-shadow: rgba(0, 0, 0, 0.5) 2px 2px 7px;
+  font-size: 16px;
+  transition: opacity 0.5s ease-in;
+  min-width: 40px;
+  pointer-events: none;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.flx-notification-bubble:after {
+  border-color: #ffffff transparent;
+  border-style: solid;
+  border-width: 0 15px 15px;
+  top: -10px;
+  content: "";
+  display: block;
+  left: 30px;
+  position: absolute;
+  width: 0;
+}
+.flx-notification-bubble:hover {
+  opacity: 0.3;
+}
+.flx-notification-bubble--visible {
+  opacity: 1;
+  display: block;
+  pointer-events: all;
+}
