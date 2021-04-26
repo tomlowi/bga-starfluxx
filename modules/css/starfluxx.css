@@ -162,7 +162,7 @@ body {
   display: block;
   margin-left: 36px;
   margin-right: 8px;
-  width: 106px;
+  width: 103px;
   height: 26px;
   background-color: #eff0f0;
   font-size: 16px;
@@ -273,7 +273,7 @@ body {
   margin-left: 20px;
   margin-right: 0px;
   height: 14px;
-  width: 58px;
+  width: 56px;
 }
 
 .flx-keepers .card-overlay-title .card-type {
@@ -500,11 +500,11 @@ body {
   position: absolute;
   left: 0px;
   background-image: url("img/cards.png");
-  background-position: -1500% -500%;
+  background-position: -900% -600%;
 }
 
 .flx-table .flx-deck .flx-deck-wrap .flx-deck-card.flx-deck-empty {
-  background-position: -1600% -500%;
+  background-position: -1000% -600%;
 }
 
 .flx-table .flx-deck .flx-deck-wrap .flx-discard {

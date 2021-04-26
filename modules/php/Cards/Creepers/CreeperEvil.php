@@ -10,66 +10,43 @@ class CreeperEvil extends CreeperCard
     parent::__construct($cardId, $uniqueId);
 
     $this->name = clienttranslate("Evil");
-    $this->subtitle = clienttranslate("Place Immediately + Redraw");
+    $this->subtitle = clienttranslate("Place Immediately + Redraw. You cannot win if you have this, unless the Goal says otherwise.");
     $this->description = clienttranslate(
-      "You cannot win if you have this card."
+      "If you have Keepers in play, you must choose one to attach this to. Both cards stay together until discarded."
+    );
+
+    $this->help = clienttranslate(
+      ""
     );
   }
 
   public function preventsWinForGoal($goalCard)
   {
-    // when Baked Potato in play, this never prevents win here
-    if (Utils::getActiveBakedPotato()) {
+    $requiredForGoals = [107, 109, 110, 113, 125];
+    // Evil is required to win with these specific goals:
+    // GoalThePowerOfTheDarkSide (107)
+    // GoalEvilComputer (109)
+    // GoalEvilBrainParasites (110)
+    // GoalImperialStarDestroyer (113)
+    // GoalTheRobotsHaveTurnedAgainstUs (125)
+    if (in_array($goalCard->getUniqueId(), $requiredForGoals)) {
       return false;
     }
 
     return parent::preventsWinForGoal($goalCard);
   }
 
-  public function onGoalChange()
+  public $interactionNeeded = "keeperSelectionSelf";
+
+  public function onCheckResolveKeepersAndCreepers($lastPlayedCard)
+  {
+    return null;
+  } 
+
+  public function resolvedBy($player_id, $args)
   {
     $game = Utils::getGame();
-    // check who has Radioactive potato in play now
-    $card = array_values(
-      $game->cards->getCardsOfType("creeper", $this->uniqueId)
-    )[0];
-    // if nobody, nothing to do
-    if ($card["location"] != "keepers") {
-      return null;
-    }
-
-    // otherwise, move potato to previous player
-    $origin_player_id = $card["location_arg"];
-
-    $directionTable = $game->getPrevPlayerTable();
-    $destination_player_id = $directionTable[$origin_player_id];
-
-    $game->cards->moveCard($card["id"], "keepers", $destination_player_id);
-
-    $players = $game->loadPlayersBasicInfos();
-    $destination_player_name = $players[$destination_player_id]["player_name"];
-
-    $game->notifyAllPlayers(
-      "keepersMoved",
-      clienttranslate(
-        'Goal change: <b>${card_name}</b> moves to ${player_name2}'
-      ),
-      [
-        "i18n" => ["card_name"],
-        "player_name2" => $destination_player_name,
-        "card_name" => $this->name,
-        "destination_player_id" => $destination_player_id,
-        "origin_player_id" => $origin_player_id,
-        "cards" => [$card],
-        "destination_creeperCount" => Utils::getPlayerCreeperCount(
-          $destination_player_id
-        ),
-        "origin_creeperCount" => Utils::getPlayerCreeperCount(
-          $origin_player_id
-        ),
-      ]
-    );
-
-    return parent::onGoalChange();
+    // @TODO: attach to keeper
+    return null;
   }
 }

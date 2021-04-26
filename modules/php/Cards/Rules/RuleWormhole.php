@@ -9,20 +9,54 @@ class RuleWormhole extends RuleCard
   {
     parent::__construct($cardId, $uniqueId);
 
-    $this->name = clienttranslate("First Play Random");
-    $this->subtitle = clienttranslate("Takes Instant Effect");
+    $this->name = clienttranslate("Wormhole");
+    $this->subtitle = clienttranslate("Free Action");
     $this->description = clienttranslate(
-      "The first card you play must be chosen at random from your hand. Ignore this rule if the current Rule card allow you to play only one card."
+      "Once during your turn, you may take the top card from the draw pile and play it immediately. Repeat if you draw a Creeper."
     );
   }
 
-  public function immediateEffectOnPlay($player_id)
+  public function canBeUsedInPlayerTurn($player_id)
   {
-    Utils::getGame()->setGameStateValue("activeFirstPlayRandom", 1);
+    return Utils::playerHasNotYetUsedMysteryPlay();
   }
 
-  public function immediateEffectOnDiscard($player_id)
+  public function immediateEffectOnPlay($player)
   {
-    Utils::getGame()->setGameStateValue("activeFirstPlayRandom", 0);
+    // nothing
+  }
+
+  public function immediateEffectOnDiscard($player)
+  {
+    // nothing
+  }
+
+  public function freePlayInPlayerTurn($player_id)
+  {
+    $game = Utils::getGame();
+    $game->setGameStateValue("playerTurnUsedMysteryPlay", 1);
+
+    // draw top card (this is moved to hand automatically)
+    $cardsDrawn = $game->performDrawCards($player_id, 1, true);
+
+    // if no more cards to draw, nothing happens
+    if (count($cardsDrawn) == 0) {
+      return;
+    }
+
+    $card = array_shift($cardsDrawn);
+
+    $game->notifyPlayer($player_id, "cardsDrawn", "", [
+      "cards" => [$card],
+    ]);
+
+    $forcedCard = $game->getCardDefinitionFor($card);
+    $game->notifyPlayer($player_id, "forcedCardNotification", "", [
+      "card_trigger" => $this->getName(),
+      "card_forced" => $forcedCard->getName(),
+    ]);
+
+    // And we mark it as the next "forcedCard" to play
+    $game->setGameStateValue("forcedCard", $card["id"]);
   }
 }

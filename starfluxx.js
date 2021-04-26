@@ -61,10 +61,15 @@ define([
         this.KEEPER_WIDTH = 83;
         this.KEEPER_HEIGHT = 129;
         this.KEEPERS_SPRITES_PATH = g_gamethemeurl + "img/keepers.png";
-        this.KEEPERS_SPRITES_PER_ROW = 10;
+        this.KEEPERS_SPRITES_PER_ROW = 15;
 
         this.CARDS_TYPES_BASEGAME = {
-          creeper: { count: 3, spriteOffset: 0, weight: 10 },
+          creeper: {
+            count: 3,
+            spriteOffset: 0,
+            materialOffset: 51,
+            weight: 10,
+          },
           keeper: { count: 25, spriteOffset: 3, materialOffset: 1, weight: 20 },
           goal: { count: 33, spriteOffset: 3 + 25, materialOffset: 101 },
           rule: { count: 17, spriteOffset: 3 + 25 + 33, materialOffset: 201 },
@@ -261,14 +266,14 @@ define([
 
       prepareKeeperPanelIcons: function (cardDefinitions) {
         var panelDivId = "tmpKeeperPanelIcons";
-        var keeperCount = 19;
+        var creeperCount = 3;
         for (var id in cardDefinitions) {
           var cardDefinition = cardDefinitions[id];
           if (cardDefinition.type == "keeper") {
             var params = {
               id: id,
               name: _(cardDefinition.name),
-              offset: (id - 1) * 100,
+              offset: (creeperCount + (id - 1)) * 100,
             };
             var panelKeeper = this.format_block("jstpl_panel_keeper", params);
             dojo.place(panelKeeper, panelDivId);
@@ -276,7 +281,7 @@ define([
             var params = {
               id: id,
               name: _(cardDefinition.name),
-              offset: (keeperCount + (id - 50) - 1) * 100,
+              offset: (id - 50 - 1) * 100,
             };
             var panelCreeper = this.format_block("jstpl_panel_keeper", params);
             dojo.place(panelCreeper, panelDivId);

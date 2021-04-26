@@ -101,7 +101,7 @@ $color-flx-brown: #f6821f;
   display: block;
   margin-left: $card-margin-left;
   margin-right: $card-margin-right;
-  width: $card-width-inner;
+  width: $card-width-inner - 3px;
   height: $card-height-title;
   background-color: $color-cardwhite;
   font-size: 16px;
@@ -215,7 +215,7 @@ $color-flx-brown: #f6821f;
     margin-left: 20px;
     margin-right: 0px;
     height: 14px;
-    width: 58px;
+    width: 56px;
 
     .card-type {
       margin-top: 8px;
