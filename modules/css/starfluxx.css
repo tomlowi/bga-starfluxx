@@ -246,7 +246,7 @@ body {
 }
 
 .flx-card-keeper .card-name {
-  margin-top: 159px;
+  margin-top: 5px;
 }
 
 .flx-card-rule .card-overlay {
@@ -315,10 +315,6 @@ body {
   -webkit-transform-origin: top left;
           transform-origin: top left;
   line-height: 100%;
-}
-
-.flx-keepers .flx-card-keeper .card-name {
-  margin-top: 88px;
 }
 
 .flx-keepers .flx-card-title-creeperpack .card-overlay-title .card-type {

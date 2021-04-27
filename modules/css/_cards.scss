@@ -185,7 +185,7 @@ $color-flx-brown: #f6821f;
 
 .flx-card-keeper {
   .card-name {
-    margin-top: $card-height-inner - 20px;
+    margin-top: 5px;
   }
 }
 
@@ -249,12 +249,6 @@ $color-flx-brown: #f6821f;
       transform: scale(0.25); // 4/16
       transform-origin: top left;
       line-height: 100%;
-    }
-  }
-
-  .flx-card-keeper {
-    .card-name {
-      margin-top: 88px;
     }
   }
 

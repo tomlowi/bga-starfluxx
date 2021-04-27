@@ -21,16 +21,18 @@ class GoalLandingParty extends GoalTwoKeepers
 
   public function goalReachedByPlayer()
   {    
+    $cards = Utils::getGame()->cards;
+
     $tester_id = null;
     // which player has the expendable crewman?
     $expendable_keeper_card = array_values(
       $cards->getCardsOfType("keeper", $this->expendable)
     )[0];
 
-    if ($expendable_keeper_card["location"] == "keeper"
-    ) {
+    if ($expendable_keeper_card["location"] == "keepers") {
       $tester_id = $expendable_keeper_card["location_arg"];
     }
+
     if ($tester_id == null) {
       return null;
     }
@@ -41,31 +43,31 @@ class GoalLandingParty extends GoalTwoKeepers
     if ($check_id != null && $check_id == $tester_id) {
       $winner_id = $tester_id;
     }
-    if ($winner_id = null) {
+    if ($winner_id == null) {
       $check_id = $this->checkTwoKeepersWin($this->crew1, $this->crew3);
       if ($check_id != null && $check_id == $tester_id) {
         $winner_id = $tester_id;
       }
     }
-    if ($winner_id = null) {
+    if ($winner_id == null) {
       $check_id = $this->checkTwoKeepersWin($this->crew1, $this->crew4);
       if ($check_id != null && $check_id == $tester_id) {
         $winner_id = $tester_id;
       }
     }
-    if ($winner_id = null) {
+    if ($winner_id == null) {
       $check_id = $this->checkTwoKeepersWin($this->crew2, $this->crew3);
       if ($check_id != null && $check_id == $tester_id) {
         $winner_id = $tester_id;
       }
     }
-    if ($winner_id = null) {
+    if ($winner_id == null) {
       $check_id = $this->checkTwoKeepersWin($this->crew2, $this->crew4);
       if ($check_id != null && $check_id == $tester_id) {
         $winner_id = $tester_id;
       }
     }
-    if ($winner_id = null) {
+    if ($winner_id == null) {
       $check_id = $this->checkTwoKeepersWin($this->crew3, $this->crew4);
       if ($check_id != null && $check_id == $tester_id) {
         $winner_id = $tester_id;
