@@ -22,12 +22,6 @@ class ActionTimePortal extends ActionCard
   public function immediateEffectOnPlay($player_id)
   {
     $game = Utils::getGame();
-    return parent::immediateEffectOnPlay($player_id);
-  }
-
-  public function resolvedBy($player_id, $args)
-  {
-    $game = Utils::getGame();
     // @TODO: player can choose to open up discard or draw pile
     // then take a card from it (like basic Let's Do That Again)
 

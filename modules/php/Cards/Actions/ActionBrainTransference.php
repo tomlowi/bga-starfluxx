@@ -20,7 +20,7 @@ class ActionBrainTransference extends ActionCard
   public $interactionNeeded = null;
 
 
-  public function resolvedBy($active_player_id, $args)
+  public function immediateEffectOnPlay($player_id)
   {
     $game = Utils::getGame();
 
@@ -35,8 +35,6 @@ class ActionBrainTransference extends ActionCard
         "i18n" => ["card_name"],
         "card_name" => $this->getName(),
       ]
-    );
-
-    return "handsExchangeOccured";
+    );    
   }
 }

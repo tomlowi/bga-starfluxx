@@ -20,12 +20,6 @@ class ActionSonicSledgehammer extends ActionCard
 
   public function immediateEffectOnPlay($player_id)
   {
-    // nothing now, needs to go to resolve action state
-    return parent::immediateEffectOnPlay($player_id);
-  }
-
-  public function resolvedBy($player_id, $args)
-  {
     $game = Utils::getGame();
 
     // @TODO: player should have selected a Keeper from each player,

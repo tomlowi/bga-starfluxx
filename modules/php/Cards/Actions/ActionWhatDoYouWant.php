@@ -19,7 +19,7 @@ class ActionWhatDoYouWant extends ActionCard
 
   public $interactionNeeded = null;
 
-  public function resolvedBy($player_id, $args)
+  public function immediateEffectOnPlay($player_id)
   {
     $game = Utils::getGame();
     // @TODO: take card from the discard pile
