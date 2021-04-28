@@ -3,7 +3,7 @@ $font-stack-title-base: "Federation", "Federation Classic Web", sans-serif-conde
 $font-stack-title-creepers: "Federation", "Federation Classic Web", sans-serif-condensed;
 $card-height: 233px;
 $card-width: 150px;
-$card-height-title: 26px;
+$card-height-title: 25px;
 $card-margin-left: 36px;
 $card-margin-right: 8px;
 $card-margin-top: 14px;
@@ -103,7 +103,7 @@ $color-flx-brown: #f6821f;
   width: $card-width-inner - 3px;
   height: $card-height-title;
   background-color: $color-cardwhite;
-  font-size: 16px;
+  font-size: 20px;
 
   .card-type {
     font-weight: bold;

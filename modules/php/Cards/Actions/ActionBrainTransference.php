@@ -28,6 +28,15 @@ class ActionBrainTransference extends ActionCard
     // but in theory we should really adapt the player order in the middle of the game
     // to check if this is possible on BGA
 
+    $game->notifyAllPlayers(
+      "notImplemented",
+      clienttranslate('Sorry, <b>${card_name}</b> not yet implemented'),
+      [
+        "i18n" => ["card_name"],
+        "card_name" => $this->getName(),
+      ]
+    );
+
     return "handsExchangeOccured";
   }
 }

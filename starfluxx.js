@@ -654,7 +654,6 @@ define([
       addCardsToStock: function (stock, cards, keepOrder) {
         for (var card_id in cards) {
           var card = cards[card_id];
-          debugger;
           stock.addToStockWithId(card.type_arg, card.id);
           if (keepOrder) {
             stock.changeItemsWeight({

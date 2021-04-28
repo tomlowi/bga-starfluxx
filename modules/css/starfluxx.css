@@ -163,9 +163,9 @@ body {
   margin-left: 36px;
   margin-right: 8px;
   width: 103px;
-  height: 26px;
+  height: 25px;
   background-color: #eff0f0;
-  font-size: 16px;
+  font-size: 20px;
 }
 
 .card-overlay-title .card-type {
@@ -234,7 +234,7 @@ body {
 }
 
 .flx-card-action .card-overlay {
-  height: 174px;
+  height: 175px;
 }
 
 .flx-card-action .card-name {
@@ -250,11 +250,11 @@ body {
 }
 
 .flx-card-rule .card-overlay {
-  height: 98.45px;
+  height: 99px;
 }
 
 .flx-card-rule .card-name {
-  margin-top: 80.55px;
+  margin-top: 81px;
 }
 
 .flx-card-rule .card-description {
@@ -434,6 +434,7 @@ body {
   font-size: 105%;
   font-weight: bold;
   font-style: italic;
+  color: white;
 }
 
 .flx_help_msg_wrapper .flx_help .help_txt {
