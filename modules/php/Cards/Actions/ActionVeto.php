@@ -2,7 +2,7 @@
 namespace StarFluxx\Cards\Actions;
 
 use StarFluxx\Game\Utils;
-use StarFluxx\Cards\Rules\RuleCardFactory;
+use starfluxx;
 
 class ActionVeto extends ActionCard
 {
@@ -10,16 +10,25 @@ class ActionVeto extends ActionCard
   {
     parent::__construct($cardId, $uniqueId);
 
-    $this->name = clienttranslate("No Limits");
+    $this->name = clienttranslate("Veto!");
     $this->description = clienttranslate(
-      "Discard all Hand and Keeper Limits currently in play."
+      "<b>Out of turn:</b> Discard a New Rule another player just played, thus preventing it from ever taking effect. <b>During your turn:</b> Discard your choice of up to 2 New Rules currently in play.<br>This card can also cancel another Surprise."
     );
   }
 
   public function immediateEffectOnPlay($player_id)
   {
     $game = Utils::getGame();
-    $game->discardRuleCardsForType("handLimit");
-    $game->discardRuleCardsForType("keepersLimit");
+
+    // @TODO: be able to use this as a normal Action, but also anywhere out of turn?
+
+    $game->notifyAllPlayers(
+      "notImplemented",
+      clienttranslate('Sorry, <b>${card_name}</b> not yet implemented'),
+      [
+        "i18n" => ["card_name"],
+        "card_name" => $this->getName(),
+      ]
+    );
   }
 }

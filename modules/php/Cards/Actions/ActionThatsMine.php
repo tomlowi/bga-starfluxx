@@ -10,74 +10,24 @@ class ActionThatsMine extends ActionCard
   {
     parent::__construct($cardId, $uniqueId);
 
-    $this->set = "creeperpack";
-    $this->name = clienttranslate("Steal Something");
+    $this->name = clienttranslate("That's Mine!");
     $this->description = clienttranslate(
-      "Take your choice of any Keeper or Creeper from in front of another player and put it in front of you."
-    );
-
-    $this->help = clienttranslate(
-      "Select any keeper or creeper card in play from another player."
+      "<b>Out of turn:</b> When another player plays a Keeper, it goes in front of you instead of them, possibly preventing their victory. <b>During your turn:</b> Steal another player's Keeper and put it in front of you.<br>This card can also cancel another Surprise."
     );
   }
-
-  public $interactionNeeded = "keeperSelectionOther";
 
   public function immediateEffectOnPlay($player_id)
   {
     $game = Utils::getGame();
-    $keepersInPlay = $game->cards->countCardInLocation("keepers");
-    $playersKeepersInPlay = $game->cards->countCardInLocation(
-      "keepers",
-      $player_id
-    );
-    if ($keepersInPlay - $playersKeepersInPlay == 0) {
-      // no keepers on the table for others, this action does nothing
-      return;
-    }
 
-    return parent::immediateEffectOnPlay($player_id);
-  }
-
-  public function resolvedBy($player_id, $args)
-  {
-    $game = Utils::getGame();
-
-    $card = $args["card"];
-    $card_definition = $game->getCardDefinitionFor($card);
-
-    $card_location = $card["location"];
-    $other_player_id = $card["location_arg"];
-
-    if ($card_location != "keepers" || $other_player_id == $player_id) {
-      Utils::throwInvalidUserAction(
-        starfluxx::totranslate(
-          "You must select a keeper or creeper card in front of another player"
-        )
-      );
-    }
-
-    // move this keeper to the current player
-    $game->cards->moveCard($card["id"], "keepers", $player_id);
-
-    $players = $game->loadPlayersBasicInfos();
-    $other_player_name = $players[$other_player_id]["player_name"];
+    // @TODO: be able to use this as a normal Action, but also anywhere out of turn?
 
     $game->notifyAllPlayers(
-      "keepersMoved",
-      clienttranslate(
-        '${player_name} stole <b>${card_name}</b> from ${player_name2}'
-      ),
+      "notImplemented",
+      clienttranslate('Sorry, <b>${card_name}</b> not yet implemented'),
       [
         "i18n" => ["card_name"],
-        "player_name" => $game->getActivePlayerName(),
-        "player_name2" => $other_player_name,
-        "card_name" => $card_definition->getName(),
-        "destination_player_id" => $player_id,
-        "origin_player_id" => $other_player_id,
-        "cards" => [$card],
-        "destination_creeperCount" => Utils::getPlayerCreeperCount($player_id),
-        "origin_creeperCount" => Utils::getPlayerCreeperCount($other_player_id),
+        "card_name" => $this->getName(),
       ]
     );
   }

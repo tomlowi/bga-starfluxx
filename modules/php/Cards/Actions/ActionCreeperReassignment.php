@@ -11,9 +11,9 @@ class ActionCreeperReassignment extends ActionCard
     parent::__construct($cardId, $uniqueId);
 
     $this->set = "creeperpack";
-    $this->name = clienttranslate("Move a Creeper");
+    $this->name = clienttranslate("Creeper Reassignment");
     $this->description = clienttranslate(
-      "Choose any Creeper in front of any player and move it to some other player."
+      "Take any one Creeper that is currently in play and move it to be in front of any other player. If it's currently attached to a Keeper, detach it before moving the Creeper. You must attach it to an appropriate Keeper (if possible) after moving it."
     );
 
     $this->help = clienttranslate(
@@ -69,6 +69,8 @@ class ActionCreeperReassignment extends ActionCard
     }
 
     // move this creeper to the selected player
+    // @TODO: make sure it is detached/attached again if this is implemented
+
     $game->cards->moveCard($card["id"], "keepers", $selected_player_id);
 
     $players = $game->loadPlayersBasicInfos();

@@ -10,15 +10,13 @@ class ActionSonicSledgehammer extends ActionCard
   {
     parent::__construct($cardId, $uniqueId);
 
-    $this->name = clienttranslate("Rock-Paper-Scissors Showdown");
+    $this->name = clienttranslate("Sonic Sledgehammer");
     $this->description = clienttranslate(
-      "Challenge another player to a 3-round Rock-Paper-Scissors tournament. Winner takes loser's entire hand of cards."
+      "All players, including you, must discard a Keeper from the table. You decide which Keeper each player discards. Players with no Keepers in play must discard a random card from their hands. If someone has the Time Traveler on the table, that player discards nothing."
     );
-
-    $this->help = clienttranslate("Choose the player you want to challenge.");
   }
 
-  public $interactionNeeded = "playerSelection";
+  public $interactionNeeded = null;
 
   public function immediateEffectOnPlay($player_id)
   {
@@ -28,31 +26,18 @@ class ActionSonicSledgehammer extends ActionCard
 
   public function resolvedBy($player_id, $args)
   {
-    //$choice = $args["value"];
     $game = Utils::getGame();
-    $selected_player_id = $args["selected_player_id"];
 
-    $game->setGameStateValue("rpsChallengerId", $player_id);
-    $game->setGameStateValue("rpsDefenderId", $selected_player_id);
-    $game->setGameStateValue("rpsChallengerChoice", -1);
-    $game->setGameStateValue("rpsDefenderChoice", -1);
-    $game->setGameStateValue("rpsChallengerWins", 0);
-    $game->setGameStateValue("rpsDefenderWins", 0);
+    // @TODO: player should have selected a Keeper from each player,
+    // they must all discard it (or random hand card if they had no keepers)
 
-    $cardsInHandChallenger = $game->cards->countCardInLocation("hand", $player_id);
-    $cardsInHandDefender = $game->cards->countCardInLocation("hand", $selected_player_id);
-
-    if ($cardsInHandChallenger == 0 && $cardsInHandDefender == 0) {
-      // both player have no cards in hand, no need to showdown
-      $game->notifyAllPlayers(
-        "actionIgnored",
-        clienttranslate(
-          'Both players are empty-handed, no need for Rock-Paper-Scissors showdown'
-        ), ["player_id" => $player_id]
-      );
-      return "resolvedAction";
-    }    
-
-    return "playRockPaperScissors";
+    $game->notifyAllPlayers(
+      "notImplemented",
+      clienttranslate('Sorry, <b>${card_name}</b> not yet implemented'),
+      [
+        "i18n" => ["card_name"],
+        "card_name" => $this->getName(),
+      ]
+    );
   }
 }

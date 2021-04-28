@@ -10,65 +10,33 @@ class ActionTimePortal extends ActionCard
   {
     parent::__construct($cardId, $uniqueId);
 
-    $this->name = clienttranslate("Trash a Keeper");
+    $this->name = clienttranslate("Time Portal");
     $this->description = clienttranslate(
-      "Take a Keeper from in front of any player and put it on the discard pile. <br/> If no one has any Keepers in play, nothing happens when you play this card."
+      "Pick up either the discard pile (the Past) or the draw pile (the Future) and choose any non-Creeper card you wish. Leave the order unchanged for the Past, and re-shuffle if you visit the Future. After revealing what you selected, the card goes into your hand and your turn ends immediately."
     );
-
-    $this->help = clienttranslate(
-      "Select any keeper card in play from any player (including yourself)."
-    );
+    
   }
 
-  public $interactionNeeded = "keeperSelectionAny";
+  public $interactionNeeded = null;
 
   public function immediateEffectOnPlay($player_id)
   {
     $game = Utils::getGame();
-    $totalKeepersInPlay = count(
-      $game->cards->getCardsOfTypeInLocation("keeper", null, "keepers", null)
-    );
-    if ($totalKeepersInPlay == 0) {
-      // no keepers on the table, this action does nothing
-      return;
-    }
-
     return parent::immediateEffectOnPlay($player_id);
   }
 
   public function resolvedBy($player_id, $args)
   {
     $game = Utils::getGame();
-
-    $card = $args["card"];
-    $card_definition = $game->getCardDefinitionFor($card);
-
-    $card_type = $card["type"];
-    $card_location = $card["location"];
-    $origin_player_id = $card["location_arg"];
-
-    if ($card_type != "keeper" || $card_location != "keepers") {
-      Utils::throwInvalidUserAction(
-        starfluxx::totranslate(
-          "You must select a keeper card in front of another player"
-        )
-      );
-    }
-
-    // move this keeper to the discard
-    $game->cards->playCard($card["id"]);
+    // @TODO: player can choose to open up discard or draw pile
+    // then take a card from it (like basic Let's Do That Again)
 
     $game->notifyAllPlayers(
-      "keepersDiscarded",
-      clienttranslate('${player_name} trashed <b>${card_name}</b>'),
+      "notImplemented",
+      clienttranslate('Sorry, <b>${card_name}</b> not yet implemented'),
       [
         "i18n" => ["card_name"],
-        "player_name" => $game->getActivePlayerName(),
-        "card_name" => $card_definition->getName(),
-        "cards" => [$card],
-        "player_id" => $origin_player_id,
-        "discardCount" => $game->cards->countCardInLocation("discard"),
-        "creeperCount" => Utils::getPlayerCreeperCount($origin_player_id),
+        "card_name" => $this->getName(),
       ]
     );
   }

@@ -48,11 +48,11 @@ body {
   background-repeat: repeat;
 }
 
-/* Bernard MT Condensed web font */
+/* Federation Classic web font */
 @font-face {
-  font-family: "Bernard MT Condensed Web";
-  src: url("//db.onlinewebfonts.com/t/eceba41a00b4b94ea2965371c8dda96c.eot");
-  src: url("//db.onlinewebfonts.com/t/eceba41a00b4b94ea2965371c8dda96c.eot?#iefix") format("embedded-opentype"), url("//db.onlinewebfonts.com/t/eceba41a00b4b94ea2965371c8dda96c.woff2") format("woff2"), url("//db.onlinewebfonts.com/t/eceba41a00b4b94ea2965371c8dda96c.woff") format("woff"), url("//db.onlinewebfonts.com/t/eceba41a00b4b94ea2965371c8dda96c.ttf") format("truetype"), url("//db.onlinewebfonts.com/t/eceba41a00b4b94ea2965371c8dda96c.svg#Bernard MT Condensed") format("svg");
+  font-family: "Federation Classic Web";
+  src: url("//db.onlinewebfonts.com/t/8ea43a2cba2fa21b594ebe9b4db01dcf.eot");
+  src: url("//db.onlinewebfonts.com/t/8ea43a2cba2fa21b594ebe9b4db01dcf.eot?#iefix") format("embedded-opentype"), url("//db.onlinewebfonts.com/t/8ea43a2cba2fa21b594ebe9b4db01dcf.woff2") format("woff2"), url("//db.onlinewebfonts.com/t/8ea43a2cba2fa21b594ebe9b4db01dcf.woff") format("woff"), url("//db.onlinewebfonts.com/t/8ea43a2cba2fa21b594ebe9b4db01dcf.ttf") format("truetype"), url("//db.onlinewebfonts.com/t/8ea43a2cba2fa21b594ebe9b4db01dcf.svg#Federation") format("svg");
 }
 
 /* Free Alternative for Helvetica Neue */
@@ -151,11 +151,11 @@ body {
 }
 
 .flx-card-title-base {
-  font-family: "Brown", "Futura", sans-serif;
+  font-family: "Federation", "Federation Classic Web", sans-serif-condensed;
 }
 
 .flx-card-title-creeperpack {
-  font-family: "Bernard MT Condensed", "Bernard MT Condensed Web", sans-serif-condensed;
+  font-family: "Federation", "Federation Classic Web", sans-serif-condensed;
 }
 
 .card-overlay-title {

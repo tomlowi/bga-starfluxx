@@ -12,7 +12,7 @@ class ActionExchangeKeepers extends ActionCard
 
     $this->name = clienttranslate("Exchange Keepers");
     $this->description = clienttranslate(
-      "Pick any Keeper another player has on the table and exchange it for one you have on the table. <be/> If you have no Keepers in play, or if no one else has a Keeper, nothing happens."
+      "Pick any Keeper another player has on the table and exchange it for one you have on the table. If you have no Keepers in play, or if no one else has a Keeper, nothing happens."
     );
 
     $this->help = clienttranslate(

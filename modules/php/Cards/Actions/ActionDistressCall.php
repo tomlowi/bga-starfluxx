@@ -9,9 +9,9 @@ class ActionDistressCall extends ActionCard
   {
     parent::__construct($cardId, $uniqueId);
 
-    $this->name = clienttranslate("Discard and Draw");
+    $this->name = clienttranslate("Distress Call");
     $this->description = clienttranslate(
-      "Discard your entire hand, then draw as many cards as you discarded. Do not count this card when determining how many cards to draw."
+      "All players draw 1 card from the deck. Anyone with a Creeper then draws additional cards until they have drawn a total of 2 cards for each Creeper they possess."
     );
   }
 
@@ -19,21 +19,13 @@ class ActionDistressCall extends ActionCard
   {
     $game = Utils::getGame();
 
-    $cards = $game->cards->getCardsInLocation("hand", $player_id);
-
-    // discard all cards
-    foreach ($cards as $card_id => $card) {
-      $game->cards->playCard($card_id);
-    }
-
-    $game->notifyAllPlayers("handDiscarded", "", [
-      "player_id" => $player_id,
-      "cards" => $cards,
-      "discardCount" => $game->cards->countCardInLocation("discard"),
-      "handCount" => $game->cards->countCardInLocation("hand", $player_id),
-    ]);
-
-    // draw equal nr of new cards
-    $game->performDrawCards($player_id, count($cards));
+    $game->notifyAllPlayers(
+      "notImplemented",
+      clienttranslate('Sorry, <b>${card_name}</b> not yet implemented'),
+      [
+        "i18n" => ["card_name"],
+        "card_name" => $this->getName(),
+      ]
+    );
   }
 }

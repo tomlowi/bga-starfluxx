@@ -2,6 +2,7 @@
 namespace StarFluxx\Cards\Actions;
 
 use StarFluxx\Game\Utils;
+use starfluxx;
 
 class ActionBelayThat extends ActionCard
 {
@@ -9,9 +10,9 @@ class ActionBelayThat extends ActionCard
   {
     parent::__construct($cardId, $uniqueId);
 
-    $this->name = clienttranslate("Share the Wealth");
+    $this->name = clienttranslate("Belay That!");
     $this->description = clienttranslate(
-      "Gather up all the Keepers on the table, shuffle them together, and deal them back out to all players, starting with yourself. These go immediately into play in front of their new owners. Everyone will probably end up with a different number of Keepers in play than they started with."
+      "<b>Out of turn:</b> Cancel an Action another player just played. <b>During your turn:</b> All other players must discard one Action, or a random card, from their hands.<br>This card can also cancel another Surprise."
     );
   }
 
@@ -19,38 +20,15 @@ class ActionBelayThat extends ActionCard
   {
     $game = Utils::getGame();
 
-    $keepersInPlay = $game->cards->getCardsOfTypeInLocation(
-      "keeper",
-      null,
-      "keepers",
-      null
+    // @TODO: be able to use this as a normal Action, but also anywhere out of turn?
+
+    $game->notifyAllPlayers(
+      "notImplemented",
+      clienttranslate('Sorry, <b>${card_name}</b> not yet implemented'),
+      [
+        "i18n" => ["card_name"],
+        "card_name" => $this->getName(),
+      ]
     );
-    $next_player = $game->getNextPlayerTable();
-
-    // gather and shuffle all keepers in play
-    shuffle($keepersInPlay);
-
-    // deal them back out, starting with the current player
-    $current_player_id = $player_id;
-
-    foreach ($keepersInPlay as $card) {
-      if ($current_player_id != $card["location_arg"]) {
-        $origin_player_id = $card["location_arg"];
-        $game->cards->moveCard($card["id"], "keepers", $current_player_id);
-        $game->notifyAllPlayers("keepersMoved", "", [
-          "destination_player_id" => $current_player_id,
-          "origin_player_id" => $origin_player_id,
-          "cards" => [$card],
-          "destination_creeperCount" => Utils::getPlayerCreeperCount(
-            $current_player_id
-          ),
-          "origin_creeperCount" => Utils::getPlayerCreeperCount(
-            $origin_player_id
-          ),
-        ]);
-      }
-      $current_player_id = $next_player[$current_player_id];
-    }
-    return "keepersExchangeOccured";
   }
 }

@@ -9,8 +9,8 @@ class ActionSpaceJackpot extends ActionCard
   {
     parent::__construct($cardId, $uniqueId);
 
-    $this->name = clienttranslate("Jackpot!");
-    $this->description = clienttranslate("Draw 3 extra cards!");
+    $this->name = clienttranslate("Space Jackpot!");
+    $this->description = clienttranslate("Draw 5 extra cards, add them to your hand, then discard 2 cards.");
   }
 
   public function immediateEffectOnPlay($player_id)
@@ -18,5 +18,7 @@ class ActionSpaceJackpot extends ActionCard
     $addInflation = Utils::getActiveInflation() ? 1 : 0;
     $extraCards = 3 + $addInflation;
     Utils::getGame()->performDrawCards($player_id, $extraCards);
+
+    // @TODO: basic jackpot to be extended
   }
 }
