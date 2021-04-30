@@ -627,7 +627,7 @@ define([
           id: card_type_id,
         };
 
-        if (card.name.length > 20) {
+        if (card.name.length > 14) {
           card.nameLength = "long";
         }
         if (card.description.length > 158) {

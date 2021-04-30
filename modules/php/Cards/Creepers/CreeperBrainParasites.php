@@ -10,10 +10,10 @@ class CreeperBrainParasites extends CreeperCard
   {
     parent::__construct($cardId, $uniqueId);
 
-    $this->name = clienttranslate("Brain Parasites");
-    $this->subtitle = clienttranslate("Place Immediately + Redraw. You cannot win if you have this, unless the Goal says otherwise.");
+    $this->name = clienttranslate("Brain&nbsp;Parasites");
+    $this->subtitle = clienttranslate("Place Immediately + Redraw");
     $this->description = clienttranslate(
-      "If you have Keepers with brains in play, you must choose one to attach this to. Both cards stay together until discarded."
+      "If you have Keepers with brains in play, you must choose one to attach this to. Both cards stay together until discarded. You cannot win if you have this, unless the Goal says otherwise."
     );
 
     $this->help = clienttranslate(

@@ -11,9 +11,9 @@ class CreeperMalfunction extends CreeperCard
     parent::__construct($cardId, $uniqueId);
 
     $this->name = clienttranslate("Malfunction");
-    $this->subtitle = clienttranslate("Place Immediately + Redraw. You cannot win if you have this, unless the Goal says otherwise.");
+    $this->subtitle = clienttranslate("Place Immediately + Redraw");
     $this->description = clienttranslate(
-      "If you have any equipment Keepers in play, you must choose one to attach this to. Both cards stay together until discarded."
+      "If you have any equipment Keepers in play, you must choose one to attach this to. Both cards stay together until discarded. You cannot win if you have this, unless the Goal says otherwise."
     );
 
     $this->help = clienttranslate(

@@ -205,7 +205,7 @@ $color-flx-brown: #f6821f;
     margin-top: 5px;
   }
   .card-description {
-    margin-top: 46px;
+    margin-top: 52px;
   }
 }
 
@@ -231,9 +231,9 @@ $color-flx-brown: #f6821f;
 
     .card-name {
       margin-top: 2px;
-      // 10/16
-      width: 100% * 16/10;
-      transform: scale(0.625);
+      // 8/16
+      width: 100% * 16/8;
+      transform: scale(0.5);
       transform-origin: top left;
     }
     .card-subtitle {

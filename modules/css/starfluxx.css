@@ -266,7 +266,7 @@ body {
 }
 
 .flx-card-creeper .card-description {
-  margin-top: 46px;
+  margin-top: 52px;
 }
 
 .flx-keepers .card-overlay-title {
@@ -293,9 +293,9 @@ body {
 
 .flx-keepers .card-overlay .card-name {
   margin-top: 2px;
-  width: 160%;
-  -webkit-transform: scale(0.625);
-          transform: scale(0.625);
+  width: 200%;
+  -webkit-transform: scale(0.5);
+          transform: scale(0.5);
   -webkit-transform-origin: top left;
           transform-origin: top left;
 }

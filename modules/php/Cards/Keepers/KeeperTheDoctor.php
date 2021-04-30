@@ -9,7 +9,7 @@ class KeeperTheDoctor extends KeeperCard
   {
     parent::__construct($cardId, $uniqueId);
 
-    $this->name = clienttranslate("The Doctor");
+    $this->name = clienttranslate("The&nbsp;Doctor");
 
     $this->description = clienttranslate("During your turn, if you have Brain Parasites, you can detach and discard them as long as they aren't attached to this card.");
   }

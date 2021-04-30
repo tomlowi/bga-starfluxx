@@ -9,7 +9,7 @@ class KeeperTheCaptain extends KeeperCard
   {
     parent::__construct($cardId, $uniqueId);
 
-    $this->name = clienttranslate("The Captain");
+    $this->name = clienttranslate("The&nbsp;Captain");
 
     $this->description = clienttranslate("Once during your turn, you can steal one of: Scientist, Engineer, Doctor, or Expendable Crewman.");
   }
