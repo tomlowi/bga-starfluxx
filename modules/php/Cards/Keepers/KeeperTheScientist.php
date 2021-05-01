@@ -10,6 +10,7 @@ class KeeperTheScientist extends KeeperCard
     parent::__construct($cardId, $uniqueId);
 
     $this->name = clienttranslate("The&nbsp;Scientist");
+    $this->set = "vertical";
 
     $this->description = clienttranslate("Once during your turn, you can steal one of: Energy Being, Energy Crystals, Unseen Force, or Monolith.");
   }

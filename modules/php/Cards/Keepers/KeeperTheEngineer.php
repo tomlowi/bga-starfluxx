@@ -10,6 +10,7 @@ class KeeperTheEngineer extends KeeperCard
     parent::__construct($cardId, $uniqueId);
 
     $this->name = clienttranslate("The&nbsp;Engineer");
+    $this->set = "vertical";
 
     $this->description = clienttranslate("During your turn, if you have Malfunction, you can detach and discard it.");
   }

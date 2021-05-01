@@ -140,7 +140,7 @@
 </div>`;
 
 var jstpl_cardOverlay_title = `<div class="flx-card-overlay-title">
-		<div class="flx-card-title flx-card-title-\${set} flx-card-title-\${type}" 
+		<div class="flx-card-title flx-card-title-base flx-card-title-\${type}" 
           id="flx-card-overlay-title-\${id}">
 			<div class="card-overlay-title">
         <div class="card-type">\${typeName}</div>

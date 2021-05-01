@@ -11,7 +11,6 @@ class CreeperCard extends Card
   public function __construct($cardId, $uniqueId)
   {
     parent::__construct($cardId, $uniqueId);
-    $this->set = "creeperpack";
   }
 
   // Creepers in play globally prevent the player winning with almost all basic Goals

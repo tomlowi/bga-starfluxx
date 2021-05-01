@@ -231,15 +231,6 @@ define([
         // Determine card overlaps per number of cards in hand / stocks
         this.adaptForScreenSize();
 
-        // Hide elements that are only used with Creeper pack expansion
-        if (!gamedatas.creeperPack) {
-          dojo
-            .query(".flx-board-creeper")
-            .forEach(function (node, index, nodelist) {
-              dojo.addClass(node, "no-creepers");
-            });
-        }
-
         // Hide elements that are not relevant for spectator
         if (this.isSpectator) {
           dojo.addClass("flxMyHand", "flx-spectator");

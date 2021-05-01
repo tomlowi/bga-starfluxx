@@ -297,7 +297,6 @@ class starfluxx extends Table
       "players" => $players,
       "cardTypesDefinitions" => $this->getAllCardTypesDefinitions(),
       "cardsDefinitions" => $this->getAllCardsDefinitions(),
-      "creeperPack" => Utils::useCreeperPackExpansion(),
       "hand" => $this->cards->getCardsInLocation("hand", $current_player_id),
       "rules" => [
         "drawRule" => $this->cards->getCardsInLocation("rules", RULE_DRAW_RULE),
@@ -506,17 +505,13 @@ class starfluxx extends Table
     $temporaryDraw = false
   ) {
     $cardsDrawn = [];
-    if (Utils::useCreeperPackExpansion()) {
-      // check for creepers while drawing
-      $cardsDrawn = $this->pickCardsWithCreeperCheck(
-        $player_id,
-        $drawCount,
-        $postponeCreeperResolve
-      );
-    } else {
-      // No creepers: we can just draw
-      $cardsDrawn = $this->cards->pickCards($drawCount, "deck", $player_id);
-    }
+    
+    // check for creepers while drawing
+    $cardsDrawn = $this->pickCardsWithCreeperCheck(
+      $player_id,
+      $drawCount,
+      $postponeCreeperResolve
+    );
 
     // don't increment drawn counter here, extra cards drawn from actions etc
     // do not count

@@ -46,10 +46,6 @@ class CreeperCardFactory extends CardFactory
   /* trigger all Creepers in play that have a special ability when Goal changes */
   public static function onGoalChange()
   {
-    if (!Utils::useCreeperPackExpansion()) {
-      return;
-    }
-
     foreach (self::$classes as $definitionId => $class) {
       $card = self::getCard(0, $definitionId);
 
@@ -60,10 +56,6 @@ class CreeperCardFactory extends CardFactory
   /* trigger all Creepers in play that have a special ability on start of turn */
   public static function onTurnStart()
   {
-    if (!Utils::useCreeperPackExpansion()) {
-      return;
-    }
-
     foreach (self::$classes as $definitionId => $class) {
       $card = self::getCard(0, $definitionId);
 
@@ -79,10 +71,6 @@ class CreeperCardFactory extends CardFactory
   /* trigger all Creepers in play that have a special ability to be checked after every change */
   public static function onCheckResolveKeepersAndCreepers($lastPlayedCard)
   {
-    if (!Utils::useCreeperPackExpansion()) {
-      return;
-    }
-
     foreach (self::$classes as $definitionId => $class) {
       $card = self::getCard(0, $definitionId);
 

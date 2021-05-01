@@ -17,11 +17,6 @@ class Utils
     throw new \BgaUserException($msg);
   }
 
-  public static function useCreeperPackExpansion()
-  {
-    return true;
-  }
-
   public static function getActiveDoubleAgenda()
   {
     return 0 != self::getGame()->getGameStateValue("activeDoubleAgenda");
@@ -97,10 +92,6 @@ class Utils
 
   public static function getPlayerCreeperCount($player_id)
   {
-    if (!self::useCreeperPackExpansion()) {
-      return 0;
-    }
-
     $cards = Utils::getGame()->cards;
     $nbCreepers = count(
       $cards->getCardsOfTypeInLocation("creeper", null, "keepers", $player_id)

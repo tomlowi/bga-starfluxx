@@ -10,6 +10,7 @@ class KeeperHolographicProjection extends KeeperCard
     parent::__construct($cardId, $uniqueId);
 
     $this->name = clienttranslate("Holographic Projection");
+    $this->set = "vertical";
 
     $this->description = clienttranslate("You can win with a Keeper another player has, as it were in front of you, not them, but only during your turn.");
   }
