@@ -96,6 +96,7 @@ class starfluxx extends Table
       "creeperTurnStartMoneyKept" => 58,
       "playerTurnLoggedPartyBonus" => 59,
       "playerTurnLoggedRichBonus" => 60,
+      "playerTurnUsedCaptain" => 61,
       "rpsChallengerId" => 90,
       "rpsDefenderId" => 91,
       "rpsChallengerChoice" => 92,
@@ -226,6 +227,7 @@ class starfluxx extends Table
     self::setGameStateInitialValue("creeperTurnStartMoneyKept", 0);
     self::setGameStateInitialValue("playerTurnLoggedPartyBonus", 0);
     self::setGameStateInitialValue("playerTurnLoggedRichBonus", 0);
+    self::setGameStateInitialValue("playerTurnUsedCaptain", 0);
 
     self::setGameStateInitialValue("tmpHand1ToPlay", 0);
     self::setGameStateInitialValue("tmpHand1Card", -1);
@@ -914,6 +916,7 @@ class starfluxx extends Table
     self::setGameStateValue("playerTurnUsedRecycling", 0);
     self::setGameStateValue("playerTurnLoggedPartyBonus", 0);
     self::setGameStateValue("playerTurnLoggedRichBonus", 0);
+    self::setGameStateValue("playerTurnUsedCaptain", 0);
     // also reset all turn-start creeper execution
     self::setGameStateValue("creeperTurnStartDeathExecuted", 0);
     self::setGameStateValue("creeperTurnStartMoneyKept", 0);

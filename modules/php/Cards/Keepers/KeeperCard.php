@@ -17,4 +17,32 @@ class KeeperCard extends Card
   {
     return "basic";
   }
+
+  // Indicates this Keeper has an effect can be used during client-side player turns
+  public function canBeUsedInPlayerTurn($player_id)
+  {
+    return false;
+  }
+
+  // Indicates which interaction is expected by this Free Rule
+  // null indicated that this can be handled without client-side interaction
+  public $interactionNeeded = null;
+
+  // Implements the immediate effect when this rule is used in player turn
+  public function freePlayInPlayerTurn($player_id)
+  {
+    if ($this->interactionNeeded != null) {
+      Utils::getGame()->setGameStateValue(
+        "freeRuleToResolve",
+        $this->getCardId()
+      );
+      return "resolveFreeRule";
+    }
+    return null;
+  }
+
+  public function resolveArgs()
+  {
+    return [];
+  }
 }

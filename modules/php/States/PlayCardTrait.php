@@ -147,6 +147,19 @@ trait PlayCardTrait
         ];
       }
     }
+    // also check Keepers with special abilities
+    $keepersInPlay = $game->cards->getCardsInLocation("keepers", $player_id);
+    foreach ($keepersInPlay as $card_id => $keeper) {
+      if ($keeper["type_arg"] > 50) continue; // skip creepers
+      $keeperCard = KeeperCardFactory::getCard($keeper["id"], $keeper["type_arg"]);
+
+      if ($keeperCard->canBeUsedInPlayerTurn($player_id)) {
+        $freeRulesAvailable[] = [
+          "card_id" => $card_id,
+          "name" => $keeperCard->getName(),
+        ];
+      }
+    }
 
     return $freeRulesAvailable;
   }
@@ -179,26 +192,38 @@ trait PlayCardTrait
     $player_id = $game->getActivePlayerId();
     $card = $game->cards->getCard($card_id);
 
-    if ($card["location"] != "rules") {
-      Utils::throwInvalidUserAction(
-        starfluxx::totranslate("This is not an active Rule")
-      );
+    $freePlayCard = null;
+    if ($card["type"] == "rule") {
+      if ($card["location"] != "rules") {
+        Utils::throwInvalidUserAction(
+          starfluxx::totranslate("This is not an active Rule")
+        );
+      }
+  
+      $freePlayCard = RuleCardFactory::getCard($card_id, $card["type_arg"]);
+    } 
+    else if ($card["type"] == "keeper") {
+      if ($card["location"] != "keepers" || $card["location_arg"] != $player_id) {
+        Utils::throwInvalidUserAction(
+          starfluxx::totranslate("This is not one of your Keepers")
+        );
+      }
+  
+      $freePlayCard = KeeperCardFactory::getCard($card_id, $card["type_arg"]);
     }
-
-    $ruleCard = RuleCardFactory::getCard($card_id, $card["type_arg"]);
 
     $game->notifyAllPlayers(
       "freeRulePlayed",
-      clienttranslate('${player_name} uses free rule <b>${card_name}</b>'),
+      clienttranslate('${player_name} uses free play <b>${card_name}</b>'),
       [
         "i18n" => ["card_name"],
         "player_name" => $game->getActivePlayerName(),
         "player_id" => $player_id,
-        "card_name" => $ruleCard->getName(),
+        "card_name" => $freePlayCard->getName(),
       ]
     );
 
-    $stateTransition = $ruleCard->freePlayInPlayerTurn($player_id);
+    $stateTransition = $freePlayCard->freePlayInPlayerTurn($player_id);
     if ($stateTransition != null) {
       // player must resolve something before continuing to play more cards
       $game->gamestate->nextstate($stateTransition);

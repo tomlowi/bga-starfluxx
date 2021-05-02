@@ -270,10 +270,10 @@ $machinestates = [
   STATE_RESOLVE_FREE_RULE => [
     "name" => "freeRuleResolve",
     "description" => clienttranslate(
-      '${actplayer} must resolve their free rule: ${action_name}'
+      '${actplayer} must resolve their free play: ${action_name}'
     ),
     "descriptionmyturn" => clienttranslate(
-      '${you} must resolve your free rule: ${action_name}'
+      '${you} must resolve your free play: ${action_name}'
     ),
     "type" => "activeplayer",
     "args" => "arg_resolveFreeRule",

@@ -48,6 +48,24 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
           "onResolveFreeRuleHandCardsSelection"
         );
       },
+      keeperSelectionOther: function (that, action_name, args) {
+        for (var player_id in that.keepersStock) {
+          if (player_id != that.player_id) {
+            var stock = that.keepersStock[player_id];
+            stock.setSelectionMode(1);
+
+            if (that._listeners["keepers_" + player_id] !== undefined) {
+              dojo.disconnect(that._listeners["keepers_" + player_id]);
+            }
+            that._listeners["keepers_" + player_id] = dojo.connect(
+              stock,
+              "onChangeSelection",
+              that,
+              "onResolveFreeRuleCardSelection"
+            );
+          }
+        }
+      },
     },
 
     onResolveFreeRuleHandCardsSelection: function (ev) {

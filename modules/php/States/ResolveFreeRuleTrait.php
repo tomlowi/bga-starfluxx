@@ -3,6 +3,7 @@ namespace StarFluxx\States;
 
 use StarFluxx\Game\Utils;
 use StarFluxx\Cards\Rules\RuleCardFactory;
+use StarFluxx\Cards\Keepers\KeeperCardFactory;
 
 trait ResolveFreeRuleTrait
 {
@@ -19,18 +20,30 @@ trait ResolveFreeRuleTrait
     return $card;
   }
 
+  private function getFreePlayCardDefinition($card) 
+  {
+    $freePlayCard = null;
+    if ($card["type"] == "rule") {
+      $freePlayCard = RuleCardFactory::getCard($card["id"], $card["type_arg"]);
+    }
+    else if ($card["type"] == "keeper") {
+      $freePlayCard = KeeperCardFactory::getCard($card["id"], $card["type_arg"]);
+    }
+    return $freePlayCard;
+  }
+
   public function arg_resolveFreeRule()
   {
     $card = self::getCurrentResolveFreeRuleCard();
-    $freeRuleCard = RuleCardFactory::getCard($card["id"], $card["type_arg"]);
+    $freePlayCard = $this->getFreePlayCardDefinition($card);
 
     return [
       "i18n" => ["action_name"],
-      "action_id" => $freeRuleCard->getCardId(),
-      "action_name" => $freeRuleCard->getName(),
-      "action_type" => $freeRuleCard->interactionNeeded,
-      "action_args" => $freeRuleCard->resolveArgs(),
-      "action_help" => $freeRuleCard->getHelp(),
+      "action_id" => $freePlayCard->getCardId(),
+      "action_name" => $freePlayCard->getName(),
+      "action_type" => $freePlayCard->interactionNeeded,
+      "action_args" => $freePlayCard->resolveArgs(),
+      "action_help" => $freePlayCard->getHelp(),
     ];
   }
 
@@ -39,10 +52,11 @@ trait ResolveFreeRuleTrait
     $player_id = self::getActivePlayerId();
 
     $card = self::getCurrentResolveFreeRuleCard();
-    $freeRuleCard = RuleCardFactory::getCard($card["id"], $card["type_arg"]);
-    $cardName = $freeRuleCard->getName();
+    $freePlayCard = $this->getFreePlayCardDefinition($card);
+    
+    $cardName = $freePlayCard->getName();
 
-    $stateTransition = $freeRuleCard->resolvedBy($player_id, $args);
+    $stateTransition = $freePlayCard->resolvedBy($player_id, $args);
 
     self::setGameStateValue("freeRuleToResolve", -1);
 

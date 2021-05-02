@@ -205,6 +205,13 @@ class Utils
     return 0 == Utils::getGame()->getGameStateValue("playerTurnUsedGoalMill");
   }
 
+  public static function playerHasNotYetUsedCaptain()
+  {
+    // Captain can only be used once by the same player in one turn.
+    return 0 ==
+      Utils::getGame()->getGameStateValue("playerTurnUsedCaptain");
+  }
+
   public static function playerHasNotYetUsedMysteryPlay()
   {
     // Mystery Play can only be used once by the same player in one turn.
