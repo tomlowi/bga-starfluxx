@@ -97,12 +97,6 @@ class starfluxx extends Table
       "playerTurnLoggedPartyBonus" => 59,
       "playerTurnLoggedRichBonus" => 60,
       "playerTurnUsedCaptain" => 61,
-      "rpsChallengerId" => 90,
-      "rpsDefenderId" => 91,
-      "rpsChallengerChoice" => 92,
-      "rpsDefenderChoice" => 93,
-      "rpsChallengerWins" => 94,
-      "rpsDefenderWins" => 95,
       //"optionCreeperPack" => 101,
     ]);
     $this->cards = self::getNew("module.common.deck");
@@ -213,12 +207,6 @@ class starfluxx extends Table
     self::setGameStateInitialValue("playerTurnUsedGoalMill", 0);
     self::setGameStateInitialValue("playerTurnUsedMysteryPlay", 0);
     self::setGameStateInitialValue("playerTurnUsedRecycling", 0);
-    self::setGameStateInitialValue("rpsChallengerId", -1);
-    self::setGameStateInitialValue("rpsDefenderId", -1);
-    self::setGameStateInitialValue("rpsChallengerChoice", -1);
-    self::setGameStateInitialValue("rpsDefenderChoice", -1);
-    self::setGameStateInitialValue("rpsChallengerWins", 0);
-    self::setGameStateInitialValue("rpsDefenderWins", 0);
     self::setGameStateInitialValue("actionToResolve", -1);
     self::setGameStateInitialValue("freeRuleToResolve", -1);
     self::setGameStateInitialValue("creeperToResolveCardId", -1);
@@ -845,7 +833,6 @@ class starfluxx extends Table
   use StarFluxx\States\HandLimitTrait;
   use StarFluxx\States\KeepersLimitTrait;
   use StarFluxx\States\ResolveActionTrait;
-  use StarFluxx\States\RockPaperScissorsTrait;
   use StarFluxx\States\ResolveFreeRuleTrait;
   use StarFluxx\States\ResolveCreeperTrait;
   use StarFluxx\States\TempHandPlayTrait;

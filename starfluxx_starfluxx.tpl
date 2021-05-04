@@ -171,12 +171,6 @@ var jstpl_winDialogTemplate = `
 		</div>
 `;
 
-var jstpl_rockPaperScissors = `
-		<div class="flx-rps-animation flx-rps-animation-\${type} flx-rps-animation-\${choice}">
-      <div class="flx-rps-animation-player"><h3>\${player_name}</h3></div>
-		</div>
-`;
-
 </script>
 
 {OVERALL_GAME_FOOTER}

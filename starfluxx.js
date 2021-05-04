@@ -33,7 +33,6 @@ define([
   g_gamethemeurl + "modules/js/states/actionResolve.js",
   g_gamethemeurl + "modules/js/states/freeRuleResolve.js",
   g_gamethemeurl + "modules/js/states/creeperResolve.js",
-  g_gamethemeurl + "modules/js/states/playRockPaperScissors.js",
   g_gamethemeurl + "modules/js/states/tempHandPlay.js",
 ], function (dojo, declare) {
   return declare(
@@ -48,7 +47,6 @@ define([
       starfluxx.states.actionResolve,
       starfluxx.states.freeRuleResolve,
       starfluxx.states.creeperResolve,
-      starfluxx.states.playRockPaperScissors,
       starfluxx.states.tempHandPlay,
     ],
     {
@@ -399,9 +397,6 @@ define([
             this.onEnteringStateGoalCleaning(args);
             break;
 
-          case "playRockPaperScissors":
-            this.onEnteringStatePlayRockPaperScissors(args);
-
           case "actionResolve":
             this.onEnteringStateActionResolve(args);
             break;
@@ -454,9 +449,6 @@ define([
           case "actionResolve":
             this.onLeavingStateActionResolve();
 
-          case "playRockPaperScissors":
-            this.onLeavingStatePlayRockPaperScissors();
-
           case "freeRuleResolve":
             this.onLeavingStateFreeRuleResolve();
             break;
@@ -499,9 +491,6 @@ define([
               break;
             case "actionResolve":
               this.onUpdateActionButtonsActionResolve(args);
-              break;
-            case "playRockPaperScissors":
-              this.onUpdateActionButtonsPlayRockPaperScissors(args);
               break;
             case "freeRuleResolve":
               this.onUpdateActionButtonsFreeRuleResolve(args);

@@ -157,14 +157,6 @@ class action_starfluxx extends APP_GameAction
     self::ajaxResponse();
   }
 
-  public function selectRockPaperScissors()
-  {
-    self::setAjaxMode();
-    $value = self::getArg("value", AT_alphanum, true);
-    $this->game->action_selectRockPaperScissors($value);
-    self::ajaxResponse();
-  }
-
   public function resolveFreeRuleCardSelection()
   {
     self::setAjaxMode();
