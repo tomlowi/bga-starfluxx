@@ -3,8 +3,6 @@ namespace StarFluxx\States;
 
 use StarFluxx\Game\Utils;
 use StarFluxx\Cards\Rules\RuleInflation;
-use StarFluxx\Cards\Rules\RulePartyBonus;
-use StarFluxx\Cards\Rules\RulePoorBonus;
 
 trait DrawCardsTrait
 {
@@ -14,26 +12,17 @@ trait DrawCardsTrait
     $player_id = $game->getActivePlayerId();
     $cards = $game->cards;
 
-    // Check if this player is empty handed and the "no-hand-bonus" is in play
-    $hasNoHandBonus = Utils::getActiveNoHandBonus();
     $cardsInHand = $cards->countCardInLocation("hand", $player_id);
 
     $addInflation = Utils::getActiveInflation() ? 1 : 0;
-
-    if ($cardsInHand == 0 && $hasNoHandBonus) {
-      $drawNoHandBonus = 3 + $addInflation;
-      $game->performDrawCards($player_id, $drawNoHandBonus, true);
-    }
 
     $drawRule = $game->getGameStateValue("drawRule");
     // Check for other draw bonuses
     if ($addInflation > 0) {
       RuleInflation::notifyActiveFor($player_id);
     }
-    $partyBonus = Utils::calculatePartyBonus($player_id);
-    $poorBonus = Utils::calculatePoorBonus($player_id);
 
-    $cardsToDraw = $drawRule + $addInflation + $partyBonus + $poorBonus;
+    $cardsToDraw = $drawRule + $addInflation;
     // PlayAllBut1: If you started with no cards in your hand and only drew 1, draw an extra card.
     // => don't apply inflation on this
     if ($cardsInHand == 0 && $cardsToDraw == 1) {

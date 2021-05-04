@@ -68,18 +68,12 @@ class starfluxx extends Table
       "lastGoalBeforeDoubleAgenda" => 30,
       "activeDoubleAgenda" => 31,
       "activeInflation" => 32,
-      "activeNoHandBonus" => 33,
-      "activePartyBonus" => 34,
-      "activePoorBonus" => 35,
-      "activeRichBonus" => 36,
       "activeFirstPlayRandom" => 37,
       "activeSilverLining" => 38,
       "activeBakedPotato" => 39,
       "actionToResolve" => 40,
       "anotherTurnMark" => 41,
       "forcedCard" => 42,
-      "playerTurnUsedPartyBonus" => 43,
-      "playerTurnUsedPoorBonus" => 44,
       "freeRuleToResolve" => 45,
       "playerTurnUsedGoalMill" => 46,
       "playerTurnUsedWormhole" => 47,
@@ -94,8 +88,6 @@ class starfluxx extends Table
       "tmpHand3ToPlay" => 56,
       "tmpHand3Card" => 57,
       "creeperTurnStartMoneyKept" => 58,
-      "playerTurnLoggedPartyBonus" => 59,
-      "playerTurnLoggedRichBonus" => 60,
       "playerTurnUsedCaptain" => 61,
       //"optionCreeperPack" => 101,
     ]);
@@ -196,14 +188,8 @@ class starfluxx extends Table
     self::setGameStateInitialValue("lastGoalBeforeDoubleAgenda", -1);
     self::setGameStateInitialValue("activeDoubleAgenda", 0);
     self::setGameStateInitialValue("activeInflation", 0);
-    self::setGameStateInitialValue("activeNoHandBonus", 0);
-    self::setGameStateInitialValue("activePartyBonus", 0);
-    self::setGameStateInitialValue("activePoorBonus", 0);
-    self::setGameStateInitialValue("activeRichBonus", 0);
     self::setGameStateInitialValue("activeFirstPlayRandom", 0);
     self::setGameStateInitialValue("forcedCard", -1);
-    self::setGameStateInitialValue("playerTurnUsedPartyBonus", 0);
-    self::setGameStateInitialValue("playerTurnUsedPoorBonus", 0);
     self::setGameStateInitialValue("playerTurnUsedGoalMill", 0);
     self::setGameStateInitialValue("playerTurnUsedWormhole", 0);
     self::setGameStateInitialValue("playerTurnUsedRecycling", 0);
@@ -213,8 +199,6 @@ class starfluxx extends Table
     self::setGameStateInitialValue("creeperToResolvePlayerId", -1);
     self::setGameStateInitialValue("creeperTurnStartDeathExecuted", 0);
     self::setGameStateInitialValue("creeperTurnStartMoneyKept", 0);
-    self::setGameStateInitialValue("playerTurnLoggedPartyBonus", 0);
-    self::setGameStateInitialValue("playerTurnLoggedRichBonus", 0);
     self::setGameStateInitialValue("playerTurnUsedCaptain", 0);
 
     self::setGameStateInitialValue("tmpHand1ToPlay", 0);
@@ -636,8 +620,7 @@ class starfluxx extends Table
 
   public function checkBonusConditions($player_id)
   {
-    Utils::checkForPartyBonus($player_id);
-    Utils::checkForPoorBonus($player_id);
+    // check for any draw bonuses again after cards played
   }
 
   public function checkCreeperResolveNeeded($lastPlayedCard)
@@ -896,13 +879,9 @@ class starfluxx extends Table
 
     // reset everything for turn of next player
     self::setGameStateValue("playedCards", 0);
-    self::setGameStateValue("playerTurnUsedPartyBonus", 0);
-    self::setGameStateValue("playerTurnUsedPoorBonus", 0);
     self::setGameStateValue("playerTurnUsedGoalMill", 0);
     self::setGameStateValue("playerTurnUsedWormhole", 0);
     self::setGameStateValue("playerTurnUsedRecycling", 0);
-    self::setGameStateValue("playerTurnLoggedPartyBonus", 0);
-    self::setGameStateValue("playerTurnLoggedRichBonus", 0);
     self::setGameStateValue("playerTurnUsedCaptain", 0);
     // also reset all turn-start creeper execution
     self::setGameStateValue("creeperTurnStartDeathExecuted", 0);

@@ -1,8 +1,5 @@
 <?php
 namespace StarFluxx\Game;
-use StarFluxx\Cards\Rules\RulePartyBonus;
-use StarFluxx\Cards\Rules\RulePoorBonus;
-use StarFluxx\Cards\Rules\RuleRichBonus;
 use starfluxx;
 
 class Utils
@@ -25,26 +22,6 @@ class Utils
   public static function getActiveInflation()
   {
     return 0 != self::getGame()->getGameStateValue("activeInflation");
-  }
-
-  public static function getActiveNoHandBonus()
-  {
-    return 0 != self::getGame()->getGameStateValue("activeNoHandBonus");
-  }
-
-  public static function getActivePartyBonus()
-  {
-    return 0 != self::getGame()->getGameStateValue("activePartyBonus");
-  }
-
-  public static function getActivePoorBonus()
-  {
-    return 0 != self::getGame()->getGameStateValue("activePoorBonus");
-  }
-
-  public static function getActiveRichBonus()
-  {
-    return 0 != self::getGame()->getGameStateValue("activeRichBonus");
   }
 
   public static function getActiveFirstPlayRandom()
@@ -131,72 +108,6 @@ class Utils
       }
     }
     return true;
-  }
-
-  public static function playerHasNotYetPartiedInTurn()
-  {
-    // Party bonus can only be scored once by the same player in one turn.
-    return 0 == Utils::getGame()->getGameStateValue("playerTurnUsedPartyBonus");
-  }
-
-  public static function playerHasNotYetBeenPoorInTurn()
-  {
-    // Poor bonus can only be scored once by the same player in one turn.
-    return 0 == Utils::getGame()->getGameStateValue("playerTurnUsedPoorBonus");
-  }
-
-  public static function calculatePartyBonus($player_id)
-  {
-    $partyBonus = 0;
-
-    if (
-      Utils::getActivePartyBonus() &&
-      Utils::playerHasNotYetPartiedInTurn() &&
-      Utils::isPartyInPlay()
-    ) {
-      $addInflation = Utils::getActiveInflation() ? 1 : 0;
-
-      $partyBonus = 1 + $addInflation;
-      RulePartyBonus::notifyActiveFor($player_id, true);
-      Utils::getGame()->setGameStateValue("playerTurnUsedPartyBonus", 1);
-    }
-
-    return $partyBonus;
-  }
-
-  public static function checkForPartyBonus($player_id)
-  {
-    $partyBonus = Utils::calculatePartyBonus($player_id);
-    if ($partyBonus > 0) {
-      Utils::getGame()->performDrawCards($player_id, $partyBonus);
-    }
-  }
-
-  public static function calculatePoorBonus($player_id)
-  {
-    $poorBonus = 0;
-
-    if (
-      Utils::getActivePoorBonus() &&
-      Utils::playerHasNotYetBeenPoorInTurn() &&
-      Utils::hasLeastKeepers($player_id)
-    ) {
-      $addInflation = Utils::getActiveInflation() ? 1 : 0;
-
-      $poorBonus = 1 + $addInflation;
-      RulePoorBonus::notifyActiveFor($player_id);
-      Utils::getGame()->setGameStateValue("playerTurnUsedPoorBonus", 1);
-    }
-
-    return $poorBonus;
-  }
-
-  public static function checkForPoorBonus($player_id)
-  {
-    $poorBonus = Utils::calculatePoorBonus($player_id);
-    if ($poorBonus > 0) {
-      Utils::getGame()->performDrawCards($player_id, $poorBonus);
-    }
   }
 
   public static function playerHasNotYetUsedGoalMill()
@@ -300,34 +211,20 @@ class Utils
 
     $addInflation = Utils::getActiveInflation() ? 1 : 0;
     // check bonus rules
-    $partyBonus =
-      Utils::getActivePartyBonus() && Utils::isPartyInPlay()
-        ? 1 + $addInflation
-        : 0;
-    if ($partyBonus > 0 && $withNotifications) {
-      RulePartyBonus::notifyActiveFor($player_id, false);
-    }
-    $richBonus =
-      Utils::getActiveRichBonus() && Utils::hasMostKeepers($player_id)
-        ? 1 + $addInflation
-        : 0;
-    if ($richBonus > 0 && $withNotifications) {
-      RuleRichBonus::notifyActiveFor($player_id);
-    }
 
     // Play All but 1 is also affected by Inflation and Bonus rules
     if ($playRule < 0) {
       $playRule -= $addInflation;
       // if "Play All but ..." + bonus plays becomes >= 0, it actually becomes "Play All"
-      if ($playRule + $partyBonus + $richBonus >= 0) {
+      if ($playRule >= 0) {
         return PLAY_COUNT_ALL;
       }
       // else it stays "Play All but ..."
-      return $playRule + $partyBonus + $richBonus;
+      return $playRule;
     }
     // Normal Play Rule
     else {
-      $playRule += $addInflation + $partyBonus + $richBonus;
+      $playRule += $addInflation;
     }
 
     return $playRule;
