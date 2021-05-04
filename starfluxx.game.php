@@ -82,7 +82,7 @@ class starfluxx extends Table
       "playerTurnUsedPoorBonus" => 44,
       "freeRuleToResolve" => 45,
       "playerTurnUsedGoalMill" => 46,
-      "playerTurnUsedMysteryPlay" => 47,
+      "playerTurnUsedWormhole" => 47,
       "playerTurnUsedRecycling" => 48,
       "creeperToResolveCardId" => 49,
       "creeperToResolvePlayerId" => 50,
@@ -205,7 +205,7 @@ class starfluxx extends Table
     self::setGameStateInitialValue("playerTurnUsedPartyBonus", 0);
     self::setGameStateInitialValue("playerTurnUsedPoorBonus", 0);
     self::setGameStateInitialValue("playerTurnUsedGoalMill", 0);
-    self::setGameStateInitialValue("playerTurnUsedMysteryPlay", 0);
+    self::setGameStateInitialValue("playerTurnUsedWormhole", 0);
     self::setGameStateInitialValue("playerTurnUsedRecycling", 0);
     self::setGameStateInitialValue("actionToResolve", -1);
     self::setGameStateInitialValue("freeRuleToResolve", -1);
@@ -899,7 +899,7 @@ class starfluxx extends Table
     self::setGameStateValue("playerTurnUsedPartyBonus", 0);
     self::setGameStateValue("playerTurnUsedPoorBonus", 0);
     self::setGameStateValue("playerTurnUsedGoalMill", 0);
-    self::setGameStateValue("playerTurnUsedMysteryPlay", 0);
+    self::setGameStateValue("playerTurnUsedWormhole", 0);
     self::setGameStateValue("playerTurnUsedRecycling", 0);
     self::setGameStateValue("playerTurnLoggedPartyBonus", 0);
     self::setGameStateValue("playerTurnLoggedRichBonus", 0);

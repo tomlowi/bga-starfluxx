@@ -18,7 +18,7 @@ class RuleWormhole extends RuleCard
 
   public function canBeUsedInPlayerTurn($player_id)
   {
-    return Utils::playerHasNotYetUsedMysteryPlay();
+    return Utils::playerHasNotYetUsedWormhole();
   }
 
   public function immediateEffectOnPlay($player)
@@ -34,7 +34,7 @@ class RuleWormhole extends RuleCard
   public function freePlayInPlayerTurn($player_id)
   {
     $game = Utils::getGame();
-    $game->setGameStateValue("playerTurnUsedMysteryPlay", 1);
+    $game->setGameStateValue("playerTurnUsedWormhole", 1);
 
     // draw top card (this is moved to hand automatically)
     $cardsDrawn = $game->performDrawCards($player_id, 1, true);

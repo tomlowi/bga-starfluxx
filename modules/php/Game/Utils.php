@@ -212,11 +212,11 @@ class Utils
       Utils::getGame()->getGameStateValue("playerTurnUsedCaptain");
   }
 
-  public static function playerHasNotYetUsedMysteryPlay()
+  public static function playerHasNotYetUsedWormhole()
   {
-    // Mystery Play can only be used once by the same player in one turn.
+    // Wormhole can only be used once by the same player in one turn.
     return 0 ==
-      Utils::getGame()->getGameStateValue("playerTurnUsedMysteryPlay");
+      Utils::getGame()->getGameStateValue("playerTurnUsedWormhole");
   }
 
   public static function playerHasNotYetUsedRecycling()
