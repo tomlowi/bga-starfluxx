@@ -35,16 +35,6 @@ trait PlayCardTrait
       return;
     }
 
-    // check if the first play random rule is active
-    // if so, the first card is already played automatically
-    if ($this->checkFirstPlayRandom()) {
-      return;
-    }
-    // if first card random was played, we should never transition endOfTurn here!
-    // make sure anything that needs to be handled for this card is done via
-    // the normal state transitions (by default just come back here to check if more plays
-    // are still allowed)
-
     // If any "free action" rule can be played, we cannot end turn automatically
     // Player must finish its turn by explicitly deciding not to use any of the free rules
     $freeRulesAvailable = $this->getFreeRulesAvailable($player_id);
@@ -519,59 +509,5 @@ trait PlayCardTrait
 
     return $stateTransition;
   }
-
-  private function checkFirstPlayRandom()
-  {
-    $game = Utils::getGame();
-    $firstPlayRandom = 0 != $game->getGameStateValue("activeFirstPlayRandom");
-    $alreadyPlayed = $game->getGameStateValue("playedCards");
-
-    // Ignore this rule if not active or if not beginning of the turn
-    if (!$firstPlayRandom || $alreadyPlayed > 0) {
-      return false;
-    }
-    // Ignore this rule if current Play Rule only allows 1 play
-    // correction: also count Inflation or Bonus plays for player
-    // if they can play more than 1 card, the first card should be random
-
-    $player_id = $game->getActivePlayerId();
-
-    $leftToPlay = Utils::calculateCardsLeftToPlayFor($player_id);
-    if ($leftToPlay <= 1) {
-      return false;
-    }
-
-    // select random card from player hand (always something there, just drew cards)    
-    $cardsInHand = $game->cards->getCardsInLocation("hand", $player_id);
-
-    $i = bga_rand(0, count($cardsInHand) - 1);
-    $card = array_values($cardsInHand)[$i];
-
-    $game->notifyAllPlayers(
-      "firstPlayRandom",
-      clienttranslate('${player_name} must play first card random'),
-      [
-        "player_name" => $game->getActivePlayerName(),
-        "player_id" => $player_id,
-      ]
-    );
-
-    $forcedCard = $game->getCardDefinitionFor($card);
-    $game->notifyPlayer($player_id, "forcedCardNotification", "", [
-      "card_trigger" => clienttranslate("First Card Random"),
-      "card_forced" => $forcedCard->getName(),
-    ]);
-
-    // note: be aware we can't have "checkAction" running here!
-    // the *active* player has already changed, but the *current* player
-    // is still the previous player that triggered its turn end
-    // so "checkAction" would thrown "It is not your turn" to the current player
-    // when trying to play the card for the active player
-
-    // first card is a forced play, but in this case
-    // it does count for the number of cards played
-    $this->_action_playCard($card["id"], true);
-
-    return true;
-  }
+  
 }

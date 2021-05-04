@@ -50,15 +50,6 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
               that,
               "onResolveCreeperCardSelection"
             );
-
-            if (that.keepersStock[player_id].count() <= 1) {
-              // Only Death > player can choose to do nothing
-              that.addActionButton(
-                "button_confirm",
-                _("Done"),
-                "onResolveCreeperCardSelectionNothing"
-              );
-            }
           }
         }
       },

@@ -13,4 +13,6 @@ class KeeperUnseenForce extends KeeperCard
 
     $this->description = clienttranslate("Once during your turn, you can steal a card chosen randomly from another player's hand and add that card to your own hand.");
   }
+
+  // @TODO: special ability Free Action once per turn
 }

@@ -24,30 +24,6 @@ class Utils
     return 0 != self::getGame()->getGameStateValue("activeInflation");
   }
 
-  public static function getActiveFirstPlayRandom()
-  {
-    return 0 != self::getGame()->getGameStateValue("activeFirstPlayRandom");
-  }
-
-  public static function getActiveSilverLining()
-  {
-    return 0 != self::getGame()->getGameStateValue("activeSilverLining");
-  }
-
-  public static function getActiveBakedPotato()
-  {
-    return 0 != self::getGame()->getGameStateValue("activeBakedPotato");
-  }
-
-  public static function isPartyInPlay()
-  {
-    $party_keeper_card_id = 16;
-    $party_keeper_card = array_values(
-      self::getGame()->cards->getCardsOfType("keeper", $party_keeper_card_id)
-    )[0];
-    return $party_keeper_card["location"] == "keepers";
-  }
-
   private static function getAllPlayersKeeperCount()
   {
     // We cannot just use "countCardsByLocationArgs" here because it doesn't return
@@ -110,19 +86,6 @@ class Utils
     return true;
   }
 
-  public static function playerHasNotYetUsedGoalMill()
-  {
-    // Goal Mill can only be used once by the same player in one turn.
-    return 0 == Utils::getGame()->getGameStateValue("playerTurnUsedGoalMill");
-  }
-
-  public static function playerHasNotYetUsedCaptain()
-  {
-    // Captain can only be used once by the same player in one turn.
-    return 0 ==
-      Utils::getGame()->getGameStateValue("playerTurnUsedCaptain");
-  }
-
   public static function playerHasNotYetUsedWormhole()
   {
     // Wormhole can only be used once by the same player in one turn.
@@ -130,10 +93,11 @@ class Utils
       Utils::getGame()->getGameStateValue("playerTurnUsedWormhole");
   }
 
-  public static function playerHasNotYetUsedRecycling()
+  public static function playerHasNotYetUsedCaptain()
   {
-    // Recycling can only be used once by the same player in one turn.
-    return 0 == Utils::getGame()->getGameStateValue("playerTurnUsedRecycling");
+    // Captain can only be used once by the same player in one turn.
+    return 0 ==
+      Utils::getGame()->getGameStateValue("playerTurnUsedCaptain");
   }
 
   public static function getActiveTempHand()

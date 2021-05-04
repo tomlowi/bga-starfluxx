@@ -18,4 +18,6 @@ class KeeperTeleporter extends KeeperCard
   {
     return "equipment";
   }
+
+  // @TODO: special ability Free Action once per turn
 }

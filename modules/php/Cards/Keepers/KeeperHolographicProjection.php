@@ -19,4 +19,6 @@ class KeeperHolographicProjection extends KeeperCard
   {
     return "equipment";
   }
+
+  // @TODO: special ability for goal victory check
 }

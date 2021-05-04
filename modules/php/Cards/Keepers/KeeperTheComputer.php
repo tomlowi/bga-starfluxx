@@ -18,4 +18,6 @@ class KeeperTheComputer extends KeeperCard
   {
     return "equipment";
   }
+
+  // @TODO: special ability bonus draw and play, and limits
 }

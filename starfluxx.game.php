@@ -68,26 +68,19 @@ class starfluxx extends Table
       "lastGoalBeforeDoubleAgenda" => 30,
       "activeDoubleAgenda" => 31,
       "activeInflation" => 32,
-      "activeFirstPlayRandom" => 37,
-      "activeSilverLining" => 38,
-      "activeBakedPotato" => 39,
       "actionToResolve" => 40,
       "anotherTurnMark" => 41,
       "forcedCard" => 42,
-      "freeRuleToResolve" => 45,
-      "playerTurnUsedGoalMill" => 46,
-      "playerTurnUsedWormhole" => 47,
-      "playerTurnUsedRecycling" => 48,
-      "creeperToResolveCardId" => 49,
-      "creeperToResolvePlayerId" => 50,
-      "creeperTurnStartDeathExecuted" => 51,
-      "tmpHand1ToPlay" => 52,
-      "tmpHand1Card" => 53,
-      "tmpHand2ToPlay" => 54,
-      "tmpHand2Card" => 55,
-      "tmpHand3ToPlay" => 56,
-      "tmpHand3Card" => 57,
-      "creeperTurnStartMoneyKept" => 58,
+      "freeRuleToResolve" => 43,
+      "creeperToResolveCardId" => 44,
+      "creeperToResolvePlayerId" => 45,
+      "tmpHand1ToPlay" => 50,
+      "tmpHand1Card" => 51,
+      "tmpHand2ToPlay" => 52,
+      "tmpHand2Card" => 53,
+      "tmpHand3ToPlay" => 54,
+      "tmpHand3Card" => 55,
+      "playerTurnUsedWormhole" => 60,
       "playerTurnUsedCaptain" => 61,
       //"optionCreeperPack" => 101,
     ]);
@@ -188,17 +181,13 @@ class starfluxx extends Table
     self::setGameStateInitialValue("lastGoalBeforeDoubleAgenda", -1);
     self::setGameStateInitialValue("activeDoubleAgenda", 0);
     self::setGameStateInitialValue("activeInflation", 0);
-    self::setGameStateInitialValue("activeFirstPlayRandom", 0);
     self::setGameStateInitialValue("forcedCard", -1);
-    self::setGameStateInitialValue("playerTurnUsedGoalMill", 0);
-    self::setGameStateInitialValue("playerTurnUsedWormhole", 0);
-    self::setGameStateInitialValue("playerTurnUsedRecycling", 0);
     self::setGameStateInitialValue("actionToResolve", -1);
     self::setGameStateInitialValue("freeRuleToResolve", -1);
     self::setGameStateInitialValue("creeperToResolveCardId", -1);
     self::setGameStateInitialValue("creeperToResolvePlayerId", -1);
-    self::setGameStateInitialValue("creeperTurnStartDeathExecuted", 0);
-    self::setGameStateInitialValue("creeperTurnStartMoneyKept", 0);
+
+    self::setGameStateInitialValue("playerTurnUsedWormhole", 0);
     self::setGameStateInitialValue("playerTurnUsedCaptain", 0);
 
     self::setGameStateInitialValue("tmpHand1ToPlay", 0);
@@ -710,29 +699,7 @@ class starfluxx extends Table
         // sorry, but you can't win yet
         $goalReachedByPlayerId = null;
       }
-      if (
-        $goalReachedByPlayerId != null &&
-        $goalCard->isWinPreventedByBakedPotato(
-          $goalReachedByPlayerId,
-          $goalCard
-        )
-      ) {
-        // notify that player could have won but also needs the Radioactive Potato
-        $players = self::loadPlayersBasicInfos();
-        $unlucky_player_name = $players[$goalReachedByPlayerId]["player_name"];
-        self::notifyAllPlayers(
-          "winPreventedByBakedPotato",
-          clienttranslate(
-            'Baked Potato prevents ${player_name2} from winning with <b>${goal_name}</b>'
-          ),
-          [
-            "goal_name" => $goalCard->getName(),
-            "player_name2" => $unlucky_player_name,
-          ]
-        );
-        // sorry, but you can't win yet
-        $goalReachedByPlayerId = null;
-      }
+
       if ($goalReachedByPlayerId != null) {
         // some player reached this goal
         if ($winnerId != null && $goalReachedByPlayerId != $winnerId) {
@@ -879,13 +846,9 @@ class starfluxx extends Table
 
     // reset everything for turn of next player
     self::setGameStateValue("playedCards", 0);
-    self::setGameStateValue("playerTurnUsedGoalMill", 0);
     self::setGameStateValue("playerTurnUsedWormhole", 0);
-    self::setGameStateValue("playerTurnUsedRecycling", 0);
     self::setGameStateValue("playerTurnUsedCaptain", 0);
     // also reset all turn-start creeper execution
-    self::setGameStateValue("creeperTurnStartDeathExecuted", 0);
-    self::setGameStateValue("creeperTurnStartMoneyKept", 0);
 
     self::giveExtraTime($player_id);
     $this->gamestate->nextState("");

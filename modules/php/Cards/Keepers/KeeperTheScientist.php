@@ -19,4 +19,6 @@ class KeeperTheScientist extends KeeperCard
   {
     return "brains";
   }
+
+  // @TODO: special ability Free Action once per turn
 }

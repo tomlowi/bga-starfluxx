@@ -37,13 +37,14 @@ class CreeperBrainParasites extends CreeperCard
 
   public function onCheckResolveKeepersAndCreepers($lastPlayedCard)
   {
+    // @TODO: when placed or any other time as soon as owner also has at least 1 Keeper with brains,
+    // let player select the Keeper to attach this to => visualize and always discard together
     return null;
   } 
 
   public function resolvedBy($player_id, $args)
   {
     $game = Utils::getGame();
-    // @TODO: attach to keeper
     return null;
   }
 }

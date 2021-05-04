@@ -22,11 +22,6 @@ class GoalCard extends Card
 
   public function isWinPreventedByCreepers($player_id, $goalCard)
   {
-    // if Silver Lining Rule is active, creepers do not prevent winning
-    if (Utils::getActiveSilverLining()) {
-      return false;
-    }
-
     $game = Utils::getGame();
     // check all creepers in play for this player,
     // probably they prevent winning (except for some specific goals)
@@ -47,30 +42,4 @@ class GoalCard extends Card
     return false;
   }
 
-  public function isWinPreventedByBakedPotato($player_id, $goalCard)
-  {
-    // check Baked Potato active
-    if (!Utils::getActiveBakedPotato()) {
-      return false;
-    }
-
-    // check Radioactive Potato in play somewhere else
-    $game = Utils::getGame();
-    // Baked Potato rule is active: if the Radioactive Potato is in play,
-    // the player that satisfies the goal must also have the Potato
-    $potato_creeper = 54;
-    $potato_creeper_cards = $game->cards->getCardsOfTypeInLocation(
-      "creeper",
-      $potato_creeper,
-      "keepers"
-    );
-
-    if (count($potato_creeper_cards) > 0) {
-      $potato_player_id = reset($potato_creeper_cards)["location_arg"];
-      return $potato_player_id != $player_id;
-    }
-    // else: the Potato is not in play, so it is not needed to win (see the FAQ)
-
-    return false;
-  }
 }

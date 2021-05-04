@@ -19,4 +19,6 @@ class KeeperExpendableCrewman extends KeeperCard
   {
     return "brains";
   }
+
+  // @TODO: special ability when player has this and anyone tries to steal/discard another keeper by any means
 }

@@ -18,4 +18,6 @@ class KeeperCuteFuzzyAlienCreature extends KeeperCard
   {
     return "brains";
   }
+
+  // @TODO: special ability when turn ends
 }
