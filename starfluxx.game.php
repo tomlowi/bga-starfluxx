@@ -74,6 +74,9 @@ class starfluxx extends Table
       "freeRuleToResolve" => 43,
       "creeperToResolveCardId" => 44,
       "creeperToResolvePlayerId" => 45,
+      "creeperBrainParasitesAttachedTo" => 46,
+      "creeperEvilAttachedTo" => 47,
+      "creeperMalfunctionAttachedTo" => 48,
       "tmpHand1ToPlay" => 50,
       "tmpHand1Card" => 51,
       "tmpHand2ToPlay" => 52,
@@ -187,6 +190,10 @@ class starfluxx extends Table
     self::setGameStateInitialValue("creeperToResolveCardId", -1);
     self::setGameStateInitialValue("creeperToResolvePlayerId", -1);
 
+    self::setGameStateInitialValue("creeperBrainParasitesAttachedTo", -1);
+    self::setGameStateInitialValue("creeperEvilAttachedTo", -1);
+    self::setGameStateInitialValue("creeperMalfunctionAttachedTo", -1);
+
     self::setGameStateInitialValue("playerTurnUsedWormhole", 0);
     self::setGameStateInitialValue("playerTurnUsedCaptain", 0);
 
@@ -281,6 +288,11 @@ class starfluxx extends Table
       "discard" => $this->cards->getCardsInLocation("discard"),
       "deckCount" => $this->cards->countCardInLocation("deck"),
       "discardCount" => $this->cards->countCardInLocation("discard"),
+      "creepersAttached" => [
+        51 => $this->getGameStateValue("creeperBrainParasitesAttachedTo"),
+        52 => $this->getGameStateValue("creeperEvilAttachedTo"),
+        53 => $this->getGameStateValue("creeperMalfunctionAttachedTo"),
+      ],
     ];
 
     foreach ($players as $player_id => $player) {

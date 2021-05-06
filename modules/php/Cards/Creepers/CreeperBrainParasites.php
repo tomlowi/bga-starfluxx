@@ -37,14 +37,75 @@ class CreeperBrainParasites extends CreeperCard
 
   public function onCheckResolveKeepersAndCreepers($lastPlayedCard)
   {
-    // @TODO: when placed or any other time as soon as owner also has at least 1 Keeper with brains,
+    $game = Utils::getGame();
+
+    $attachedTo = $game->getGameStateValue("creeperBrainParasitesAttachedTo");
+    if ($attachedTo > -1) {
+      return; // already attached to a Keeper, nothing to do
+    }
+
+    // when placed or any other time as soon as owner also has at least 1 Keeper with brains,
     // let player select the Keeper to attach this to => visualize and always discard together
-    return null;
-  } 
+    $creeper_player = $this->findPlayerWithThisCreeper();
+    if ($creeper_player == null) {
+      return null;
+    }
+    $creeper_player_id = $creeper_player["player_id"];
+    $keepersWithBrains = $this->findKeepersOfType($creeper_player_id, "brains");
+    if (empty($keepersWithBrains)) {
+      return null;
+    }
+
+    $brainparasites_card = $creeper_player["creeper_card"];
+    $game->setGameStateValue("creeperToResolvePlayerId", $creeper_player_id);
+    $game->setGameStateValue("creeperToResolveCardId", $brainparasites_card["id"]);
+    return parent::onCheckResolveKeepersAndCreepers($brainparasites_card);
+  }
 
   public function resolvedBy($player_id, $args)
   {
     $game = Utils::getGame();
-    return null;
+    
+    $card = $args["card"];
+    $card_definition = $game->getCardDefinitionFor($card);
+
+    $card_type = $card["type"];
+    $card_location = $card["location"];
+    $origin_player_id = $card["location_arg"];
+    
+    // Brain Parasites can only be attached to a Keeper with Brains in play for this player
+    if (
+      ($card_type != "keeper") ||
+      $card_location != "keepers" ||
+      $origin_player_id != $player_id ||
+      $card_definition->getKeeperType() != "brains"
+    ) {
+      Utils::throwInvalidUserAction(
+        starfluxx::totranslate(
+          "You must select a keeper with brains you have in play"
+        )
+      );
+    }
+
+    $game->setGameStateValue("creeperBrainParasitesAttachedTo", $card["id"]);
+
+    $players = $game->loadPlayersBasicInfos();
+    $player_name = $players[$origin_player_id]["player_name"];
+
+    $game->notifyAllPlayers(
+      "creeperAttached",
+      clienttranslate('${player_name} attaches <b>${creeper_name}</b> to <b>${keeper_name}</b>'),
+      [
+        "i18n" => ["creeper_name", "keeper_name"],
+        "player_id" => $origin_player_id,
+        "player_name" => $player_name,
+        "creeper_name" => $this->getName(),
+        "keeper_name" => $card_definition->getName(),
+        "card" => $card,
+        "creeper" => $this->getUniqueId(),
+        "creeperCount" => Utils::getPlayerCreeperCount($origin_player_id),
+      ]
+    );
   }
+
 }

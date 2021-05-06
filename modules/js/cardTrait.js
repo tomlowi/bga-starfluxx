@@ -20,7 +20,8 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
         ["handCountUpdate", null],
         ["reshuffle", null],
         ["tmpHandDiscarded", 500],
-        ["forcedCardNotification", null]
+        ["forcedCardNotification", null],
+        ["creeperAttached", 500]
       );
     },
 
@@ -428,6 +429,47 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
         _(card_trigger) + ": <b>" + _(card_forced) + "</b>"
       );
       setTimeout(() => this.hideNotificationBubble(), 3000);
+    },
+
+    notif_creeperAttached: function (notif) {
+      var player_id = notif.args.player_id;
+      var keeper_card = notif.args.card;
+      var creeper = notif.args.creeper;
+
+      this.display_creeperAttached(player_id, keeper_card["id"], creeper);
+    },
+
+    display_creeperAttached: function (
+      player_id,
+      keeper_id,
+      creeper_unique_id
+    ) {
+      var keeperCardId = "keepersStock" + player_id + "_item_" + keeper_id;
+      if (dojo.byId(keeperCardId) == null) return;
+
+      var creeperDivId = "flx-board-panel-keeper-" + creeper_unique_id;
+      var creeperItem = dojo.byId(creeperDivId);
+      var creeperAttach = dojo.clone(creeperItem);
+      dojo.attr(creeperAttach, "id", creeperDivId + "-attach");
+      dojo.place(creeperAttach, keeperCardId);
+    },
+
+    notif_creeperDetached: function (notif) {
+      var player_id = notif.args.player_id;
+      var creeper = notif.args.creeper;
+
+      var creeperDivId = "flx-board-panel-keeper-" + creeper + "-attached";
+      var creeperDiv = dojo.byId(creeperDivId);
+      if (creeperDiv != null) {
+        dojo
+          .fadeOut({
+            duration: 1000,
+            node: creeperDiv,
+            onEnd: dojo.destroy,
+            delay: 500,
+          })
+          .play();
+      }
     },
   });
 });

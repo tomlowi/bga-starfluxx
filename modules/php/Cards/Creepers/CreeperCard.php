@@ -48,4 +48,40 @@ class CreeperCard extends Card
   {
     return [];
   }
+
+  protected function findPlayerWithThisCreeper()
+  {
+    $game = Utils::getGame();
+    // check who has this creeper in play now
+    $creeper_card = array_values(
+      $game->cards->getCardsOfType("creeper", $this->uniqueId)
+    )[0];
+    // if nobody, nothing to do
+    if ($creeper_card["location"] != "keepers") {
+      return null;
+    }
+
+    $creeper_player_id = $creeper_card["location_arg"];
+    return [
+      "player_id" => $creeper_player_id,
+      "creeper_card" => $creeper_card,
+    ];
+  }
+
+  protected function findKeepersOfType($player_id, $keeper_type) {
+    $game = Utils::getGame();
+    $keeper_cards = $game->cards->getCardsInLocation("keepers", $player_id);
+
+    $keepersMatching = [];
+    foreach ($keeper_cards as $card_id => $card) {
+      if ($card["type"] == "creeper")
+        continue;
+      $keeper = $game->getCardDefinitionFor($card);
+      if ($keeper_type == null || $keeper->getKeeperType() == $keeper_type) {
+        $keepersMatching[] = $keeper;
+      }      
+    }
+
+    return $keepersMatching;
+  }
 }

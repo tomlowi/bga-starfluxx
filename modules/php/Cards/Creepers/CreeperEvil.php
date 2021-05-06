@@ -2,6 +2,7 @@
 namespace StarFluxx\Cards\Creepers;
 
 use StarFluxx\Game\Utils;
+use starfluxx;
 
 class CreeperEvil extends CreeperCard
 {
@@ -40,14 +41,73 @@ class CreeperEvil extends CreeperCard
 
   public function onCheckResolveKeepersAndCreepers($lastPlayedCard)
   {
-    // @TODO: when placed or any other time as soon as owner also has at least 1 Keeper of any type,
+    $game = Utils::getGame();
+
+    $attachedTo = $game->getGameStateValue("creeperEvilAttachedTo");
+    if ($attachedTo > -1) {
+      return; // already attached to a Keeper, nothing to do
+    }
+
+    // when placed or any other time as soon as owner also has at least 1 Keeper (any),
     // let player select the Keeper to attach this to => visualize and always discard together
-    return null;
-  } 
+    $creeper_player = $this->findPlayerWithThisCreeper();
+    if ($creeper_player == null) {
+      return null;
+    }
+    $creeper_player_id = $creeper_player["player_id"];
+    $keepersAny = $this->findKeepersOfType($creeper_player_id, null);
+    if (empty($keepersAny)) {
+      return null;
+    }
+
+    $evil_card = $creeper_player["creeper_card"];
+    $game->setGameStateValue("creeperToResolvePlayerId", $creeper_player_id);
+    $game->setGameStateValue("creeperToResolveCardId", $evil_card["id"]);
+    return parent::onCheckResolveKeepersAndCreepers($evil_card);
+  }
 
   public function resolvedBy($player_id, $args)
   {
     $game = Utils::getGame();
-    return null;
+    
+    $card = $args["card"];
+    $card_definition = $game->getCardDefinitionFor($card);
+
+    $card_type = $card["type"];
+    $card_location = $card["location"];
+    $origin_player_id = $card["location_arg"];
+    
+    // Evil can only be attached to a Keeper (any) in play for this player
+    if (
+      ($card_type != "keeper") ||
+      $card_location != "keepers" ||
+      $origin_player_id != $player_id
+    ) {
+      Utils::throwInvalidUserAction(
+        starfluxx::totranslate(
+          "You must select a keeper you have in play"
+        )
+      );
+    }
+
+    $game->setGameStateValue("creeperEvilAttachedTo", $card["id"]);
+
+    $players = $game->loadPlayersBasicInfos();
+    $player_name = $players[$origin_player_id]["player_name"];
+
+    $game->notifyAllPlayers(
+      "creeperAttached",
+      clienttranslate('${player_name} attaches <b>${creeper_name}</b> to <b>${keeper_name}</b>'),
+      [
+        "i18n" => ["creeper_name", "keeper_name"],
+        "player_id" => $origin_player_id,
+        "player_name" => $player_name,
+        "creeper_name" => $this->getName(),
+        "keeper_name" => $card_definition->getName(),
+        "card" => $card,
+        "creeper" => $this->getUniqueId(),
+        "creeperCount" => Utils::getPlayerCreeperCount($origin_player_id),
+      ]
+    );
   }
 }

@@ -224,6 +224,17 @@ define([
             player_id,
             this.gamedatas.keepers[player_id]
           );
+
+          // if player has creepers attached to their keepers, also show this
+          for (var creeper in gamedatas.creepersAttached) {
+            var attachedToKeeperId = gamedatas.creepersAttached[creeper];
+            // this will just do nothing if that keeper doesn't belong to this player
+            this.display_creeperAttached(
+              player_id,
+              attachedToKeeperId,
+              creeper
+            );
+          }
         }
 
         // Determine card overlaps per number of cards in hand / stocks
