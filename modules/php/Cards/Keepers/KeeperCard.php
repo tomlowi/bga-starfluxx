@@ -45,4 +45,28 @@ class KeeperCard extends Card
   {
     return [];
   }
+
+  public function onTurnEnd()
+  {
+    return null;
+  }
+
+  protected function findPlayerWithThisKeeper()
+  {
+    $game = Utils::getGame();
+    // check who has this keeper in play now
+    $keeper_card = array_values(
+      $game->cards->getCardsOfType("keeper", $this->uniqueId)
+    )[0];
+    // if nobody, nothing to do
+    if ($keeper_card["location"] != "keepers") {
+      return null;
+    }
+
+    $keeper_player_id = $keeper_card["location_arg"];
+    return [
+      "player_id" => $keeper_player_id,
+      "keeper_card" => $keeper_card,
+    ];
+  }  
 }

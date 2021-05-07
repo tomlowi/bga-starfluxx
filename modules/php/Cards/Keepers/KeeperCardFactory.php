@@ -32,6 +32,19 @@ class KeeperCardFactory extends CardFactory
     return $keeperDefinitions;
   }
 
+  /* trigger all Keepers in play that have a special ability on end of turn */
+  public static function onTurnEnd()
+  {
+    foreach (self::$classes as $definitionId => $class) {
+      $card = self::getCard(0, $definitionId);
+
+      $stateTransition = $card->onTurnEnd();
+      if ($stateTransition != null) {
+        return $stateTransition;
+      }
+    }
+  }
+
   /*
    * cardClasses : for each card Id, the corresponding class name
    * no need for separate Keeper Card files, Keepers have no game logic

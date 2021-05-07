@@ -823,6 +823,10 @@ class starfluxx extends Table
     $anotherTurnMark = self::getGameStateValue("anotherTurnMark");
     $player_id = -1;
     $active_player = self::getActivePlayerId();
+
+    // Some Keeper abilities activate on turn end
+    KeeperCardFactory::onTurnEnd();
+
     if ($anotherTurnMark == 1) {
       // Take Another Turn can only be used once (two turns in a row)
       self::setGameStateValue("anotherTurnMark", 2);

@@ -49,6 +49,10 @@ class CreeperCard extends Card
     return [];
   }
 
+  // @TODO in general: if a Creeper and Keeper are attached,
+  // whenever one of them gets stolen, moved, taken, ... they should always move together (and stay attached)
+  // whenever one gets discarded, both should be discarded together (and get detached in the discard pile)
+
   protected function findPlayerWithThisCreeper()
   {
     $game = Utils::getGame();

@@ -21,7 +21,6 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
     },
 
     addPlayerSelectionButtons(that, args, onResolveMethodName, includeSelf) {
-      // @TODO: could be extended with nice visual way of selecting other players
       for (var player_id in that.players) {
         if (includeSelf || player_id != that.player_id) {
           that.addActionButton(

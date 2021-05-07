@@ -17,8 +17,9 @@ class ActionSpaceJackpot extends ActionCard
   {
     $addInflation = Utils::getActiveInflation() ? 1 : 0;
     $extraCards = 3 + $addInflation;
-    Utils::getGame()->performDrawCards($player_id, $extraCards);
+    Utils::getGame()->performDrawCards($player_id, $extraCards, true);
 
-    // @TODO: basic jackpot to be extended
+    // @TODO: basic jackpot (draw 3) to be extended to (draw 5, then discard 2)
+    // might reuse some part of the EnforceHandLimitSelf, but need to check state transitions then
   }
 }
