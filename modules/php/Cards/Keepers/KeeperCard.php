@@ -15,7 +15,7 @@ class KeeperCard extends Card
 
   public function getKeeperType()
   {
-    return "basic";
+    return "";
   }
 
   // Indicates this Keeper has an effect can be used during client-side player turns

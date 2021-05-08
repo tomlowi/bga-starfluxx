@@ -22,6 +22,7 @@ class KeeperCardFactory extends CardFactory
 
       $keeperDefinitions[$definitionId] = [
         "type" => "keeper",
+        "subtype" => $card->getKeeperType(),
         "set" => $card->getCardSet(),
         "name" => $card->getName(),
         "subtitle" => $card->getSubtitle(),

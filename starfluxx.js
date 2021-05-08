@@ -369,6 +369,7 @@ define([
           description: _("Draw 1 card, then Play 1 card"),
           type: "rule",
           typeName: "",
+          subtypeName: "",
           id: 0,
         };
 
@@ -615,6 +616,7 @@ define([
           descLength: "normal",
           type: cardDefinition.type,
           typeName: _(this.cardTypesDefinitions[cardDefinition.type]),
+          subtypeName: _(cardDefinition.subtype || ""),
           id: card_type_id,
         };
 

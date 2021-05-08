@@ -132,6 +132,7 @@
 			<div class="card-front">
 				<div class="card-name">\${name}</div>
         <div class="card-type">\${typeName}</div>
+        <div class="card-subtype">\${subtypeName}</div>
 				<div class="card-subtitle">\${subtitle}</div>
 				<div class="card-description">\${description}</div>				
 				<div class="card-background"></div>

@@ -141,6 +141,11 @@ body {
   font-style: italic;
 }
 
+.flx-card-tooltip .card-subtype {
+  font-size: 16px;
+  font-style: italic;
+}
+
 .flx-card-tooltip .card-subtitle {
   font-weight: bolder;
   font-size: 16px;
