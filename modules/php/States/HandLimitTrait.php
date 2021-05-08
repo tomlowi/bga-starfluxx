@@ -57,11 +57,12 @@ trait HandLimitTrait
     $gamestate = Utils::getGame()->gamestate;
 
     // Activate all players that need to discard some cards (if any)
+    $stateTransition = "handLimitChecked";
     if (empty($playersInfraction)) {
-      $gamestate->setAllPlayersNonMultiactive("");
+      $gamestate->setAllPlayersNonMultiactive($stateTransition);
     } else {
-      $gamestate->setPlayersMultiactive(array_keys($playersInfraction), "", true);
-    }    
+      $gamestate->setPlayersMultiactive(array_keys($playersInfraction), $stateTransition, true);
+    }  
   }
 
   public function st_enforceHandLimitForSelf()
@@ -171,11 +172,12 @@ trait HandLimitTrait
 
     $state = $game->gamestate->state();
 
+    $stateTransition = "handLimitChecked";
     if ($state["type"] == "multipleactiveplayer") {
       // Multiple active state: this player is done
-      $game->gamestate->setPlayerNonMultiactive($player_id, "");
+      $game->gamestate->setPlayerNonMultiactive($player_id, $stateTransition);
     } else {
-      $game->gamestate->nextstate("handLimitChecked");
+      $game->gamestate->nextstate($stateTransition);
     }
   }
 }

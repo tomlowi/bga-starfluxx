@@ -57,10 +57,11 @@ trait KeepersLimitTrait
     $gamestate = Utils::getGame()->gamestate;
 
     // Activate all players that need to remove keepers (if any)
+    $stateTransition = "keeperLimitChecked";
     if (empty($playersInfraction)) {
-      $gamestate->setAllPlayersNonMultiactive("");
+      $gamestate->setAllPlayersNonMultiactive($stateTransition);
     } else {
-      $gamestate->setPlayersMultiactive(array_keys($playersInfraction), "", true);
+      $gamestate->setPlayersMultiactive(array_keys($playersInfraction), $stateTransition, true);
     }
   }
 
@@ -148,11 +149,12 @@ trait KeepersLimitTrait
 
     $state = $game->gamestate->state();
 
+    $stateTransition = "keeperLimitChecked";
     if ($state["type"] == "multipleactiveplayer") {
       // Multiple active state: this player is done
-      $game->gamestate->setPlayerNonMultiactive($player_id, "");
+      $game->gamestate->setPlayerNonMultiactive($player_id, $stateTransition);
     } else {
-      $game->gamestate->nextstate("keeperLimitChecked");
+      $game->gamestate->nextstate($stateTransition);
     }
   }
 }
