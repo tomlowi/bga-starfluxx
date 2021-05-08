@@ -32,9 +32,15 @@ class KeeperCuteFuzzyAlienCreature extends KeeperCard
       return;
     }
 
+    $card = $CFA_player["keeper_card"];
     // but if it is, it should be moved to the next player
     $directionTable = $game->getNextPlayerTable();
     $destination_player_id = $directionTable[$origin_player_id];
+
+    $game->cards->moveCard($card["id"], "keepers", $destination_player_id);
+
+    $players = $game->loadPlayersBasicInfos();
+    $destination_player_name = $players[$destination_player_id]["player_name"];
 
     $game->notifyAllPlayers(
       "keepersMoved",

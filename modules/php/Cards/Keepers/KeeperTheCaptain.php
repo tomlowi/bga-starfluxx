@@ -45,6 +45,7 @@ class KeeperTheCaptain extends KeeperCard
           && $crew_keeper_card["location_arg"] != $player_id) {
         return true;
       }
+      $i++;
     }    
 
     return false;
