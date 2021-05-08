@@ -17,7 +17,7 @@ class CreeperMalfunction extends CreeperCard
     );
 
     $this->help = clienttranslate(
-      ""
+      "Select any of your equipment Keepers in play to get Malfunction."
     );
   }
 

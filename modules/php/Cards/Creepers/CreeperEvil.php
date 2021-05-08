@@ -17,7 +17,7 @@ class CreeperEvil extends CreeperCard
     );
 
     $this->help = clienttranslate(
-      ""
+      "Select any of your Keepers in play to get Evil."
     );
   }
 

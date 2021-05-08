@@ -85,6 +85,7 @@ class starfluxx extends Table
       "tmpHand3Card" => 55,
       "playerTurnUsedWormhole" => 60,
       "playerTurnUsedCaptain" => 61,
+      "playerTurnUsedScientist" => 62,
       //"optionCreeperPack" => 101,
     ]);
     $this->cards = self::getNew("module.common.deck");
@@ -196,6 +197,7 @@ class starfluxx extends Table
 
     self::setGameStateInitialValue("playerTurnUsedWormhole", 0);
     self::setGameStateInitialValue("playerTurnUsedCaptain", 0);
+    self::setGameStateInitialValue("playerTurnUsedScientist", 0);
 
     self::setGameStateInitialValue("tmpHand1ToPlay", 0);
     self::setGameStateInitialValue("tmpHand1Card", -1);
@@ -864,6 +866,7 @@ class starfluxx extends Table
     self::setGameStateValue("playedCards", 0);
     self::setGameStateValue("playerTurnUsedWormhole", 0);
     self::setGameStateValue("playerTurnUsedCaptain", 0);
+    self::setGameStateValue("playerTurnUsedScientist", 0);
     // also reset all turn-start creeper execution
 
     self::giveExtraTime($player_id);

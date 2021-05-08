@@ -17,7 +17,7 @@ class CreeperBrainParasites extends CreeperCard
     );
 
     $this->help = clienttranslate(
-      ""
+      "Select any of your Keepers with brains in play to get Brain Parasites."
     );
   }
 

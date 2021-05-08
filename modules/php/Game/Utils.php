@@ -100,6 +100,13 @@ class Utils
       Utils::getGame()->getGameStateValue("playerTurnUsedCaptain");
   }
 
+  public static function playerHasNotYetUsedScientist()
+  {
+    // Scientist can only be used once by the same player in one turn.
+    return 0 ==
+      Utils::getGame()->getGameStateValue("playerTurnUsedScientist");
+  }
+
   public static function getActiveTempHand()
   {
     if (Utils::getGame()->getGameStateValue("tmpHand3Card") > 0) {
