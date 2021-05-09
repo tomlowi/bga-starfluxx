@@ -68,14 +68,14 @@ class KeeperTheEngineer extends KeeperCard
     $card_definition = $game->getCardDefinitionFor($card);
     // if Malfunction is attached to something, first detach it
     $malfunctionAttached = $game->getGameStateValue("creeperMalfunctionAttachedTo");
-    if ($malfunctionAttached > 0) {
+    if ($malfunctionAttached > -1) {
       $game->setGameStateValue("creeperMalfunctionAttachedTo", -1);
 
       $game->notifyAllPlayers(
         "creeperDetached",
         clienttranslate('${player_name} uses <b>${this_name}</b> to detach <b>${card_name}</b>'),
         [
-          "i18n" => ["creeper_name", "keeper_name"],
+          "i18n" => ["this_name", "card_name"],
           "player_id" => $player_id,
           "player_name" => $player_name,
           "this_name" => $this->getName(),
