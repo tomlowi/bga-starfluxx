@@ -37,6 +37,18 @@ class CreeperEvil extends CreeperCard
     return parent::preventsWinForGoal($goalCard);
   }
 
+  public function isAttachedTo()
+  {
+    $game = Utils::getGame();
+    return $game->getGameStateValue("creeperEvilAttachedTo");
+  }
+
+  public function detach()
+  {
+    $game = Utils::getGame();
+    $game->setGameStateValue("creeperEvilAttachedTo", -1);
+  }
+
   public $interactionNeeded = "keeperSelectionSelf";
 
   public function onCheckResolveKeepersAndCreepers($lastPlayedCard)

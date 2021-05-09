@@ -73,28 +73,12 @@ class ActionExchangeKeepers extends ActionCard
     }
 
     // switch the keeper locations
-    $game->cards->moveCard($myKeeper["id"], "keepers", $other_player_id);
+    Utils::moveKeeperToPlayer($player_id, $myKeeper,
+      $player_id, $other_player_id, "");
+    Utils::moveKeeperToPlayer($player_id, $otherKeeper,
+      $other_player_id, $player_id, "");
 
-    $player_creeperCount = Utils::getPlayerCreeperCount($player_id);
-    $other_player_creeperCount = Utils::getPlayerCreeperCount($other_player_id);
-
-    $game->notifyAllPlayers("keepersMoved", "", [
-      "origin_player_id" => $player_id,
-      "destination_player_id" => $other_player_id,
-      "cards" => [$myKeeper],
-      "destination_creeperCount" => $other_player_creeperCount,
-      "origin_creeperCount" => $player_creeperCount,
-    ]);
-
-    $game->cards->moveCard($otherKeeper["id"], "keepers", $player_id);
-    $game->notifyAllPlayers("keepersMoved", "", [
-      "origin_player_id" => $other_player_id,
-      "destination_player_id" => $player_id,
-      "cards" => [$otherKeeper],
-      "destination_creeperCount" => $player_creeperCount,
-      "origin_creeperCount" => $other_player_creeperCount,
-    ]);
-
+    // extra notification about the switch
     $players = $game->loadPlayersBasicInfos();
     $other_player_name = $players[$other_player_id]["player_name"];
     $myKeeperCard = $game->getCardDefinitionFor($myKeeper);

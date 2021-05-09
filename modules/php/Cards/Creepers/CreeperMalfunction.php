@@ -33,6 +33,18 @@ class CreeperMalfunction extends CreeperCard
     return parent::preventsWinForGoal($goalCard);
   }
 
+  public function isAttachedTo()
+  {
+    $game = Utils::getGame();
+    return $game->getGameStateValue("creeperMalfunctionAttachedTo");
+  }
+
+  public function detach()
+  {
+    $game = Utils::getGame();
+    $game->setGameStateValue("creeperMalfunctionAttachedTo", -1);
+  }
+
   public $interactionNeeded = "keeperSelectionSelf";
 
   public function onCheckResolveKeepersAndCreepers($lastPlayedCard)

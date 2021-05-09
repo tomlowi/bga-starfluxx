@@ -67,34 +67,22 @@ class ActionCreeperReassignment extends ActionCard
       );
     }
 
-    // move this creeper to the selected player
-    // @TODO: make sure it is detached/attached again if this is implemented
-
-    $game->cards->moveCard($card["id"], "keepers", $selected_player_id);
-
-    $players = $game->loadPlayersBasicInfos();
-    $other_player_name = $players[$other_player_id]["player_name"];
-    $selected_player_name = $players[$selected_player_id]["player_name"];
+    // detach the creeper first (if it is attached)
+    $card_definition->detach();
 
     $game->notifyAllPlayers(
-      "keepersMoved",
-      clienttranslate(
-        '${player_name} moved <b>${card_name}</b> from ${player_name1} to ${player_name2}'
-      ),
+      "creeperDetached", '',
       [
-        "i18n" => ["card_name"],
-        "player_name" => $game->getActivePlayerName(),
-        "player_name1" => $other_player_name,
-        "player_name2" => $selected_player_name,
-        "card_name" => $card_definition->getName(),
-        "destination_player_id" => $selected_player_id,
-        "origin_player_id" => $other_player_id,
-        "cards" => [$card],
-        "destination_creeperCount" => Utils::getPlayerCreeperCount(
-          $selected_player_id
-        ),
-        "origin_creeperCount" => Utils::getPlayerCreeperCount($other_player_id),
+        "creeper" => $card["type_arg"],
       ]
     );
+
+    // move this creeper to the selected player
+    $notificationMsg = clienttranslate(
+      '${player_name} moved <b>${card_name}</b> from ${player_name1} to ${player_name2}'
+    );
+    Utils::moveKeeperToPlayer($player_id, $card,
+      $other_player_id, $selected_player_id, $notificationMsg); 
+
   }
 }

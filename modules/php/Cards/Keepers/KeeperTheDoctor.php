@@ -73,10 +73,10 @@ class KeeperTheDoctor extends KeeperCard
     $player_name = $game->getActivePlayerName();
 
     $card = $brainparasites_player["creeper_card"];
-    $card_definition = $game->getCardDefinitionFor($card);
+    $creeper_definition = $game->getCardDefinitionFor($card);
     // if BrainParasites is attached to something, first detach it
     if ($parasitesAttached > -1) {
-      $game->setGameStateValue("creeperBrainParasitesAttachedTo", -1);
+      $creeper_definition->detach();
 
       $game->notifyAllPlayers(
         "creeperDetached",
@@ -86,7 +86,7 @@ class KeeperTheDoctor extends KeeperCard
           "player_id" => $player_id,
           "player_name" => $player_name,
           "this_name" => $this->getName(),
-          "card_name" => $card_definition->getName(),
+          "card_name" => $creeper_definition->getName(),
           "card" => $card,
           "creeper" => $card["type_arg"],
           "creeperCount" => Utils::getPlayerCreeperCount($player_id),

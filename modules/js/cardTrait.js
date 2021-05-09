@@ -21,8 +21,8 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
         ["reshuffle", null],
         ["tmpHandDiscarded", 500],
         ["forcedCardNotification", null],
-        ["creeperAttached", 500],
-        ["creeperDetached", 500]
+        ["creeperAttached", 1000],
+        ["creeperDetached", 1000]
       );
     },
 
@@ -285,6 +285,7 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
     },
 
     notif_keepersMoved: function (notif) {
+      console.log(notif.args);
       var destination_player_id = notif.args.destination_player_id;
       var origin_player_id = notif.args.origin_player_id;
       var cards = notif.args.cards;
@@ -443,10 +444,29 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
     display_creeperAttached: function (
       player_id,
       keeper_id,
-      creeper_unique_id
+      creeper_unique_id,
+      retryCount = 0
     ) {
       var keeperCardId = "keepersStock" + player_id + "_item_" + keeper_id;
-      if (dojo.byId(keeperCardId) == null) return;
+      if (dojo.byId(keeperCardId) == null) {
+        // moved keeper div might not be available in DOM yet
+        if (retryCount < 1) {
+          setTimeout(
+            () =>
+              this.display_creeperAttached(
+                player_id,
+                keeper_id,
+                creeper_unique_id,
+                retryCount + 1
+              ),
+            2000
+          );
+        }
+        console.log(
+          "creeperAttached cannot be shown, missing div = " + keeperCardId
+        );
+        return;
+      }
 
       var creeperDivId = "flx-board-panel-keeper-" + creeper_unique_id;
       var creeperItem = dojo.byId(creeperDivId);
@@ -456,12 +476,11 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
     },
 
     notif_creeperDetached: function (notif) {
-      var player_id = notif.args.player_id;
+      //var player_id = notif.args.player_id;
       var creeper = notif.args.creeper;
 
       var creeperDivId = "flx-board-panel-keeper-" + creeper + "-attach";
       var creeperDiv = dojo.byId(creeperDivId);
-      debugger;
       if (creeperDiv != null) {
         dojo
           .fadeOut({

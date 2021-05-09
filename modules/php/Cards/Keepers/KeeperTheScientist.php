@@ -78,28 +78,10 @@ class KeeperTheScientist extends KeeperCard
     }
 
     // move this keeper to the active player
-    $card_definition = $game->getCardDefinitionFor($card);
-    $game->cards->moveCard($card["id"], "keepers", $player_id);
-
-    $players = $game->loadPlayersBasicInfos();
-    $other_player_name = $players[$other_player_id]["player_name"];
-
-    $game->notifyAllPlayers(
-      "keepersMoved",
-      clienttranslate(
-        '${player_name} stole <b>${card_name}</b> from ${player_name2}'
-      ),
-      [
-        "i18n" => ["card_name"],
-        "player_name" => $game->getActivePlayerName(),
-        "player_name2" => $other_player_name,
-        "card_name" => $card_definition->getName(),
-        "destination_player_id" => $player_id,
-        "origin_player_id" => $other_player_id,
-        "cards" => [$card],
-        "destination_creeperCount" => Utils::getPlayerCreeperCount($player_id),
-        "origin_creeperCount" => Utils::getPlayerCreeperCount($other_player_id),
-      ]
+    $notificationMsg = clienttranslate(
+      '${player_name} stole <b>${card_name}</b> from ${player_name2}'
     );
+    Utils::moveKeeperToPlayer($player_id, $card,
+      $other_player_id, $player_id, $notificationMsg);
   }
 }

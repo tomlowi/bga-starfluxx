@@ -65,11 +65,11 @@ class KeeperTheEngineer extends KeeperCard
     $player_name = $game->getActivePlayerName();
 
     $card = $malfunction_player["creeper_card"];
-    $card_definition = $game->getCardDefinitionFor($card);
+    $creeper_definition = $game->getCardDefinitionFor($card);
     // if Malfunction is attached to something, first detach it
     $malfunctionAttached = $game->getGameStateValue("creeperMalfunctionAttachedTo");
     if ($malfunctionAttached > -1) {
-      $game->setGameStateValue("creeperMalfunctionAttachedTo", -1);
+      $creeper_definition->detach();
 
       $game->notifyAllPlayers(
         "creeperDetached",
@@ -79,7 +79,7 @@ class KeeperTheEngineer extends KeeperCard
           "player_id" => $player_id,
           "player_name" => $player_name,
           "this_name" => $this->getName(),
-          "card_name" => $card_definition->getName(),
+          "card_name" => $creeper_definition->getName(),
           "card" => $card,
           "creeper" => $card["type_arg"],
           "creeperCount" => Utils::getPlayerCreeperCount($player_id),
@@ -96,7 +96,7 @@ class KeeperTheEngineer extends KeeperCard
       [
         "i18n" => ["card_name"],
         "player_name" => $player_name,
-        "card_name" => $card_definition->getName(),
+        "card_name" => $creeper_definition->getName(),
         "cards" => [$card],
         "player_id" => $player_id,
         "discardCount" => $game->cards->countCardInLocation("discard"),

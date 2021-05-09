@@ -238,4 +238,100 @@ class Utils
       "creeper_card" => $creeper_card,
     ];
   }
+
+  public static function moveKeeperToPlayer($active_player_id, $card,
+    $origin_player_id, $destination_player_id, $notificationMsg) {
+
+    $game = Utils::getGame();
+    // move this keeper from one player to another
+    $card_definition = $game->getCardDefinitionFor($card);
+    $game->cards->moveCard($card["id"], "keepers", $destination_player_id);
+
+    $players = $game->loadPlayersBasicInfos();
+    $active_player_name = $players[$active_player_id]["player_name"];
+    $origin_player_name = $players[$origin_player_id]["player_name"];
+    $destination_player_name = $players[$destination_player_id]["player_name"];
+
+    $cardsToMove = [$card];
+
+    $keeper_card = null;
+    $creepers_attached = [];
+    // if this card is a keeper with a creeper attached,
+    // then any attached creeper(s) should move together with it
+    if ($card["type"] == "keeper") {
+      $keeper_card = $card;
+      if ($card["id"] == $game->getGameStateValue("creeperBrainParasitesAttachedTo")) {
+        $brainparasites = self::findPlayerWithCreeper(51);
+        $attachedCard = $brainparasites["creeper_card"];
+        $cardsToMove[] = $attachedCard;
+        $game->cards->moveCard($attachedCard["id"], "keepers", $destination_player_id);
+
+        $creepers_attached[] = 51;
+      }
+      if ($card["id"] == $game->getGameStateValue("creeperEvilAttachedTo")) {
+        $evil = self::findPlayerWithCreeper(52);
+        $attachedCard = $evil["creeper_card"];
+        $cardsToMove[] = $attachedCard;
+        $game->cards->moveCard($attachedCard["id"], "keepers", $destination_player_id);
+
+        $creepers_attached[] = 52;
+      }
+      if ($card["id"] == $game->getGameStateValue("creeperMalfunctionAttachedTo")) {
+        $malfunction = self::findPlayerWithCreeper(53);
+        $attachedCard = $malfunction["creeper_card"];
+        $cardsToMove[] = $attachedCard;
+        $game->cards->moveCard($attachedCard["id"], "keepers", $destination_player_id);
+
+        $creepers_attached[] = 53;
+      }      
+    }
+    // if this card is a creeper that is attached to a keeper,
+    // then that keeper should also move with it
+    else if ($card["type"] == "creeper") {
+      $creeper = $game->getCardDefinitionFor($card);
+      $attached_id = $creeper->isAttachedTo();
+      if ($attached_id > -1) {
+        $attachedCard = $game->cards->getCard($attached_id);
+        $cardsToMove[] = $attachedCard;
+        $game->cards->moveCard($attachedCard["id"], "keepers", $destination_player_id);
+
+        $keeper_card = $attachedCard;
+        $creepers_attached[] = $creeper->getUniqueId();
+      }
+    }
+
+    $game->notifyAllPlayers(
+      "keepersMoved", $notificationMsg,
+      [
+        "i18n" => ["card_name"],
+        "player_name" => $active_player_name,
+        "player_name1" => $origin_player_name,
+        "player_name2" => $destination_player_name,
+        "card_name" => $card_definition->getName(),
+        "destination_player_id" => $destination_player_id,
+        "origin_player_id" => $origin_player_id,
+        "cards" => $cardsToMove,
+        "destination_creeperCount" => Utils::getPlayerCreeperCount($destination_player_id),
+        "origin_creeperCount" => Utils::getPlayerCreeperCount($origin_player_id),
+      ]
+    );
+
+    // also send notifications again to show creeper(s) being attached
+    // to the moved keeper (as stock card was destroyed and re-created)
+
+    if ($keeper_card != null && !empty($creepers_attached))
+    {
+      foreach ($creepers_attached as $creeper) {
+        $game->notifyAllPlayers(
+          "creeperAttached",
+          '',
+          [
+            "player_id" => $destination_player_id,
+            "card" => $keeper_card,
+            "creeper" => $creeper,
+          ]
+        );
+      }
+    }
+  }
 }

@@ -37,30 +37,11 @@ class KeeperCuteFuzzyAlienCreature extends KeeperCard
     $directionTable = $game->getNextPlayerTable();
     $destination_player_id = $directionTable[$origin_player_id];
 
-    $game->cards->moveCard($card["id"], "keepers", $destination_player_id);
-
-    $players = $game->loadPlayersBasicInfos();
-    $destination_player_name = $players[$destination_player_id]["player_name"];
-
-    $game->notifyAllPlayers(
-      "keepersMoved",
-      clienttranslate(
-        'Turn end: <b>${card_name}</b> moves to ${player_name2}'
-      ),
-      [
-        "i18n" => ["card_name"],
-        "player_name2" => $destination_player_name,
-        "card_name" => $this->name,
-        "destination_player_id" => $destination_player_id,
-        "origin_player_id" => $origin_player_id,
-        "cards" => [$card],
-        "destination_creeperCount" => Utils::getPlayerCreeperCount(
-          $destination_player_id
-        ),
-        "origin_creeperCount" => Utils::getPlayerCreeperCount(
-          $origin_player_id
-        ),
-      ]
+    $notificationMsg = clienttranslate(
+      'Turn end: <b>${card_name}</b> moves to ${player_name2}'
     );
+    Utils::moveKeeperToPlayer($origin_player_id, $card,
+      $origin_player_id, $destination_player_id, $notificationMsg); 
+
   }
 }
