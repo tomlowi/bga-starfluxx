@@ -21,7 +21,8 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
         ["reshuffle", null],
         ["tmpHandDiscarded", 500],
         ["forcedCardNotification", null],
-        ["creeperAttached", 500]
+        ["creeperAttached", 500],
+        ["creeperDetached", 500]
       );
     },
 
@@ -458,8 +459,9 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
       var player_id = notif.args.player_id;
       var creeper = notif.args.creeper;
 
-      var creeperDivId = "flx-board-panel-keeper-" + creeper + "-attached";
+      var creeperDivId = "flx-board-panel-keeper-" + creeper + "-attach";
       var creeperDiv = dojo.byId(creeperDivId);
+      debugger;
       if (creeperDiv != null) {
         dojo
           .fadeOut({

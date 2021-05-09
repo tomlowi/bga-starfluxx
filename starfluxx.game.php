@@ -116,16 +116,16 @@ class starfluxx extends Table
     return "starfluxx";
   }
 
+  // for testing purposes only
+  public function testForceCardDrawFor($cardType, $cardUniqueId, $player_id) {
+    $deckSearch = $this->cards->getCardsOfTypeInLocation($cardType, $cardUniqueId, "deck", null);
+    if (count($deckSearch) > 0) {
+      $card = array_shift($deckSearch);
+      $this->cards->moveCard($card["id"], "hand", $player_id);
 
-  // public function testForceCardDrawFor($cardType, $cardUniqueId, $player_id) {
-  //   $deckSearch = $this->cards->getCardsOfTypeInLocation($cardType, $cardUniqueId, "deck", null);
-  //   if (count($deckSearch) > 0) {
-  //     $card = array_shift($deckSearch);
-  //     $this->cards->moveCard($card["id"], "hand", $player_id);
-
-  //     return $card["id"];
-  //   }
-  // }
+      return $card["id"];
+    }
+  }
 
   /*
     setupNewGame:
@@ -242,6 +242,11 @@ class starfluxx extends Table
       $this->gamestate->changeActivePlayer($player_id);
       $this->performDrawCards($player_id, $startingHand, true);
     }
+
+    // $this->testForceCardDrawFor("rule", 202, $first_player_id); // GetOnWithIt
+    // $this->testForceCardDrawFor("keeper", 19, $first_player_id);
+    // $this->testForceCardDrawFor("keeper", 3, $first_player_id);
+    // $this->testForceCardDrawFor("creeper", 53, $first_player_id);
 
     // reset to start with correct first active player
     $this->gamestate->changeActivePlayer($first_player_id);

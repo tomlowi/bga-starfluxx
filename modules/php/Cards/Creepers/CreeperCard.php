@@ -55,21 +55,7 @@ class CreeperCard extends Card
 
   protected function findPlayerWithThisCreeper()
   {
-    $game = Utils::getGame();
-    // check who has this creeper in play now
-    $creeper_card = array_values(
-      $game->cards->getCardsOfType("creeper", $this->uniqueId)
-    )[0];
-    // if nobody, nothing to do
-    if ($creeper_card["location"] != "keepers") {
-      return null;
-    }
-
-    $creeper_player_id = $creeper_card["location_arg"];
-    return [
-      "player_id" => $creeper_player_id,
-      "creeper_card" => $creeper_card,
-    ];
+    return Utils::findPlayerWithCreeper($this->uniqueId);
   }
 
   protected function findKeepersOfType($player_id, $keeper_type) {
