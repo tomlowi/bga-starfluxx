@@ -38,19 +38,19 @@ class KeeperLaserSword extends KeeperCard
     $playerHasKeeperWithCreeper = false;
     // Laser Sword can only be used on own keepers with attached creepers
     $keeper1 = $game->getGameStateValue("creeperBrainParasitesAttachedTo");
-    if (!$playerHasKeeperWithCreeper && $keeper1 > -1) {
+    if (!$playerHasKeeperWithCreeper && $keeper1 > -1 && $keeper1 != $this->getCardId()) {
       $playerHasKeeperWithCreeper 
         = $this->checkKeeperInPlayWithThisPlayer($keeper1, $player_id);            
     }
     
     $keeper2 = $game->getGameStateValue("creeperEvilAttachedTo");
-    if (!$playerHasKeeperWithCreeper && $keeper2 > -1) {
+    if (!$playerHasKeeperWithCreeper && $keeper2 > -1 && $keeper2 != $this->getCardId()) {
       $playerHasKeeperWithCreeper 
         = $this->checkKeeperInPlayWithThisPlayer($keeper2, $player_id);            
     }
 
     $keeper3 = $game->getGameStateValue("creeperMalfunctionAttachedTo");
-    if (!$playerHasKeeperWithCreeper && $keeper3 > -1) {
+    if (!$playerHasKeeperWithCreeper && $keeper3 > -1 && $keeper3 != $this->getCardId()) {
       $playerHasKeeperWithCreeper 
         = $this->checkKeeperInPlayWithThisPlayer($keeper3, $player_id);            
     }
@@ -79,7 +79,8 @@ class KeeperLaserSword extends KeeperCard
       || ($keeper2 == $card["id"]) || ($keeper3 == $card["id"]);
 
     if ($card_type != "keeper" || $card_location != "keepers" 
-        || $origin_player_id != $player_id || !$hasCreeper) {
+        || $origin_player_id != $player_id || !$hasCreeper
+        || $card["id"] == $this->getCardId()) {
       Utils::throwInvalidUserAction(
         starfluxx::totranslate(
           "You must select a keeper card in front of yourself, with a creeper attached"

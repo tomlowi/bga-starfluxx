@@ -33,7 +33,9 @@ class KeeperLaserPistol extends KeeperCard
     $keeper2 = $game->getGameStateValue("creeperEvilAttachedTo");
     $keeper3 = $game->getGameStateValue("creeperMalfunctionAttachedTo");    
        
-    return $keeper1 > -1 || $keeper2 > -1 || $keeper3 > -1;
+    return ($keeper1 > -1 && $keeper1 != $this->getCardId())
+      || ($keeper2 > -1 && $keeper2 != $this->getCardId())
+      || ($keeper3 > -1 && $keeper3 != $this->getCardId());
   }
 
   public function resolvedBy($player_id, $args) 
@@ -56,7 +58,8 @@ class KeeperLaserPistol extends KeeperCard
     $hasCreeper = ($keeper1 == $card["id"]) 
       || ($keeper2 == $card["id"]) || ($keeper3 == $card["id"]);
 
-    if ($card_type != "keeper" || $card_location != "keepers" || !$hasCreeper) {
+    if ($card_type != "keeper" || $card_location != "keepers" || !$hasCreeper
+        || $card["id"] == $this->getCardId()) {
       Utils::throwInvalidUserAction(
         starfluxx::totranslate(
           "You must select a keeper card in front of any player, with a creeper attached"
