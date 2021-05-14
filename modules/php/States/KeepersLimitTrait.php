@@ -85,11 +85,21 @@ trait KeepersLimitTrait
       ? clienttranslate('<span class="flx-warn-inflation">(+1 Inflation)</span>')
       : "";
 
+    $playerInfractions = $this->getKeepersInfractions();
+    // make sure some arguments are here for the active player
+    // normally they should never be in this state, but in some rare cases they
+    // remain active very briefly and get error message:
+    // Invalid or missing substitution argument for log message:
+    $active_player_id = self::getActivePlayerId();
+    $playerInfractions[$active_player_id] = [
+      "discardCount" => 0,
+    ];
+
     return [
       "i18n" => ["warnInflation"],
       "limit" => $this->getKeepersLimit(),
       "warnInflation" => $warnInflation,
-      "_private" => $this->getKeepersInfractions(),
+      "_private" => $playerInfractions,
     ];
   }
 

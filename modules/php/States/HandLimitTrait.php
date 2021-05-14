@@ -85,11 +85,23 @@ trait HandLimitTrait
       ? clienttranslate('<span class="flx-warn-inflation">(+1 Inflation)</span>')
       : "";
 
+    $playerInfractions = $this->getHandInfractions();
+    // make sure some arguments are here for the active player
+    // normally they should never be in this state, but in some rare cases they
+    // remain active very briefly and get error message:
+    // Invalid or missing substitution argument for log message:
+    // ${you} can only keep ${_private.actualLimit} card(s) (discard ${_private.discardCount}) for Hand Limit ${limit}${warnInflation}
+    $active_player_id = self::getActivePlayerId();
+    $playerInfractions[$active_player_id] = [
+      "discardCount" => 0,
+      "actualLimit" => -1,          
+    ];
+
     return [
       "i18n" => ["warnInflation"],
       "limit" => $this->getHandLimit(),
       "warnInflation" => $warnInflation,
-      "_private" => $this->getHandInfractions(),
+      "_private" => $playerInfractions,
     ];
   }
 

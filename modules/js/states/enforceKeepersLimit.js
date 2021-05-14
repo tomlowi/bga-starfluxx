@@ -11,7 +11,10 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
       if (this.isCurrentPlayerActive()) {
         stock.setSelectionMode(2);
 
-        this._discardCount = args._private.discardCount;
+        this._discardCount = 0;
+        if (args._private !== undefined) {
+          this._discardCount = args._private.discardCount;
+        }
 
         if (this._listener !== undefined) dojo.disconnect(this._listener);
         this._listener = dojo.connect(

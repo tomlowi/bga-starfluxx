@@ -10,7 +10,10 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
       if (this.isCurrentPlayerActive()) {
         this.handStock.setSelectionMode(2);
 
-        this._discardCount = args._private.discardCount;
+        this._discardCount = 0;
+        if (args._private !== undefined) {
+          this._discardCount = args._private.discardCount;
+        }
 
         // Prevent registering this listener twice
         if (this._listener !== undefined) dojo.disconnect(this._listener);

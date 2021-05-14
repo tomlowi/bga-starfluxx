@@ -103,7 +103,7 @@ class KeeperTheDoctor extends KeeperCard
       [
         "i18n" => ["card_name"],
         "player_name" => $player_name,
-        "card_name" => $card_definition->getName(),
+        "card_name" => $creeper_definition->getName(),
         "cards" => [$card],
         "player_id" => $player_id,
         "discardCount" => $game->cards->countCardInLocation("discard"),
