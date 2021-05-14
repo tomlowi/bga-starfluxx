@@ -2,6 +2,7 @@
 namespace StarFluxx\Cards\Keepers;
 
 use StarFluxx\Game\Utils;
+use starfluxx;
 
 class KeeperLaserSword extends KeeperCard
 {
@@ -25,7 +26,7 @@ class KeeperLaserSword extends KeeperCard
   {
     $game = Utils::getGame();
     $card = $game->cards->getCard($keeper_card_id);
-    return $card["location"] == "keepers" && $card["location_arg"] = $player_id;
+    return $card["location"] == "keepers" && $card["location_arg"] == $player_id;
   }
 
   public function canBeUsedInPlayerTurn($player_id)
