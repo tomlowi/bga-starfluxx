@@ -107,6 +107,20 @@ class Utils
       Utils::getGame()->getGameStateValue("playerTurnUsedScientist");
   }
 
+  public static function playerHasNotYetUsedLaserPistol()
+  {
+    // LaserPistol can only be used once by the same player in one turn.
+    return 0 ==
+      Utils::getGame()->getGameStateValue("playerTurnUsedLaserPistol");
+  }
+
+  public static function playerHasNotYetUsedLaserSword()
+  {
+    // LaserSword can only be used once by the same player in one turn.
+    return 0 ==
+      Utils::getGame()->getGameStateValue("playerTurnUsedLaserSword");
+  }
+
   public static function getActiveTempHand()
   {
     if (Utils::getGame()->getGameStateValue("tmpHand3Card") > 0) {
@@ -333,5 +347,99 @@ class Utils
         );
       }
     }
+  }
+
+  public static function discardKeeperFromPlay($active_player_id, $card,
+    $origin_player_id, $trigger_name, $notificationMsg) {
+
+    $game = Utils::getGame();
+    // move this keeper from player to the discard pile
+    $card_definition = $game->getCardDefinitionFor($card);
+    $game->cards->playCard($card["id"]);
+
+    $players = $game->loadPlayersBasicInfos();
+    $active_player_name = $players[$active_player_id]["player_name"];
+    $origin_player_name = $players[$origin_player_id]["player_name"];
+
+    $cardsToRemove = [$card];
+
+    $keeper_card = null;
+    $creepers_attached = [];
+    // if this card is a keeper with a creeper attached,
+    // then any attached creeper(s) should get detached and also be discarded
+    if ($card["type"] == "keeper") {
+      $keeper_card = $card;
+      if ($card["id"] == $game->getGameStateValue("creeperBrainParasitesAttachedTo")) {
+        $brainparasites = self::findPlayerWithCreeper(51);
+        $attachedCard = $brainparasites["creeper_card"];
+        $cardsToRemove[] = $attachedCard;
+        $game->cards->playCard($attachedCard["id"]);
+
+        $game->setGameStateValue("creeperBrainParasitesAttachedTo", -1);
+        $creepers_attached[] = 51;
+      }
+      if ($card["id"] == $game->getGameStateValue("creeperEvilAttachedTo")) {
+        $evil = self::findPlayerWithCreeper(52);
+        $attachedCard = $evil["creeper_card"];
+        $cardsToRemove[] = $attachedCard;
+        $game->cards->playCard($attachedCard["id"]);
+
+        $game->setGameStateValue("creeperEvilAttachedTo", -1);
+        $creepers_attached[] = 52;
+      }
+      if ($card["id"] == $game->getGameStateValue("creeperMalfunctionAttachedTo")) {
+        $malfunction = self::findPlayerWithCreeper(53);
+        $attachedCard = $malfunction["creeper_card"];
+        $cardsToRemove[] = $attachedCard;
+        $game->cards->playCard($attachedCard["id"]);
+
+        $game->setGameStateValue("creeperMalfunctionAttachedTo", -1);
+        $creepers_attached[] = 53;
+      }      
+    }
+    // if this card is a creeper that is attached to a keeper,
+    // then that keeper should also be discarded (after detaching the creeper)
+    else if ($card["type"] == "creeper") {
+      $creeper = $game->getCardDefinitionFor($card);
+      $attached_id = $creeper->isAttachedTo();
+      if ($attached_id > -1) {
+        $attachedCard = $game->cards->getCard($attached_id);
+        $cardsToRemove[] = $attachedCard;
+        $game->cards->playCard($attachedCard["id"]);
+
+        $keeper_card = $attachedCard;
+        $creepers_attached[] = $creeper->getUniqueId();
+        $creeper->detach();
+      }
+    }
+
+    // send notifications again to show creeper(s) being detached
+    if ($keeper_card != null && !empty($creepers_attached))
+    {
+      foreach ($creepers_attached as $creeper) {
+        $game->notifyAllPlayers(
+          "creeperDetached",
+          '',
+          [
+            "creeper" => $creeper,
+          ]
+        );
+      }
+    }
+    // send notifications to show cards being discarded
+    $game->notifyAllPlayers(
+      "keepersDiscarded", $notificationMsg,
+      [
+        "i18n" => ["card_name"],
+        "player_name" => $active_player_name,
+        "player_name2" => $origin_player_name,
+        "trigger_name" => $trigger_name,
+        "card_name" => $card_definition->getName(),
+        "player_id" => $origin_player_id,
+        "cards" => $cardsToRemove,
+        "discardCount" => $game->cards->countCardInLocation("discard"),
+        "creeperCount" => Utils::getPlayerCreeperCount($origin_player_id),
+      ]
+    );
   }
 }

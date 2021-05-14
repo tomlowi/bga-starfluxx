@@ -19,6 +19,8 @@ class KeeperCuteFuzzyAlienCreature extends KeeperCard
     return "brains";
   }
 
+  // @TODO: when discarded, goes back to top of draw pile
+
   public function onTurnEnd()
   {
     $game = Utils::getGame();

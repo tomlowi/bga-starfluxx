@@ -39,6 +39,22 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
           }
         }
       },
+      keeperSelectionAny: function (that, action_name, args) {
+        for (var player_id in that.keepersStock) {
+          var stock = that.keepersStock[player_id];
+          stock.setSelectionMode(1);
+
+          if (that._listeners["keepers_" + player_id] !== undefined) {
+            dojo.disconnect(that._listeners["keepers_" + player_id]);
+          }
+          that._listeners["keepers_" + player_id] = dojo.connect(
+            stock,
+            "onChangeSelection",
+            that,
+            "onResolveFreeRuleCardSelection"
+          );
+        }
+      },
       handCardsSelection: function (that, args) {
         that.handStock.setSelectionMode(2);
 
