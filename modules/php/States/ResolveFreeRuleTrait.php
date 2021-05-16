@@ -105,4 +105,12 @@ trait ResolveFreeRuleTrait
     }
     return self::_action_resolveFreeRule(["cards" => $cards]);
   }
+
+  public function action_resolveFreeRulePlayerSelection($selected_player_id)
+  {
+    self::checkAction("resolveFreeRulePlayerSelection");
+    return self::_action_resolveFreeRule([
+      "selected_player_id" => $selected_player_id,
+    ]);
+  }
 }

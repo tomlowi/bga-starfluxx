@@ -20,6 +20,19 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
       }
     },
 
+    addPlayerSelectionButtons(that, args, onResolveMethodName, includeSelf) {
+      for (var player_id in that.players) {
+        if (includeSelf || player_id != that.player_id) {
+          that.addActionButton(
+            "button_" + player_id,
+            that.players[player_id]["name"],
+            onResolveMethodName
+          );
+          dojo.attr("button_" + player_id, "data-player-id", player_id);
+        }
+      }
+    },
+
     updateActionButtonsFreeRuleResolve: {
       keeperSelectionSelf: function (that, args) {
         for (var player_id in that.keepersStock) {
@@ -82,6 +95,14 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
           }
         }
       },
+      playerSelection: function (that, action_name, args) {
+        that.addPlayerSelectionButtons(
+          that,
+          args,
+          "onResolveFreeRulePlayerSelection",
+          false
+        );
+      },
     },
 
     onResolveFreeRuleHandCardsSelection: function (ev) {
@@ -119,6 +140,18 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
       }
 
       stock.unselectAll();
+    },
+
+    onResolveFreeRulePlayerSelection: function (ev) {
+      var player_id = ev.target.getAttribute("data-player-id");
+
+      var action = "resolveFreeRulePlayerSelection";
+
+      if (this.checkAction(action)) {
+        this.ajaxAction(action, {
+          player_id: player_id,
+        });
+      }
     },
 
     onLeavingStateFreeRuleResolve: function () {

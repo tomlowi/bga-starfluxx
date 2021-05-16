@@ -121,6 +121,13 @@ class Utils
       Utils::getGame()->getGameStateValue("playerTurnUsedLaserSword");
   }
 
+  public static function playerHasNotYetUsedUnseenForce()
+  {
+    // UnseenForce can only be used once by the same player in one turn.
+    return 0 ==
+      Utils::getGame()->getGameStateValue("playerTurnUsedUnseenForce");
+  }
+
   public static function getActiveTempHand()
   {
     if (Utils::getGame()->getGameStateValue("tmpHand3Card") > 0) {
