@@ -502,5 +502,12 @@ class Utils
         "creeperCount" => Utils::getPlayerCreeperCount($origin_player_id),
       ]
     );
+
+    // finally, if keeper is discarded,
+    // sometimes special things should happen also
+    if ($keeper_card != null) {
+      $keeperCard = $game->getCardDefinitionFor($keeper_card);
+      $keeperCard->immediateEffectOnDiscard($active_player_id);
+    }
   }
 }

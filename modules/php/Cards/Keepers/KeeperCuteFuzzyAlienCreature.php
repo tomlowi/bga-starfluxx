@@ -18,8 +18,31 @@ class KeeperCuteFuzzyAlienCreature extends KeeperCard
   {
     return "brains";
   }
+  
+  public function immediateEffectOnDiscard($player_id)
+  {
+    // when discarded, this card goes back to top of draw pile
+    $game = Utils::getGame();
 
-  // @TODO: when discarded, goes back to top of draw pile
+    $card = $game->cards->getCard($this->getCardId());
+    $game->cards->insertCardOnExtremePosition($card["id"], "deck", 1);
+
+    // Then we notify players and update the discard pile
+    $game->notifyAllPlayers(
+      "cardTakenFromDiscard",
+      clienttranslate(
+        '${card_name} moves back from the discard pile to top of draw pile'
+      ),
+      [
+        "i18n" => ["card_name"],
+        "card" => $card,
+        "card_name" => $this->getName(),
+        "discardCount" => $game->cards->countCardInLocation("discard"),
+      ]
+    );
+
+    return null;
+  }
 
   public function onTurnEnd()
   {

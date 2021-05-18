@@ -21,6 +21,7 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
         ["reshuffle", null],
         ["tmpHandDiscarded", 500],
         ["forcedCardNotification", null],
+        ["cardTakenFromDiscard", null],
         ["creeperAttached", 1000],
         ["creeperDetached", 1000]
       );
@@ -431,6 +432,12 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
         _(card_trigger) + ": <b>" + _(card_forced) + "</b>"
       );
       setTimeout(() => this.hideNotificationBubble(), 3000);
+    },
+
+    notif_cardTakenFromDiscard: function (notif) {
+      var card = notif.args.card;
+      this.discardStock.removeFromStockById(card.id);
+      this.discardCounter.toValue(notif.args.discardCount);
     },
 
     notif_creeperAttached: function (notif) {
