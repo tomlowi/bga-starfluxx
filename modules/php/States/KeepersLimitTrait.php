@@ -33,9 +33,13 @@ trait KeepersLimitTrait
       $keepersInPlay = count(
         $cards->getCardsOfTypeInLocation("keeper", null, "keepers", $player_id)
       );
-      if ($keepersInPlay > $keepersLimit) {
+
+      $computerBonus = Utils::getActiveComputerBonus($player_id) ? 1 : 0;
+      $actualKeepersLimit = $keepersLimit + $computerBonus;
+
+      if ($keepersInPlay > $actualKeepersLimit) {
         $playersInfraction[$player_id] = [
-          "discardCount" => $keepersInPlay - $keepersLimit,
+          "discardCount" => $keepersInPlay - $actualKeepersLimit,
         ];
       }
     }

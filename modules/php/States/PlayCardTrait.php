@@ -343,6 +343,8 @@ trait PlayCardTrait
         "creeperCount" => Utils::getPlayerCreeperCount($player_id),
       ]
     );
+    // few keepers also have immediate effect
+    $keeperCard->immediateEffectOnPlay($player_id);
   }
 
   public function playCreeperCard($player_id, $card)

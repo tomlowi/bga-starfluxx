@@ -32,10 +32,14 @@ trait HandLimitTrait
 
     foreach ($players_id as $player_id) {
       $handCount = $cards->countCardInLocation("hand", $player_id);
-      if ($handCount > $handLimit) {
+
+      $computerBonus = Utils::getActiveComputerBonus($player_id) ? 1 : 0;
+      $actualHandLimit = $handLimit + $computerBonus;
+
+      if ($handCount > $actualHandLimit) {
         $playersInfraction[$player_id] = [
-          "discardCount" => $handCount - $handLimit,
-          "actualLimit" => $handLimit,          
+          "discardCount" => $handCount - $actualHandLimit,
+          "actualLimit" => $actualHandLimit,          
         ];
       }
     }

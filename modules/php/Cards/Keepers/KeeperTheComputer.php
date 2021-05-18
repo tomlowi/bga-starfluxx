@@ -19,5 +19,30 @@ class KeeperTheComputer extends KeeperCard
     return "equipment";
   }
 
-  // @TODO: special ability bonus draw and play, and limits
+  public function immediateEffectOnPlay($player_id)
+  {
+    // Draw rule is adapted immediately, so current player draws an extra card
+    Utils::checkForDrawComputerBonus($player_id);
+  }
+
+  public static function notifyActiveFor($player_id)
+  {
+    $game = Utils::getGame();
+    // only log once per turn, otherwise clutters log after each card played
+    $alreadyLogged = $game->getGameStateValue("playerTurnLoggedComputerBonus");
+    if ($alreadyLogged != 0) {
+      return;
+    }
+
+    $game->notifyAllPlayers(
+      "computerBonus",
+      clienttranslate('${player_name} gets <b>Computer Bonus</b>'),
+      [
+        "player_id" => $player_id,
+        "player_name" => $game->getActivePlayerName(),
+      ]
+    );
+
+    $game->setGameStateValue("playerTurnLoggedComputerBonus", 1);
+  }
 }

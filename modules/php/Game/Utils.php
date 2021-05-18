@@ -1,5 +1,6 @@
 <?php
 namespace StarFluxx\Game;
+use StarFluxx\Cards\Keepers\KeeperTheComputer;
 use starfluxx;
 
 class Utils
@@ -128,6 +129,45 @@ class Utils
       Utils::getGame()->getGameStateValue("playerTurnUsedUnseenForce");
   }
 
+  public static function playerHasNotYetUsedComputerBonus()
+  {
+    // Computer Bonus draw only once per turn.
+    return 0 ==
+      Utils::getGame()->getGameStateValue("playerTurnUsedComputerBonus");
+  }
+
+  public static function getActiveComputerBonus($player_id)
+  {
+    $keeperComputer = 3;
+    $computer_player = Utils::findPlayerWithKeeper($keeperComputer);
+
+    return $computer_player != null && $computer_player["player_id"] == $player_id;
+  }
+
+  public static function calculateDrawComputerBonus($player_id)
+  {
+    $computerBonus = 0;
+
+    if (
+      Utils::getActiveComputerBonus($player_id) &&
+      Utils::playerHasNotYetUsedComputerBonus()
+    ) {
+      $computerBonus = 1;
+      KeeperTheComputer::notifyActiveFor($player_id);
+      Utils::getGame()->setGameStateValue("playerTurnUsedComputerBonus", 1);
+    }
+
+    return $computerBonus;
+  }
+
+  public static function checkForDrawComputerBonus($player_id)
+  {
+    $computerBonus = Utils::calculateDrawComputerBonus($player_id);
+    if ($computerBonus > 0) {
+      Utils::getGame()->performDrawCards($player_id, $computerBonus);
+    }
+  }
+
   public static function getActiveTempHand()
   {
     if (Utils::getGame()->getGameStateValue("tmpHand3Card") > 0) {
@@ -203,20 +243,27 @@ class Utils
 
     $addInflation = Utils::getActiveInflation() ? 1 : 0;
     // check bonus rules
+    $computerBonus =
+      Utils::getActiveComputerBonus($player_id)
+        ? 1 + $addInflation
+        : 0;
+    if ($computerBonus > 0 && $withNotifications) {
+      KeeperTheComputer::notifyActiveFor($player_id);
+    }
 
     // Play All but 1 is also affected by Inflation and Bonus rules
     if ($playRule < 0) {
       $playRule -= $addInflation;
       // if "Play All but ..." + bonus plays becomes >= 0, it actually becomes "Play All"
-      if ($playRule >= 0) {
+      if ($playRule + $computerBonus >= 0) {
         return PLAY_COUNT_ALL;
       }
       // else it stays "Play All but ..."
-      return $playRule;
+      return $playRule + $computerBonus;
     }
     // Normal Play Rule
     else {
-      $playRule += $addInflation;
+      $playRule += $addInflation + $computerBonus;
     }
 
     return $playRule;
@@ -353,6 +400,13 @@ class Utils
           ]
         );
       }
+    }
+
+    // finally, if keeper is moved to the active player,
+    // maybe it has an effect that should immediately apply to this new owner (like The Computer)
+    if ($keeper_card != null && $destination_player_id == $active_player_id) {
+      $keeperCard = $game->getCardDefinitionFor($keeper_card);
+      $keeperCard->immediateEffectOnPlay($active_player_id);
     }
   }
 

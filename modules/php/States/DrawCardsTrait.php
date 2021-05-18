@@ -21,8 +21,9 @@ trait DrawCardsTrait
     if ($addInflation > 0) {
       RuleInflation::notifyActiveFor($player_id);
     }
+    $computerBonus = Utils::calculateDrawComputerBonus($player_id);
 
-    $cardsToDraw = $drawRule + $addInflation;
+    $cardsToDraw = $drawRule + $addInflation + $computerBonus;
     // PlayAllBut1: If you started with no cards in your hand and only drew 1, draw an extra card.
     // => don't apply inflation on this
     if ($cardsInHand == 0 && $cardsToDraw == 1) {
