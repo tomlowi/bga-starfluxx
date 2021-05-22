@@ -31,7 +31,7 @@ class KeeperCuteFuzzyAlienCreature extends KeeperCard
     $game->notifyAllPlayers(
       "cardTakenFromDiscard",
       clienttranslate(
-        '${card_name} moves back from the discard pile to top of draw pile'
+        '<b>${card_name}</b> moves back from the discard pile to top of draw pile'
       ),
       [
         "i18n" => ["card_name"],

@@ -19,5 +19,4 @@ class KeeperTimeTraveler extends KeeperCard
     return "brains";
   }
 
-  // @TODO: special ability when Action = Time Portal played by same player
 }
