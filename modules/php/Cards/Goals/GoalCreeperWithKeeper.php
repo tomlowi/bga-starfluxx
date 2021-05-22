@@ -22,7 +22,9 @@ class GoalCreeperWithKeeper extends GoalCard
 
   function checkCreeperWithKeeper($creeper, $keeper)
   {
-    $cards = Utils::getGame()->cards;
+    $game = Utils::getGame();
+    $cards = $game->cards;
+    $active_player_id = $game->getActivePlayerId();
 
     $creeper_card = array_values(
       $cards->getCardsOfType("creeper", $creeper)
@@ -37,9 +39,24 @@ class GoalCreeperWithKeeper extends GoalCard
       return null;
     }
 
+    // Exceptionally, the Holographic projection can let player win with Keeper from someone else
+    // But only in their turn, so they must be the active player!
+    $holograph_player_id = null;
+    $player_with_holograph = Utils::findPlayerWithKeeper($this->keeperHolograph);
+    if ($player_with_holograph != null) {
+      $holograph_player_id = $player_with_holograph["player_id"];
+    }    
+
     // If both cards are in the same player's keepers, this player wins
-    if ($creeper_card["location_arg"] == $keeper_card["location_arg"]) {
-      return $creeper_card["location_arg"];
+    $creeper_player_id = $creeper_card["location_arg"];
+    $keeper_player_id = $keeper_card["location_arg"];
+
+    if ($holograph_player_id != null && $holograph_player_id == $active_player_id) {
+      if ($holograph_player_id == $creeper_player_id) {
+        return $holograph_player_id;
+      }
+    } else if ($creeper_player_id == $keeper_player_id) {
+      return $creeper_player_id;
     }
 
     return null;

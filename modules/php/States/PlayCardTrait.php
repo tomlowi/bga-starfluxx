@@ -35,6 +35,11 @@ trait PlayCardTrait
       return;
     }
 
+    // before we play anything new, check again if we have a winner at this point
+    if ($this->checkWinConditions()) {
+      return;
+    }
+
     // If any "free action" rule can be played, we cannot end turn automatically
     // Player must finish its turn by explicitly deciding not to use any of the free rules
     $freeRulesAvailable = $this->getFreeRulesAvailable($player_id);

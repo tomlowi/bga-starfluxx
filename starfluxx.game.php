@@ -657,7 +657,7 @@ class starfluxx extends Table
   {
     $winnerInfo = $this->checkCurrentGoalsWinner();
     if ($winnerInfo == null) {
-      return;
+      return false;
     }
 
     // We have one winner, no tie
@@ -689,6 +689,7 @@ class starfluxx extends Table
     );
 
     $this->gamestate->nextState("endGame");
+    return true;
   }
 
   public function checkCurrentGoalsWinner()
