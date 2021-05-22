@@ -257,6 +257,7 @@ $machinestates = [
       "resolveFreeRuleCardsSelection",
       "resolveFreeRuleButtons",
       "resolveFreeRulePlayerSelection",
+      "resolveFreeRuleCardAndPlayerSelection",
     ],
     "transitions" => [
       "resolvedFreeRule" => STATE_PLAY_CARD,

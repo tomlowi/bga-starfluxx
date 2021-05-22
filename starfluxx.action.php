@@ -183,6 +183,18 @@ class action_starfluxx extends APP_GameAction
     self::ajaxResponse();
   }
 
+  public function resolveFreeRuleCardAndPlayerSelection()
+  {
+    self::setAjaxMode();
+    $card_id = self::getArg("card_id", AT_posint, true);
+    $player_id = self::getArg("player_id", AT_posint, true);
+    $this->game->action_resolveFreeRuleCardAndPlayerSelection(
+      $card_id,
+      $player_id
+    );
+    self::ajaxResponse();
+  }
+
   public function resolveCreeperCardSelection()
   {
     self::setAjaxMode();

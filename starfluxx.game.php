@@ -91,6 +91,7 @@ class starfluxx extends Table
       "playerTurnUsedUnseenForce" => 65,
       "playerTurnUsedComputerBonus" => 66,
       "playerTurnLoggedComputerBonus" => 67,
+      "playerTurnUsedTeleporter" => 68,
       //"optionCreeperPack" => 101,
     ]);
     $this->cards = self::getNew("module.common.deck");
@@ -208,6 +209,7 @@ class starfluxx extends Table
     self::setGameStateInitialValue("playerTurnUsedUnseenForce", 0);
     self::setGameStateInitialValue("playerTurnUsedComputerBonus", 0);
     self::setGameStateInitialValue("playerTurnLoggedComputerBonus", 0);
+    self::setGameStateInitialValue("playerTurnUsedTeleporter", 0);
 
     self::setGameStateInitialValue("tmpHand1ToPlay", 0);
     self::setGameStateInitialValue("tmpHand1Card", -1);
@@ -254,7 +256,7 @@ class starfluxx extends Table
     }
 
     // $this->testForceCardDrawFor("action", 302, $first_player_id);
-    // $this->testForceCardDrawFor("keeper", 21, $first_player_id);
+    //$this->testForceCardDrawFor("keeper", 16, $first_player_id);
 
     // reset to start with correct first active player
     $this->gamestate->changeActivePlayer($first_player_id);
@@ -885,6 +887,7 @@ class starfluxx extends Table
     self::setGameStateValue("playerTurnUsedUnseenForce", 0);
     self::setGameStateValue("playerTurnUsedComputerBonus", 0);
     self::setGameStateValue("playerTurnLoggedComputerBonus", 0);
+    self::setGameStateValue("playerTurnUsedTeleporter", 0);
     // also reset all turn-start creeper execution
 
     self::giveExtraTime($player_id);

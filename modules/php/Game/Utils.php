@@ -44,6 +44,15 @@ class Utils
     return $keeperCounts;
   }
 
+  public static function getPlayerKeeperCount($player_id)
+  {
+    $cards = Utils::getGame()->cards;
+    $nbCreepers = count(
+      $cards->getCardsOfTypeInLocation("keeper", null, "keepers", $player_id)
+    );
+    return $nbCreepers;
+  }
+
   public static function getPlayerCreeperCount($player_id)
   {
     $cards = Utils::getGame()->cards;
@@ -127,6 +136,13 @@ class Utils
     // UnseenForce can only be used once by the same player in one turn.
     return 0 ==
       Utils::getGame()->getGameStateValue("playerTurnUsedUnseenForce");
+  }
+
+  public static function playerHasNotYetUsedTeleporter()
+  {
+    // Teleporter can only be used once by the same player in one turn.
+    return 0 ==
+      Utils::getGame()->getGameStateValue("playerTurnUsedTeleporter");
   }
 
   public static function playerHasNotYetUsedComputerBonus()

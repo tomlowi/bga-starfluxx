@@ -113,4 +113,19 @@ trait ResolveFreeRuleTrait
       "selected_player_id" => $selected_player_id,
     ]);
   }
+
+  public function action_resolveFreeRuleCardAndPlayerSelection(
+    $card_id,
+    $selected_player_id
+  ) {
+    self::checkAction("resolveFreeRuleCardAndPlayerSelection");
+
+    $game = Utils::getGame();
+    $card = $game->cards->getCard($card_id);
+
+    return self::_action_resolveFreeRule([
+      "card" => $card,
+      "selected_player_id" => $selected_player_id,
+    ]);
+  }
 }
