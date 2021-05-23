@@ -47,7 +47,7 @@ $gameinfos = [
   // 'not_recommend_player_number' => array( 2, 3 ),      // <= example: this is not recommended to play this game with 2 or 3 players
 
   // Estimated game duration, in minutes (used only for the launch, afterward the real duration is computed)
-  "estimated_duration" => 30,
+  "estimated_duration" => 20,
 
   // Time in second add to a player when "giveExtraTime" is called (speed profile = fast)
   "fast_additional_time" => 30,
@@ -131,9 +131,9 @@ $gameinfos = [
   // A good length for this text is between 100 and 150 words (about 6 to 9 lines on a standard display)
   "presentation" => [
     totranslate("The Ever Changing Card Game... In Space!"),
-    totranslate("It all begins with one basic rule: Draw one card, Play one card. But New Rule cards quickly make things chaotic..."),
-    totranslate("Even the object of the game will often change as you play, as players swap out one Goal card for another. Can you achieve World Peace before someone changes the goal to Bread and Chocolate?"),
-    totranslate("For even more fun and a litte more complexity, include the Creeper Pack expansion. Because sometimes you just Also Need a Baked Potato!"),
+    totranslate("Just when you thought that Fluxx had gone as far as it could go - it blasts off for the Stars!"),
+    totranslate("Explore the vastness of space-themed humor with your valiant Captain, Engineer, and, of course, your Expendable Crewman."),
+    totranslate("Go check out that Small Moon – or is it really a Space Station? You may be swayed by Unseen Forces, held hostage by Evil Computers, or find your ship infested with Cute Fuzzy Aliens."),
   ],
 
   // Games categories
