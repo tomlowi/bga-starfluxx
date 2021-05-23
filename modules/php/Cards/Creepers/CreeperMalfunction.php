@@ -33,8 +33,7 @@ class CreeperMalfunction extends CreeperCard
     return parent::preventsWinForGoal($goalCard);
   }
 
-  // @TODO: Any special powers of the Keeper become ignored!
-
+  // When Malfunction attached: any special powers of the Keeper become ignored!
   public function isAttachedTo()
   {
     $game = Utils::getGame();
