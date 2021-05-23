@@ -27,6 +27,9 @@ class KeeperLaserPistol extends KeeperCard
     $alreadyUsed = !Utils::playerHasNotYetUsedLaserPistol();
     if ($alreadyUsed) return false;
 
+    if (Utils::checkForMalfunction($this->getCardId()))
+      return false;
+
     $game = Utils::getGame();
     // Laser Pistol can only be used on keepers with attached creepers
     $keeper1 = $game->getGameStateValue("creeperBrainParasitesAttachedTo");

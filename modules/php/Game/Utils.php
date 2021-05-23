@@ -157,7 +157,8 @@ class Utils
     $keeperComputer = 3;
     $computer_player = Utils::findPlayerWithKeeper($keeperComputer);
 
-    return $computer_player != null && $computer_player["player_id"] == $player_id;
+    return $computer_player != null && $computer_player["player_id"] == $player_id
+      && !Utils::checkForMalfunction($computer_player["keeper_card"]["id"]);
   }
 
   public static function calculateDrawComputerBonus($player_id)
@@ -321,6 +322,14 @@ class Utils
       "player_id" => $creeper_player_id,
       "creeper_card" => $creeper_card,
     ];
+  }
+
+  public static function checkForMalfunction($card_id) 
+  {
+    $game = Utils::getGame();
+    $keeper_id_malfunction = $game->getGameStateValue("creeperMalfunctionAttachedTo");
+
+    return $card_id == $keeper_id_malfunction;
   }
 
   public static function checkTargetCardReplaceWithExpendableCrewman($card, $active_player_id, 

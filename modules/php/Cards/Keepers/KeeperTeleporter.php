@@ -27,6 +27,9 @@ class KeeperTeleporter extends KeeperCard
     $alreadyUsed = !Utils::playerHasNotYetUsedTeleporter();
     if ($alreadyUsed) return false;
 
+    if (Utils::checkForMalfunction($this->getCardId()))
+      return false;
+
     $keeperCount = Utils::getPlayerKeeperCount($player_id);
     // players needs to have at least 1 other keeper than the Teleporter
     return $keeperCount > 1;

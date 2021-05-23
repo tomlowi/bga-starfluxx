@@ -46,7 +46,10 @@ class GoalCreeperWithKeeper extends GoalCard
     $holograph_player_id = null;
     $player_with_holograph = Utils::findPlayerWithKeeper($this->keeperHolograph);
     if ($player_with_holograph != null) {
-      $holograph_player_id = $player_with_holograph["player_id"];
+      if (!Utils::checkForMalfunction($player_with_holograph["keeper_card"]["id"]))
+      {
+        $holograph_player_id = $player_with_holograph["player_id"];
+      }      
     }    
 
     // If both cards are in the same player's keepers, this player wins

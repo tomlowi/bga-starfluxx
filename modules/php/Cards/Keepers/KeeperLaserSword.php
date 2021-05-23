@@ -34,6 +34,9 @@ class KeeperLaserSword extends KeeperCard
     $alreadyUsed = !Utils::playerHasNotYetUsedLaserSword();
     if ($alreadyUsed) return false;
 
+    if (Utils::checkForMalfunction($this->getCardId()))
+      return false;
+
     $game = Utils::getGame();
     $playerHasKeeperWithCreeper = false;
     // Laser Sword can only be used on own keepers with attached creepers

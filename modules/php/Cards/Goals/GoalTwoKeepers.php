@@ -51,7 +51,10 @@ class GoalTwoKeepers extends GoalCard
     $holograph_player_id = null;
     $player_with_holograph = Utils::findPlayerWithKeeper($this->keeperHolograph);
     if ($allow_holograph && $player_with_holograph != null) {
-      $holograph_player_id = $player_with_holograph["player_id"];
+      if (!Utils::checkForMalfunction($player_with_holograph["keeper_card"]["id"]))
+      {
+        $holograph_player_id = $player_with_holograph["player_id"];
+      }      
     }
 
     // https://faq.looneylabs.com/fluxx-games/star-fluxx#1265

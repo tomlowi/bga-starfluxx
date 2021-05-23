@@ -20,8 +20,9 @@ class GoalLandingParty extends GoalTwoKeepers
   }
 
   public function goalReachedByPlayer()
-  {    
-    $cards = Utils::getGame()->cards;
+  {
+    $game = Utils::getGame();
+    $cards = $game->cards;
 
     $tester_id = null;
     // which player has the expendable crewman?
@@ -39,10 +40,14 @@ class GoalLandingParty extends GoalTwoKeepers
 
     // Exceptionally, the Holographic projection can let player win with Keeper from someone else
     // But only in their turn, so they must be the active player!
+    $active_player_id = $game->getActivePlayerId();
     $holograph_player_id = null;
     $player_with_holograph = Utils::findPlayerWithKeeper($this->keeperHolograph);
-    if ($player_with_holograph != null) {
-      $holograph_player_id = $player_with_holograph["player_id"];
+    if ($player_with_holograph != null && $holograph_player_id == $active_player_id) {
+      if (!Utils::checkForMalfunction($player_with_holograph["keeper_card"]["id"]))
+      {
+        $holograph_player_id = $player_with_holograph["player_id"];
+      }      
     }
     // https://faq.looneylabs.com/fluxx-games/star-fluxx#1265
     // Active player with holographic projector takes precedence over other player that has both keepers!
