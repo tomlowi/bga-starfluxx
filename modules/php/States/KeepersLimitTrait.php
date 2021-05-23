@@ -145,21 +145,28 @@ trait KeepersLimitTrait
       );
     }
 
-    // verify these are all actually keeper cards in hand of player
+    // discard selected keepers, but make sure attached creepers also get discarded
+    $cards = [];
+    foreach ($cards_id as $card_id) {
+      // Verify card is in the right location
+      $card = $this->cards->getCard($card_id);
+      if (
+        $card == null ||
+        $card["type"] != "keeper" ||
+        $card["location"] != "keepers" ||
+        $card["location_arg"] != $player_id
+      ) {
+        Utils::throwInvalidUserAction(
+          starfluxx::totranslate("Impossible discard: invalid keeper card ") . $card_id
+        );
+      }
 
-    $cards = self::discardCardsFromLocation(
-      $cards_id,
-      "keepers",
-      $player_id,
-      "keeper"
-    );
+      Utils::discardKeeperFromPlay($player_id, $card,
+        $player_id, "keeperlimit", '');
 
-    self::notifyAllPlayers("keepersDiscarded", "", [
-      "player_id" => $player_id,
-      "cards" => $cards,
-      "discardCount" => $game->cards->countCardInLocation("discard"),
-      "creeperCount" => Utils::getPlayerCreeperCount($player_id),
-    ]);
+      $cards[$card["id"]] = $card;
+    }  
+
 
     $state = $game->gamestate->state();
 
