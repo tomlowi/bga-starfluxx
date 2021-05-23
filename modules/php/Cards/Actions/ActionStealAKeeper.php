@@ -69,7 +69,7 @@ class ActionStealAKeeper extends ActionCard
 
     // move this keeper to the current player
     $notificationMsg = clienttranslate(
-      '${player_name} stole <b>${card_name}</b> from ${player_name2}'
+      '${player_name} stole <b>${card_name}</b> from ${player_name1}'
     );
     Utils::moveKeeperToPlayer($player_id, $card,
       $other_player_id, $player_id, $notificationMsg);    

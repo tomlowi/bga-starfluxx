@@ -63,13 +63,18 @@ class GoalTwoKeepers extends GoalCard
 
         $players = $game->loadPlayersBasicInfos();
         $holograph_player_name = $players[$holograph_player_id]["player_name"];
+
+        $card_definition = $game->getCardDefinitionFor($player_with_holograph["keeper_card"]);
+
         $game->notifyAllPlayers(
           "winWithHolograph",
           clienttranslate(
-            '<b>Holographic projection</b> allows ${player_name} to win with Keeper from another player'
+            '<b>${card_name}</b> allows ${player_name} to win with Keeper from another player'
           ),
           [
+            "i18n" => ["card_name"],
             "player_name" => $holograph_player_name,
+            "card_name" => $card_definition->getName(),
           ]
         );
 

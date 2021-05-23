@@ -323,18 +323,73 @@ class Utils
     ];
   }
 
+  public static function checkTargetCardReplaceWithExpendableCrewman($card, $active_player_id, 
+    $origin_player_id, $origin_player_name)
+  {
+    $game = Utils::getGame();
+
+    $target_card = $card;
+    // if targetted origin player has the Expendable Crewman,
+    // and this card is a keeper or a creeper attached to a keeper,
+    // then the Expendable Crewman should step into the line of fire and take the hit
+
+    // unless the active player is the one owning the Expendable Crewman,
+    // they can still give him exact order
+    if ($active_player_id == $origin_player_id) {
+      return $target_card;
+    }
+
+    $expendable_unique_id = 12;
+    $expendable_player = self::findPlayerWithKeeper($expendable_unique_id);
+    if ($expendable_player != null && $expendable_player["player_id"] == $origin_player_id) {
+      $expendable_card = $expendable_player["keeper_card"];
+
+      $stepIn = false;
+      if ($card["type"] == "keeper") {
+        $stepIn = true;
+      }
+      else if ($card["type"] == "creeper") {
+        $creeper = $game->getCardDefinitionFor($card);
+        $attached_id = $creeper->isAttachedTo();
+        $stepIn = ($attached_id > -1);
+      }
+
+      if ($stepIn) {
+        $target_card = $expendable_card;
+        $card_definition = $game->getCardDefinitionFor($expendable_card);
+
+        $game->notifyAllPlayers(
+          "expendableCrewman", 
+          '<b>${card_name}</b> takes the hit for ${player_name}',
+          [
+            "i18n" => ["card_name"],
+            "player_name" => $origin_player_name,
+            "card_name" => $card_definition->getName(),
+          ]
+        );
+      }      
+    }
+
+    return $target_card;
+  }
+
   public static function moveKeeperToPlayer($active_player_id, $card,
     $origin_player_id, $destination_player_id, $notificationMsg) {
 
     $game = Utils::getGame();
-    // move this keeper from one player to another
-    $card_definition = $game->getCardDefinitionFor($card);
-    $game->cards->moveCard($card["id"], "keepers", $destination_player_id);
 
     $players = $game->loadPlayersBasicInfos();
     $active_player_name = $players[$active_player_id]["player_name"];
     $origin_player_name = $players[$origin_player_id]["player_name"];
     $destination_player_name = $players[$destination_player_id]["player_name"];
+
+    // replace with Expendable Crewman if needed
+    $card = self::checkTargetCardReplaceWithExpendableCrewman($card, $active_player_id,
+      $origin_player_id, $origin_player_name);
+
+    // move this keeper from one player to another
+    $card_definition = $game->getCardDefinitionFor($card);
+    $game->cards->moveCard($card["id"], "keepers", $destination_player_id);
 
     $cardsToMove = [$card];
 
@@ -430,14 +485,18 @@ class Utils
     $origin_player_id, $trigger_name, $notificationMsg) {
 
     $game = Utils::getGame();
-    // move this keeper from player to the discard pile
-    $card_definition = $game->getCardDefinitionFor($card);
-    $game->cards->playCard($card["id"]);
 
     $players = $game->loadPlayersBasicInfos();
     $active_player_name = $players[$active_player_id]["player_name"];
     $origin_player_name = $players[$origin_player_id]["player_name"];
 
+    // replace with Expendable Crewman if needed
+    $card = self::checkTargetCardReplaceWithExpendableCrewman($card, $active_player_id, 
+      $origin_player_id, $origin_player_name);
+
+    // move this keeper from player to the discard pile
+    $game->cards->playCard($card["id"]);
+    $card_definition = $game->getCardDefinitionFor($card);
     $cardsToRemove = [$card];
 
     $keeper_card = null;

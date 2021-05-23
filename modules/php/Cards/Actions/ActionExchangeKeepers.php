@@ -72,12 +72,6 @@ class ActionExchangeKeepers extends ActionCard
       );
     }
 
-    // switch the keeper locations
-    Utils::moveKeeperToPlayer($player_id, $myKeeper,
-      $player_id, $other_player_id, "");
-    Utils::moveKeeperToPlayer($player_id, $otherKeeper,
-      $other_player_id, $player_id, "");
-
     // extra notification about the switch
     $players = $game->loadPlayersBasicInfos();
     $other_player_name = $players[$other_player_id]["player_name"];
@@ -87,7 +81,7 @@ class ActionExchangeKeepers extends ActionCard
     $game->notifyAllPlayers(
       "actionResolved",
       clienttranslate(
-        '${player_name} got <b>${other_keeper_name}</b> from ${player_name2} in exchange for <b>${my_keeper_name}</b>'
+        '${player_name} exchanges <b>${other_keeper_name}</b> from ${player_name2} for <b>${my_keeper_name}</b>'
       ),
       [
         "i18n" => ["other_keeper_name", "my_keeper_name"],
@@ -97,5 +91,11 @@ class ActionExchangeKeepers extends ActionCard
         "my_keeper_name" => $myKeeperCard->getName(),
       ]
     );
+
+    // switch the keeper locations
+    Utils::moveKeeperToPlayer($player_id, $myKeeper,
+        $player_id, $other_player_id, "");
+    Utils::moveKeeperToPlayer($player_id, $otherKeeper,
+        $other_player_id, $player_id, "");
   }
 }

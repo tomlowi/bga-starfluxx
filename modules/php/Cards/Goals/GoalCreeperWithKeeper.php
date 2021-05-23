@@ -11,6 +11,8 @@ class GoalCreeperWithKeeper extends GoalCard
 
     $this->creeper = -1;
     $this->keeper = -1;
+
+    $this->keeperHolograph = 8;
   }
 
   public function goalReachedByPlayer()
@@ -53,6 +55,24 @@ class GoalCreeperWithKeeper extends GoalCard
 
     if ($holograph_player_id != null && $holograph_player_id == $active_player_id) {
       if ($holograph_player_id == $creeper_player_id) {
+
+        $players = $game->loadPlayersBasicInfos();
+        $holograph_player_name = $players[$holograph_player_id]["player_name"];
+
+        $card_definition = $game->getCardDefinitionFor($player_with_holograph["keeper_card"]);
+
+        $game->notifyAllPlayers(
+          "winWithHolograph",
+          clienttranslate(
+            '<b>${card_name}</b> allows ${player_name} to win with Keeper from another player'
+          ),
+          [
+            "i18n" => ["card_name"],
+            "player_name" => $holograph_player_name,
+            "card_name" => $card_definition->getName(),
+          ]
+        );
+
         return $holograph_player_id;
       }
     } else if ($creeper_player_id == $keeper_player_id) {

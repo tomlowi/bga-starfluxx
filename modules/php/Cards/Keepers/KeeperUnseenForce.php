@@ -65,10 +65,11 @@ class KeeperUnseenForce extends KeeperCard
         "player_name" => $player_name,
         "player_name2" => $selected_player_name,
       ]
-    );
-    $game->sendHandCountNotifications();
+    );    
 
     // We move this card in the player's hand
     $game->cards->moveCard($card["id"], "hand", $player_id);
+
+    $game->sendHandCountNotifications();
   }
 }
