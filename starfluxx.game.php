@@ -387,6 +387,7 @@ class starfluxx extends Table
   {
     return [
       "action" => clienttranslate("Action"),
+      "surprise" => clienttranslate("Surprise"),
       "creeper" => clienttranslate("Creeper"),
       "goal" => clienttranslate("Goal"),
       "keeper" => clienttranslate("Keeper"),

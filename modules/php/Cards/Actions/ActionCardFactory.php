@@ -25,6 +25,7 @@ class ActionCardFactory extends CardFactory
 
       $actionDefinitions[$definitionId] = [
         "type" => "action",
+        "subtype" => $card->getActionType(),
         "set" => $card->getCardSet(),
         "name" => $card->getName(),
         "description" => $card->getDescription(),

@@ -13,6 +13,11 @@ class ActionCard extends Card
     parent::__construct($cardId, $uniqueId);
   }
 
+  public function getActionType()
+  {
+    return null;
+  }
+
   // Indicates which interaction is expected by this Action
   // null indicated that this action  can be handled without client-side interaction
   public $interactionNeeded = null;

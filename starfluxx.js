@@ -621,6 +621,11 @@ define([
           id: card_type_id,
         };
 
+        if (cardDefinition.type == "action" && cardDefinition.subtype != null) {
+          card.typeName = _(this.cardTypesDefinitions[cardDefinition.subtype]);
+          card.subtypeName = _("");
+        }
+
         if (card.name.length > 14) {
           card.nameLength = "long";
         }

@@ -16,6 +16,11 @@ class ActionThatsMine extends ActionCard
     );
   }
 
+  public function getActionType()
+  {
+    return "surprise";
+  }
+
   public function immediateEffectOnPlay($player_id)
   {
     $game = Utils::getGame();
