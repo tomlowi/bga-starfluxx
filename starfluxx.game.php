@@ -77,6 +77,7 @@ class starfluxx extends Table
       "creeperBrainParasitesAttachedTo" => 46,
       "creeperEvilAttachedTo" => 47,
       "creeperMalfunctionAttachedTo" => 48,
+      "creeperForcedRecheckNeeded" => 49,
       "tmpHand1ToPlay" => 50,
       "tmpHand1Card" => 51,
       "tmpHand2ToPlay" => 52,
@@ -200,6 +201,7 @@ class starfluxx extends Table
     self::setGameStateInitialValue("creeperBrainParasitesAttachedTo", -1);
     self::setGameStateInitialValue("creeperEvilAttachedTo", -1);
     self::setGameStateInitialValue("creeperMalfunctionAttachedTo", -1);
+    self::setGameStateInitialValue("creeperForcedRecheckNeeded", 0);
 
     self::setGameStateInitialValue("playerTurnUsedWormhole", 0);
     self::setGameStateInitialValue("playerTurnUsedCaptain", 0);
@@ -643,6 +645,7 @@ class starfluxx extends Table
 
   public function checkCreeperResolveNeeded($lastPlayedCard)
   {
+    self::setGameStateValue("creeperForcedRecheckNeeded", 0);
     // Check for any Creeper abilities after keepers/creepers played or moved
     $stateTransition = CreeperCardFactory::onCheckResolveKeepersAndCreepers(
       $lastPlayedCard
@@ -833,6 +836,8 @@ class starfluxx extends Table
       $this->gamestate->nextstate("continuePlay");
       return;
     }
+
+    self::setGameStateValue("creeperForcedRecheckNeeded", 1);
   }
 
   public function st_nextPlayer()
@@ -890,6 +895,7 @@ class starfluxx extends Table
     self::setGameStateValue("playerTurnLoggedComputerBonus", 0);
     self::setGameStateValue("playerTurnUsedTeleporter", 0);
     // also reset all turn-start creeper execution
+    self::setGameStateValue("creeperForcedRecheckNeeded", 0);
 
     self::giveExtraTime($player_id);
     $this->gamestate->nextState("");

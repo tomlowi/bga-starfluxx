@@ -35,6 +35,16 @@ trait PlayCardTrait
       return;
     }
 
+    $forceRecheck = $game->getGameStateValue("creeperForcedRecheckNeeded");
+    $lastCardPlayed = null;
+    if ($forceRecheck) {
+      $lastCardPlayed = ["type" => "goal", "id" => 0, "type_arg" => 0];
+    }    
+    // check if any creepers should be checked again because of the cards just drawn    
+    if ($game->checkCreeperResolveNeeded($lastCardPlayed)) {
+      return;
+    }
+
     // before we play anything new, check again if we have a winner at this point
     if ($this->checkWinConditions()) {
       return;

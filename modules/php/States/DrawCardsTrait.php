@@ -48,10 +48,6 @@ trait DrawCardsTrait
     // move to state where player is allowed to start playing cards
     $game->gamestate->nextstate("cardsDrawn");
 
-    // check if any creepers must be resolved because of the cards just drawn
-    // (e.g. player had Peace on the table and has just drawn War)
-    if ($game->checkCreeperResolveNeeded(null)) {
-      return;
-    }
+    $game->setGameStateValue("creeperForcedRecheckNeeded", 1);
   }
 }

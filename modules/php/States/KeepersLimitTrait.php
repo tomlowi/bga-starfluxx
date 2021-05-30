@@ -10,12 +10,12 @@ trait KeepersLimitTrait
     return self::getGameStateValue("keepersLimit");
   }
 
-  private function getKeepersInfractions($players_id = null)
+  private function getKeepersInfractions($players_id = null, $includeAllArguments = false)
   {
     $keepersLimit = $this->getKeepersLimit();
 
     // no active Keeper Limit, nothing to do
-    if ($keepersLimit < 0) {
+    if ($keepersLimit < 0 && !$includeAllArguments) {
       return [];
     }
 
@@ -40,6 +40,10 @@ trait KeepersLimitTrait
       if ($keepersInPlay > $actualKeepersLimit) {
         $playersInfraction[$player_id] = [
           "discardCount" => $keepersInPlay - $actualKeepersLimit,
+        ];
+      } else if ($includeAllArguments) {
+        $playersInfraction[$player_id] = [
+          "discardCount" => 0,
         ];
       }
     }
@@ -89,7 +93,7 @@ trait KeepersLimitTrait
       ? clienttranslate('<span class="flx-warn-inflation">(+1 Inflation)</span>')
       : "";
 
-    $playerInfractions = $this->getKeepersInfractions();
+    $playerInfractions = $this->getKeepersInfractions(null, true);
     // make sure some arguments are here for the active player
     // normally they should never be in this state, but in some rare cases they
     // remain active very briefly and get error message:

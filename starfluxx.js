@@ -426,7 +426,7 @@ define([
             this.onEnteringStateTempHandPlay(args);
             break;
 
-          case "dummmy":
+          case "dummy":
             break;
         }
       },
@@ -460,6 +460,7 @@ define([
 
           case "actionResolve":
             this.onLeavingStateActionResolve();
+            break;
 
           case "freeRuleResolve":
             this.onLeavingStateFreeRuleResolve();
@@ -474,7 +475,7 @@ define([
             this.onLeavingStateTempHandPlay();
             break;
 
-          case "dummmy":
+          case "dummy":
             break;
         }
       },

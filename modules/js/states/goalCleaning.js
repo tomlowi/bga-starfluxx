@@ -3,7 +3,7 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
     constructor() {},
 
     onEnteringStateGoalCleaning: function (args) {
-      console.log("Entering state: GoalCleaning", this.isCurrentPlayerActive());
+      console.log("Entering state: GoalCleaning", this.isCurrentPlayerActive(), args);
 
       if (this.isCurrentPlayerActive()) {
         this.goalsStock.setSelectionMode(1);
