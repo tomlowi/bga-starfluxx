@@ -257,7 +257,7 @@ class starfluxx extends Table
       $this->performDrawCards($player_id, $startingHand, true);
     }
 
-    // $this->testForceCardDrawFor("action", 302, $first_player_id);
+    //$this->testForceCardDrawFor("action", 301, $first_player_id);
     //$this->testForceCardDrawFor("keeper", 16, $first_player_id);
 
     // reset to start with correct first active player

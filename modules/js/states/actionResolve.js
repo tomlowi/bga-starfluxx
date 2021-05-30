@@ -227,6 +227,15 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
         );
         dojo.attr("button_" + player_id, "data-player-id", player_id);
       },
+      handCardsSelection: function (that, args) {
+        that.handStock.setSelectionMode(2);
+
+        that.addActionButton(
+          "button_confirm",
+          _("Done"),
+          "onResolveActionHandCardsSelection"
+        );
+      },
 
       // NotImplemented: function (that, action_name, args) {
       //   that.addActionButton(
@@ -408,6 +417,24 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
 
       var cards = this.tmpSelectStock.getSelectedItems();
       var cards_id = cards.map(function (card) {
+        return card.id;
+      });
+
+      if (this.checkAction(action)) {
+        this.ajaxAction(action, {
+          cards_id: cards_id.join(";"),
+        });
+      }
+    },
+
+    onResolveActionHandCardsSelection: function (ev) {
+      var selectedCards = [];
+
+      var stock = this.handStock;
+      selectedCards = stock.getSelectedItems();
+
+      var action = "resolveActionCardsSelection";
+      var cards_id = selectedCards.map(function (card) {
         return card.id;
       });
 
