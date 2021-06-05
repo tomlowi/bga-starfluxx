@@ -60,7 +60,7 @@ class ActionBeamUsUp extends ActionCard
             $target_player_id = $to_player_id ?? $check_player_id;            
             $origin_player_id = $card["location_arg"];
             Utils::moveKeeperToHand($player_id, $card,
-              $origin_player_id, $target_player_id, "");            
+              $origin_player_id, $target_player_id, "", false);
           }
         }
       }

@@ -16,7 +16,7 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
         ["cardsReceivedFromPlayer", 500],
         ["cardsSentToPlayer", null],
         ["keepersMoved", 500],
-        ["cardFromTableToHand", null],
+        ["cardFromTableToHand", 500],
         ["handCountUpdate", null],
         ["reshuffle", null],
         ["tmpHandDiscarded", 500],

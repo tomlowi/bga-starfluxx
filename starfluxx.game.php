@@ -65,6 +65,7 @@ class starfluxx extends Table
       "keepersLimit" => 13,
       "drawnCards" => 20,
       "playedCards" => 21,
+      "forcedTurnEnd" => 22,
       "lastGoalBeforeDoubleAgenda" => 30,
       "activeDoubleAgenda" => 31,
       "activeInflation" => 32,
@@ -188,6 +189,7 @@ class starfluxx extends Table
     self::setGameStateInitialValue("keepersLimit", -1);
     self::setGameStateInitialValue("drawnCards", 0);
     self::setGameStateInitialValue("playedCards", 0);
+    self::setGameStateInitialValue("forcedTurnEnd", 0);
     self::setGameStateInitialValue("anotherTurnMark", 0);
     self::setGameStateInitialValue("lastGoalBeforeDoubleAgenda", -1);
     self::setGameStateInitialValue("activeDoubleAgenda", 0);
@@ -886,6 +888,7 @@ class starfluxx extends Table
 
     // reset everything for turn of next player
     self::setGameStateValue("playedCards", 0);
+    self::setGameStateValue("forcedTurnEnd", 0);
     self::setGameStateValue("playerTurnUsedWormhole", 0);
     self::setGameStateValue("playerTurnUsedCaptain", 0);
     self::setGameStateValue("playerTurnUsedScientist", 0);

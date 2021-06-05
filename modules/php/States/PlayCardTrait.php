@@ -50,6 +50,13 @@ trait PlayCardTrait
       return;
     }
 
+    // If anything happened during previous plays that forces this player to end turn immediately
+    $forcedTurnEnd = $game->getGameStateValue("forcedTurnEnd");
+    if ($forcedTurnEnd > 0) {
+      $game->gamestate->nextstate("endOfTurn");
+      return;
+    }
+
     // If any "free action" rule can be played, we cannot end turn automatically
     // Player must finish its turn by explicitly deciding not to use any of the free rules
     $freeRulesAvailable = $this->getFreeRulesAvailable($player_id);

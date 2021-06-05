@@ -383,7 +383,7 @@ class Utils
   }
 
   public static function moveKeeperToPlayer($active_player_id, $card,
-    $origin_player_id, $destination_player_id, $notificationMsg) {
+    $origin_player_id, $destination_player_id, $notificationMsg, $checkForReplace = true) {
 
     $game = Utils::getGame();
 
@@ -393,8 +393,10 @@ class Utils
     $destination_player_name = $players[$destination_player_id]["player_name"];
 
     // replace with Expendable Crewman if needed
-    $card = self::checkTargetCardReplaceWithExpendableCrewman($card, $active_player_id,
+    if ($checkForReplace) {
+      $card = self::checkTargetCardReplaceWithExpendableCrewman($card, $active_player_id,
       $origin_player_id, $origin_player_name);
+    }    
 
     // move this keeper from one player to another
     $card_definition = $game->getCardDefinitionFor($card);
@@ -491,7 +493,7 @@ class Utils
   }
 
   public static function discardKeeperFromPlay($active_player_id, $card,
-    $origin_player_id, $trigger_name, $notificationMsg) {
+    $origin_player_id, $trigger_name, $notificationMsg, $checkForReplace = true) {
 
     $game = Utils::getGame();
 
@@ -500,8 +502,10 @@ class Utils
     $origin_player_name = $players[$origin_player_id]["player_name"];
 
     // replace with Expendable Crewman if needed
-    $card = self::checkTargetCardReplaceWithExpendableCrewman($card, $active_player_id, 
+    if ($checkForReplace) {
+      $card = self::checkTargetCardReplaceWithExpendableCrewman($card, $active_player_id, 
       $origin_player_id, $origin_player_name);
+    }    
 
     // move this keeper from player to the discard pile
     $game->cards->playCard($card["id"]);
@@ -596,7 +600,7 @@ class Utils
   }
 
   public static function moveKeeperToHand($active_player_id, $card,
-    $origin_player_id, $destination_player_id, $notificationMsg, $checkForReplace = false) {
+    $origin_player_id, $destination_player_id, $notificationMsg, $checkForReplace = true) {
 
     $game = Utils::getGame();
 
