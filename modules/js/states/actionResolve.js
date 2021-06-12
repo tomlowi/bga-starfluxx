@@ -111,17 +111,20 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
           false
         );
       },
-      discardSelection: function (that, action_name, args) {
+      availableCardsSelection: function (that, action_name, args) {
         dojo.place("<h3>" + action_name + "</h3>", "tmpSelectCards");
         dojo.place('<div id="tmpSelectStock"></div>', "tmpSelectCards");
 
         that.tmpSelectStock = that.createCardStock("tmpSelectStock", [
+          "keeper",
+          "goal",
           "rule",
           "action",
+          //"creeper",
         ]);
         that.adaptCardOverlapsForStock(that.tmpSelectStock, 4);
 
-        that.addCardsToStock(that.tmpSelectStock, args.discard);
+        that.addCardsToStock(that.tmpSelectStock, args.availableCards);
         that.tmpSelectStock.setSelectionMode(1);
 
         that._listeners["tmpDiscard"] = dojo.connect(
@@ -394,13 +397,11 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
       var keepersSelected = [];
 
       for (var player_id in this.keepersStock) {
-        if (player_id != this.player_id) {
-          var stock = this.keepersStock[player_id];
-          var items = stock.getSelectedItems();
+        var stock = this.keepersStock[player_id];
+        var items = stock.getSelectedItems();
 
-          if (items.length > 0) {
-            keepersSelected = keepersSelected.concat(items[0]);
-          }
+        if (items.length > 0) {
+          keepersSelected = keepersSelected.concat(items[0]);
         }
       }
 

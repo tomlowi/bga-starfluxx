@@ -85,6 +85,7 @@ class starfluxx extends Table
       "tmpHand2Card" => 53,
       "tmpHand3ToPlay" => 54,
       "tmpHand3Card" => 55,
+      "tmpActionPhase" => 56,
       "playerTurnUsedWormhole" => 60,
       "playerTurnUsedCaptain" => 61,
       "playerTurnUsedScientist" => 62,
@@ -221,6 +222,7 @@ class starfluxx extends Table
     self::setGameStateInitialValue("tmpHand2Card", -1);
     self::setGameStateInitialValue("tmpHand3ToPlay", 0);
     self::setGameStateInitialValue("tmpHand3Card", -1);
+    self::setGameStateInitialValue("tmpActionPhase", 0);
 
     // Initialize game statistics
     // (note: statistics used in this file must be defined in your stats.inc.php file)
@@ -259,7 +261,7 @@ class starfluxx extends Table
       $this->performDrawCards($player_id, $startingHand, true);
     }
 
-    //$this->testForceCardDrawFor("action", 313, $first_player_id);
+    //$this->testForceCardDrawFor("action", 302, $first_player_id);
     //$this->testForceCardDrawFor("keeper", 21, $first_player_id);
 
     // reset to start with correct first active player
