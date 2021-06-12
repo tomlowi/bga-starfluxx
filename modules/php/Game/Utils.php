@@ -579,7 +579,7 @@ class Utils
     $game->notifyAllPlayers(
       "keepersDiscarded", $notificationMsg,
       [
-        "i18n" => ["card_name"],
+        "i18n" => ["card_name", "trigger_name"],
         "player_name" => $active_player_name,
         "player_name2" => $origin_player_name,
         "trigger_name" => $trigger_name,

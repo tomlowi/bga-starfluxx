@@ -45,6 +45,17 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
           "onResolveActionKeepersExchange"
         );
       },
+      keeperFromEachPlayer: function (that, action_name, args) {
+        for (var player_id in that.keepersStock) {
+          var stock = that.keepersStock[player_id];
+          stock.setSelectionMode(1);
+        }
+        that.addActionButton(
+          "button_confirm",
+          _("Done"),
+          "onResolveActionKeeperFromEachPlayer"
+        );
+      },
       keeperSelectionOther: function (that, action_name, args) {
         for (var player_id in that.keepersStock) {
           if (player_id != that.player_id) {
@@ -375,6 +386,33 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
         this.ajaxAction(action, {
           myKeeperId: myKeeper.id,
           otherKeeperId: otherKeeper.id,
+        });
+      }
+    },
+
+    onResolveActionKeeperFromEachPlayer: function (ev) {
+      var keepersSelected = [];
+
+      for (var player_id in this.keepersStock) {
+        if (player_id != this.player_id) {
+          var stock = this.keepersStock[player_id];
+          var items = stock.getSelectedItems();
+
+          if (items.length > 0) {
+            keepersSelected = keepersSelected.concat(items[0]);
+          }
+        }
+      }
+
+      var action = "resolveActionCardsSelection";
+
+      var keepers_id = keepersSelected.map(function (keeper) {
+        return keeper.id;
+      });
+
+      if (this.checkAction(action)) {
+        this.ajaxAction(action, {
+          cards_id: keepers_id.join(";"),
         });
       }
     },
