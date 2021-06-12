@@ -13,6 +13,10 @@ class KeeperLaserPistol extends KeeperCard
     $this->name = clienttranslate("Laser Pistol");
 
     $this->description = clienttranslate("Once during your turn, you can discard any Keeper anywhere in play (other than this one) if it has a Creeper attached to it.");
+
+    $this->help = clienttranslate(
+      "Select any keeper card in play with a creeper attached to it, from any player (including yourself)."
+    );
   }
 
   public function getKeeperType()
