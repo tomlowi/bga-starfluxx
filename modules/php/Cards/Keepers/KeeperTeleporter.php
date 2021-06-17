@@ -15,6 +15,10 @@ class KeeperTeleporter extends KeeperCard
     // see Star Fluxx FAQ: https://faq.looneylabs.com/question/1079
     // Teleporter text should be read as any *other* keeper, so best adapt that here
     $this->description = clienttranslate("Once during your turn, you can move any 1 of your other Keepers to another player.");
+
+    $this->help = clienttranslate(
+      "First select one of your keepers (not the Teleporter), then choose the player it should move to."
+    );
   }
 
   public function getKeeperType()

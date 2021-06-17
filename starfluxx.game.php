@@ -261,7 +261,7 @@ class starfluxx extends Table
       $this->performDrawCards($player_id, $startingHand, true);
     }
 
-    //$this->testForceCardDrawFor("action", 302, $first_player_id);
+    //$this->testForceCardDrawFor("action", 315, $first_player_id);
     //$this->testForceCardDrawFor("keeper", 21, $first_player_id);
 
     // reset to start with correct first active player
@@ -484,7 +484,7 @@ class starfluxx extends Table
         ]);
         // play card without "checkAction": can be in any state here
         // and don't add this to "play count", and postpone
-        self::_action_playCard($nextCard["id"], false, $postponeCreeperResolve);
+        self::_action_playCard($nextCard["id"], $player_id, false, $postponeCreeperResolve);
         // re-draw for another card
         $nextCard = $this->cards->pickCard("deck", $player_id);
       }
@@ -524,7 +524,7 @@ class starfluxx extends Table
       "cardsDrawnOther",
       clienttranslate('${player_name} draws <b>${drawCount}</b> card(s)'),
       [
-        "player_name" => self::getActivePlayerName(),
+        "player_name" => Utils::getPlayerName($player_id),
         "drawCount" => $drawCount,
         "player_id" => $player_id,
         "handCount" => $this->cards->countCardInLocation("hand", $player_id),

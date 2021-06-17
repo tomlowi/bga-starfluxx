@@ -44,6 +44,13 @@ class Utils
     return $keeperCounts;
   }
 
+  public static function getPlayerName($player_id)
+  {
+    $game = Utils::getGame();
+    $players = $game->loadPlayersBasicInfos();
+    return $players[$player_id]["player_name"];
+  }
+
   public static function getPlayerKeeperCount($player_id)
   {
     $cards = Utils::getGame()->cards;

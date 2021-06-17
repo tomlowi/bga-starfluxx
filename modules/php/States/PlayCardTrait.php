@@ -262,7 +262,8 @@ trait PlayCardTrait
     }
 
     // play the card from active player's hand
-    self::_action_playCard($card_id, true, $postponeCreeperResolve);
+    $player_id = $game->getActivePlayerId();
+    self::_action_playCard($card_id, $player_id, true, $postponeCreeperResolve);
   }
 
   public function action_forced_playCard($card_id)
@@ -271,17 +272,18 @@ trait PlayCardTrait
     $game = Utils::getGame();
     $game->checkAction("playCard");
     // play the card from active player's hand, but don't count it for nr played cards
-    self::_action_playCard($card_id, false);
+    $player_id = $game->getActivePlayerId();
+    self::_action_playCard($card_id, $player_id, false);
   }
 
   private function _action_playCard(
     $card_id,
+    $player_id,
     $incrementPlayedCards,
     $postponeCreeperResolve = false
   ) {
     $game = Utils::getGame();
 
-    $player_id = $game->getActivePlayerId();
     $card = $game->cards->getCard($card_id);
 
     if ($card["location"] != "hand" or $card["location_arg"] != $player_id) {
@@ -389,7 +391,7 @@ trait PlayCardTrait
       clienttranslate('${player_name} must place creeper <b>${card_name}</b>'),
       [
         "i18n" => ["card_name"],
-        "player_name" => $game->getActivePlayerName(),
+        "player_name" => Utils::getPlayerName($player_id),
         "player_id" => $player_id,
         "card_name" => $creeperCard->getName(),
         "card" => $card,
