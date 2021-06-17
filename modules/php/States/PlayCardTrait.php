@@ -276,6 +276,13 @@ trait PlayCardTrait
     self::_action_playCard($card_id, $player_id, false);
   }
 
+  public function action_forced_playCard_forOtherPlayer($card_id, $player_id)
+  {
+    // immediately play card without "checkAction": can be in any state here
+    // and don't add this to "play count", and postpone resolving the creeper
+    self::_action_playCard($card_id, $player_id, false, true);
+  }
+
   private function _action_playCard(
     $card_id,
     $player_id,

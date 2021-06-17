@@ -115,13 +115,7 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
         dojo.place("<h3>" + action_name + "</h3>", "tmpSelectCards");
         dojo.place('<div id="tmpSelectStock"></div>', "tmpSelectCards");
 
-        that.tmpSelectStock = that.createCardStock("tmpSelectStock", [
-          "keeper",
-          "goal",
-          "rule",
-          "action",
-          //"creeper",
-        ]);
+        that.tmpSelectStock = that.createCardStock("tmpSelectStock", args.availableTypes);
         that.adaptCardOverlapsForStock(that.tmpSelectStock, 4);
 
         that.addCardsToStock(that.tmpSelectStock, args.availableCards);

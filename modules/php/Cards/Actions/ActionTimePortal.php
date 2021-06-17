@@ -45,11 +45,13 @@ class ActionTimePortal extends ActionCard
     $actionPhase = $game->getGameStateValue("tmpActionPhase");
     if ($actionPhase == 2) {
       return [
+        "availableTypes" => ["keeper", "goal", "rule", "action"],
         "availableCards" => $this->getAvailableCardsFromDrawPile()
       ];
     }
     else if ($actionPhase == 1) {
       return [
+        "availableTypes" => ["keeper", "goal", "rule", "action"],
         "availableCards" => $this->getAvailableCardsFromDiscardPile()
       ];
     }
