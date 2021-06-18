@@ -133,7 +133,10 @@ class ActionWhatDoYouWant extends ActionCard
       case "keeper":
       case "goal":
         $this->putCardInPlayerHand($card, $player_id);
-        return "endOfTurn";        
+        // force end of turn,
+      // but can't transition "endOfTurn" here, as other "Temp Hand" actions might still be resolving
+        $game->setGameStateValue("forcedTurnEnd", 1);
+        return null;
       // Creeper: select another player to give it to.
       // @TODO: if it needs to be resolved, actually this player should resolve instead of the receiver
       case "creeper":
