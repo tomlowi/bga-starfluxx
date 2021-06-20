@@ -203,10 +203,10 @@ class ActionTimePortal extends ActionCard
     $game->notifyAllPlayers(
       "cardTakenFromDiscard",
       clienttranslate(
-        '<b>${card_name}</b> moves into the hand of the Time Traveler'
+        '<b>${card_name}</b> moves through the Time Portal'
       ),
       [
-        "i18n" => ["card_name"],
+        "i18n" => ["card_name", "this_name"],
         "card" => $card,
         "card_name" => $card_definition->getName(),
         "discardCount" => $game->cards->countCardInLocation("discard"),
