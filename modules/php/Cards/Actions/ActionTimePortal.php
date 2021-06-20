@@ -158,7 +158,11 @@ class ActionTimePortal extends ActionCard
       $this->putThisCardWhereItBelongs($player_id);
       // either way their turn is over
       $game->setGameStateValue("tmpActionPhase", 0);
-      return "endOfTurn";      
+
+      // force end of turn,
+      // but can't transition "endOfTurn" here, as other "Temp Hand" actions might still be resolving
+      $game->setGameStateValue("forcedTurnEnd", 1);
+      return null;
     } else {
       $direction = $args["value"];
       // first resolving: player chose past or future
