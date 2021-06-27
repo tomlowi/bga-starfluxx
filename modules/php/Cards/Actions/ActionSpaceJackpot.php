@@ -22,9 +22,18 @@ class ActionSpaceJackpot extends ActionCard
 
   public function immediateEffectOnPlay($player_id)
   {
+    $game = Utils::getGame();
+
     $addInflation = Utils::getActiveInflation() ? 1 : 0;
     $extraCards = 5 + $addInflation;
-    Utils::getGame()->performDrawCards($player_id, $extraCards, true);
+
+    // make sure we can't draw back this card itself (after reshuffle if deck would be empty)
+    $game->cards->moveCard($this->getCardId(), "side", $player_id);
+
+    $game->performDrawCards($player_id, $extraCards, true);
+
+    // move this card itself back to the discard pile
+    $game->cards->playCard($this->getCardId());
 
     // basic jackpot (draw 3) gets extended to (draw 5, then discard 2)
     return parent::immediateEffectOnPlay($player_id);

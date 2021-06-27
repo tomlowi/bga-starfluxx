@@ -24,6 +24,10 @@ class ActionDistressCall extends ActionCard
 
     $active_player = $game->getActivePlayerId();
     $players = $game->loadPlayersBasicInfos();
+
+    // make sure we can't draw back this card itself (after reshuffle if deck would be empty)
+    $game->cards->moveCard($this->getCardId(), "side", $player_id);
+
     // draw 1 card for each player first
     foreach ($players as $player_id => $player) {
       $game->performDrawCards($player_id, 1, true);                  
@@ -48,5 +52,7 @@ class ActionDistressCall extends ActionCard
       } while ($extraCreeperCount > 0);
     }
 
+    // move this card itself back to the discard pile
+    $game->cards->playCard($this->getCardId());
   }
 }

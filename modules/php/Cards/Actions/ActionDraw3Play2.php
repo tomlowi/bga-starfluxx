@@ -23,14 +23,37 @@ class ActionDraw3Play2 extends ActionCard
     $game = Utils::getGame();
     $addInflation = Utils::getActiveInflation() ? 1 : 0;
 
+    $cardsToDraw = 3 + $addInflation;
+    // there must be enough available cards to draw, otherwise this action can't do anything
+    // and remember we can't redraw this card itself (as it is still being resolved)
+    $countAvailable = ($game->cards->countCardInLocation("discard") - 1)
+      + $game->cards->countCardInLocation("deck");
+    if ($countAvailable < $cardsToDraw) {
+      $game->notifyAllPlayers(
+        "actionIgnored",
+        clienttranslate(
+          'Not enough available cards to draw for <b>${card_name}</b>'
+        ), [
+          "i18n" => ["card_name"],
+          "player_id" => $player_id,
+          "card_name" => $this->getName(),
+          ]
+      );
+      return null;
+    }
+
     $tmpHandActive = Utils::getActiveTempHand();
     $tmpHandNext = $tmpHandActive + 1;
 
     $tmpHandLocation = "tmpHand" . $tmpHandNext;
     // Draw 3 for temp hand
+
+    // make sure we can't draw back this card itself (after reshuffle if deck would be empty)
+    $game->cards->moveCard($this->getCardId(), "side", $player_id);
+
     $tmpCards = $game->performDrawCards(
       $player_id,
-      3 + $addInflation,
+      $cardsToDraw,
       true, // $postponeCreeperResolve
       true
     ); // $temporaryDraw
@@ -41,6 +64,9 @@ class ActionDraw3Play2 extends ActionCard
 
     // move cards to temporary hand location
     $game->cards->moveCards($tmpCardIds, $tmpHandLocation, $player_id);
+
+    // move this card itself back to the discard pile
+    $game->cards->playCard($this->getCardId());
 
     // done: next play run will detect temp hand active
   }
