@@ -65,7 +65,7 @@ if (!defined("STATE_GAME_SETUP")) {
   define("STATE_RESOLVE_CREEPER_TURNSTART", 34);
   define("STATE_RESOLVE_CREEPER_INPLAY", 35);
   define("STATE_RESOLVE_TEMP_HAND_PLAY", 36);
-  define("STATE_ALLOW_SURPRISE_CANCEL_PLAY", 37);
+  define("STATE_ALLOW_SURPRISE_COUNTER_PLAY", 37);
   define("STATE_ALLOW_SURPRISE_CANCEL_SURPRISE", 38);
   define("STATE_NEXT_PLAYER_TURNSTART_CREEPERS", 89);
   define("STATE_NEXT_PLAYER", 90);
@@ -121,7 +121,7 @@ $machinestates = [
 
       "zombiePass" => STATE_ENFORCE_HAND_LIMIT_SELF,
 
-      "checkForSurprises" => STATE_ALLOW_SURPRISE_CANCEL_PLAY,
+      "checkForSurprises" => STATE_ALLOW_SURPRISE_COUNTER_PLAY,
     ],
   ],
 
@@ -369,24 +369,23 @@ $machinestates = [
     ],
   ],
 
-  STATE_ALLOW_SURPRISE_CANCEL_PLAY => [
-    "name" => "allowSurpriseCancelPlay",
+  STATE_ALLOW_SURPRISE_COUNTER_PLAY => [
+    "name" => "surpriseCounterPlay",
     "description" => clienttranslate(
-      'Some players may choose to Surprise cancel <b>${playedCardName}</b>'
+      'Some players may choose to Surprise counter <b>${playedCardName}</b>'
     ),
     "descriptionmyturn" => clienttranslate(
-      '${you} can choose to Surprise cancel <b>${playedCardName}</b>'
+      '${you} can choose to Surprise counter <b>${playedCardName}</b>'
     ),
     "type" => "multipleactiveplayer",
-    "args" => "arg_allowSurpriseCancelPlay",
-    "action" => "st_allowSurpriseCancelPlay",
+    "args" => "arg_allowSurpriseCounterPlay",
+    "action" => "st_allowSurpriseCounterPlay",
     "possibleactions" => [
-      "resolveSurprisePlay",
-      "resolveSurpriseIgnore"
+      "decideSurpriseCounterPlay"
     ],
     "transitions" => [
-      "surprisePlay" => STATE_ALLOW_SURPRISE_CANCEL_SURPRISE,
-      "continuePlay" => STATE_PLAY_CARD,
+      //"surprisePlayChecked" => STATE_ALLOW_SURPRISE_CANCEL_SURPRISE,
+      "surprisePlayChecked" => STATE_PLAY_CARD,
       "zombiePass" => STATE_PLAY_CARD,
       "endOfTurn" => STATE_ENFORCE_HAND_LIMIT_SELF,
       "endGame" => STATE_GAME_END,
@@ -394,7 +393,7 @@ $machinestates = [
   ],
 
   STATE_ALLOW_SURPRISE_CANCEL_SURPRISE => [
-    "name" => "allowSurpriseCancelSurprise",
+    "name" => "surpriseCancelSurprise",
     "description" => clienttranslate(
       'Some players may choose to cancel the Surprise <b>${surpriseName}</b>'
     ),
@@ -409,8 +408,8 @@ $machinestates = [
       "resolveSurpriseIgnore"
     ],
     "transitions" => [
-      "surprisePlay" => STATE_ALLOW_SURPRISE_CANCEL_SURPRISE,
-      "continuePlay" => STATE_PLAY_CARD,
+      //"surprisePlayChecked" => STATE_ALLOW_SURPRISE_CANCEL_SURPRISE,
+      "surprisePlayChecked" => STATE_PLAY_CARD,
       "zombiePass" => STATE_PLAY_CARD,
       "endOfTurn" => STATE_ENFORCE_HAND_LIMIT_SELF,
       "endGame" => STATE_GAME_END,
