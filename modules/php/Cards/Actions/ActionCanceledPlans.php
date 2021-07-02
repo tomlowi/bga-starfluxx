@@ -14,6 +14,10 @@ class ActionCanceledPlans extends ActionCard
     $this->description = clienttranslate(
       "<b>Out of turn:</b> Discard a Goal another player just played, thus preventing possible victory. <b>During your turn:</b> Discard the current Goal(s). Also, all other players must discard a Goal, or a random card, from their hands.<br>This card can also cancel another Surprise."
     );
+
+    // https://faq.looneylabs.com/question/188
+    // Note that "discard a Goal, or a random card" means that either the player chooses
+    // a specific Goal card to discard, or a random card is discarded - *not* chosen by the player then
   }
 
   public function getActionType()

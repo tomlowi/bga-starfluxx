@@ -299,6 +299,16 @@ trait PlayCardTrait
       );
     }
 
+    // @TODO: check if some other players have Surprise actions that could prevent this play
+    // If so, ask all players (multi?) if they want to play a Surprise 
+    // (prevent exposing which player actually has as Surprise)
+    // = state "checkForSurprises"
+    // If no Surprise, only then let the play go through
+    // If Surprised, allow more Surprise-cancelling-Surprise until decided if the card can be played
+
+    // It's a Trap is special: this should also be checked again after resolving Actions,
+    // and after resolving any Free Rule/Keeper plays that might steal keepers.
+
     $card_type = $card["type"];
     $stateTransition = null;
     $continuePlayTransition = "continuePlay";
