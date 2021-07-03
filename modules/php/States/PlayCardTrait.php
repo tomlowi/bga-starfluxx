@@ -87,15 +87,15 @@ trait PlayCardTrait
     if ($surpriseTargetId != -1) {
       $surpriseCounterId = $game->getGameStateValue("cardIdSurpriseCounter");
 
-      // Surprise countered the card played: discard both
-      // @TODO: not always just both discarded, depends on the Surprise played
+      // Surprise countered the card played
       if ($surpriseCounterId != -1) {
+
         $targetCard = $game->cards->getCard($surpriseTargetId);
-        $targetPlayerId = $targetCard["location_arg"];
         $surpriseCard = $game->cards->getCard($surpriseCounterId);
+        $surpriseCardDef = $game->getCardDefinitionFor($surpriseCard);
         $surprisePlayerId = $surpriseCard["location_arg"];
-        $game->cards->playCard($surpriseTargetId);
-        $game->cards->playCard($surpriseCounterId);
+
+        $surpriseCardDef->outOfTurnCounterPlay($surpriseTargetId);
 
         $players = $game->loadPlayersBasicInfos();
         $game->notifyAllPlayers("surprise", 
@@ -106,20 +106,6 @@ trait PlayCardTrait
             "card_surprise" => $game->getCardDefinitionFor($surpriseCard)->getName(),
             "card_target" => $game->getCardDefinitionFor($targetCard)->getName(),
           ]);
-        
-        $discardCount =$game->cards->countCardInLocation("discard");
-        $game->notifyAllPlayers("handDiscarded", "", [
-          "player_id" => $targetPlayerId,
-          "cards" => [$targetCard],
-          "discardCount" => $discardCount,
-          "handCount" => $game->cards->countCardInLocation("hand", $targetPlayerId),
-        ]);
-        $game->notifyAllPlayers("handDiscarded", "", [
-          "player_id" => $surprisePlayerId,
-          "cards" => [$surpriseCard],
-          "discardCount" => $discardCount,
-          "handCount" => $game->cards->countCardInLocation("hand", $surprisePlayerId),
-        ]);
 
         // the Surprised card does still count as played
         $game->incGameStateValue("playedCards", 1);

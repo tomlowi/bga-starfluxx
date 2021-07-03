@@ -36,4 +36,42 @@ class ActionThatsMine extends ActionCard
       ]
     );
   }
+
+  public function outOfTurnCounterPlay($surpriseTargetId)
+  {
+    $game = Utils::getGame();
+
+    $surpriseCounterId = $this->getCardId();
+
+    $targetCard = $game->cards->getCard($surpriseTargetId);
+    $targetPlayerId = $targetCard["location_arg"];
+    $surpriseCard = $game->cards->getCard($surpriseCounterId);
+    $surprisePlayerId = $surpriseCard["location_arg"];
+
+    // Intercept the Keeper played, goes to surprise player instead of original player, then discard this card
+
+    // so, first transfer the Keeper from playing hand to surprise player hand
+    $game->notifyPlayer($targetPlayerId, "cardsSentToPlayer", "", [
+      "cards" => [$targetCard],
+      "player_id" => $surprisePlayerId,
+    ]);
+    $game->notifyPlayer($surprisePlayerId, "cardsReceivedFromPlayer", "", [
+      "cards" => [$targetCard],
+      "player_id" => $targetPlayerId,
+    ]);
+    $game->sendHandCountNotifications();
+    // then play it as normal
+    $game->playKeeperCard($surprisePlayerId, $targetCard);
+
+    // finally discard the surprise card
+    $game->cards->playCard($surpriseCounterId);
+    
+    $discardCount =$game->cards->countCardInLocation("discard");
+    $game->notifyAllPlayers("handDiscarded", "", [
+      "player_id" => $surprisePlayerId,
+      "cards" => [$surpriseCard],
+      "discardCount" => $discardCount,
+      "handCount" => $game->cards->countCardInLocation("hand", $surprisePlayerId),
+    ]); 
+  }
 }

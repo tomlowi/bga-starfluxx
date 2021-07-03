@@ -40,4 +40,33 @@ class ActionBelayThat extends ActionCard
       ]
     );
   }
+
+  public function outOfTurnCounterPlay($surpriseTargetId)
+  {
+    $game = Utils::getGame();
+
+    $surpriseCounterId = $this->getCardId();
+
+    $targetCard = $game->cards->getCard($surpriseTargetId);
+    $targetPlayerId = $targetCard["location_arg"];
+    $surpriseCard = $game->cards->getCard($surpriseCounterId);
+    $surprisePlayerId = $surpriseCard["location_arg"];
+    $game->cards->playCard($surpriseTargetId);
+    $game->cards->playCard($surpriseCounterId);
+
+    // Cancel the Action played => discard it, and discard this card    
+    $discardCount =$game->cards->countCardInLocation("discard");
+    $game->notifyAllPlayers("handDiscarded", "", [
+      "player_id" => $targetPlayerId,
+      "cards" => [$targetCard],
+      "discardCount" => $discardCount,
+      "handCount" => $game->cards->countCardInLocation("hand", $targetPlayerId),
+    ]);
+    $game->notifyAllPlayers("handDiscarded", "", [
+      "player_id" => $surprisePlayerId,
+      "cards" => [$surpriseCard],
+      "discardCount" => $discardCount,
+      "handCount" => $game->cards->countCardInLocation("hand", $surprisePlayerId),
+    ]);        
+  }
 }
