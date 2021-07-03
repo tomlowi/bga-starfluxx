@@ -7,6 +7,20 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
     onUpdateActionButtonsSurpriseCounterPlay: function (args) {
       console.log("Update Action Buttons: SurpriseCounterPlay", args);
 
+      dojo.empty("tmpSelectCards");
+      var tmpStockId = "tmpSurpriseStock";
+      dojo.place("<h3>" + _("Surprise Queue") + "</h3>", "tmpSelectCards");
+      dojo.place('<div id="tmpSurpriseStock"></div>', "tmpSelectCards");
+      // show the cards waiting in the Surprise "queue" to everyone
+      var tmpSurpriseStock = this.createCardStock(tmpStockId, [
+        "keeper",
+        "goal",
+        "rule",
+        "action"
+      ]);
+      this.addCardsToStock(tmpSurpriseStock, args.surpriseCards);
+      tmpSurpriseStock.setSelectionMode(0);
+
       if (this.isCurrentPlayerActive()) {
         this.handStock.setSelectionMode(1);
 
@@ -30,6 +44,11 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
 
     onLeavingStateSurpriseCounterPlay: function () {
       console.log("Leaving state: SurpriseCounterPlay");
+
+      if (this.tmpSurpriseStock !== undefined) {
+        delete this.tmpSurpriseStock;
+      }
+      dojo.empty("tmpSelectCards");
 
       if (this._listener !== undefined) {
         dojo.disconnect(this._listener);

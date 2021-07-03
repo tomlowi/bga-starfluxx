@@ -44,11 +44,10 @@ trait SurpriseCounterPlayTrait
     $card = $game->cards->getCard($targetCardId);
     $card_definition = $game->getCardDefinitionFor($card);
 
-    // @TODO: really show the card being played somewhere, instead of just the card name
-
     return [
       "i18n" => ["playedCardName"],
       "playedCardName" => $card_definition->getName(),
+      "surpriseCards" => [$card],
     ];
   }
 
