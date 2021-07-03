@@ -81,12 +81,13 @@ trait PlayCardTrait
     $game = Utils::getGame();
     $surpriseTargetId = $game->getGameStateValue("cardIdSurpriseTarget");
 
-    if ($surpriseTargetId == -1)
+    if ($surpriseTargetId == -1) {
       return false;
+    }      
 
     $surpriseCounterId = $game->getGameStateValue("cardIdSurpriseCounter");
 
-    // Surprise countered the card played
+    // some Surprise countered the card played
     if ($surpriseCounterId != -1) {
 
       $targetCard = $game->cards->getCard($surpriseTargetId);
@@ -106,22 +107,26 @@ trait PlayCardTrait
           "card_target" => $game->getCardDefinitionFor($targetCard)->getName(),
         ]);
 
+      // make sure we don't keep looping back in here (so reset *before* nextstate)
+      $game->setGameStateValue("cardIdSurpriseTarget", -1);
+      $game->setGameStateValue("cardIdSurpriseCounter", -1);
+    
       // the Surprised card does still count as played
       $game->incGameStateValue("playedCards", 1);
       // and we should force refresh args for PlayCard state
-      $game->gamestate->nextstate("continuePlay"); // force arg refresh
+      $game->gamestate->nextstate("continuePlay");
     }
-    // allowed to play, just do it again from active player hand
+    // no Surprise, it is allowed to play: just do it again from active player hand
     else {
       $player_id = $game->getActivePlayerId();
       self::_action_playCard($surpriseTargetId, $player_id, true);
+
+      // make sure we don't keep looping back in here (but only reset *after* play)
+      $game->setGameStateValue("cardIdSurpriseTarget", -1);
+      $game->setGameStateValue("cardIdSurpriseCounter", -1);      
     }
 
-    $game->setGameStateValue("cardIdSurpriseTarget", -1);
-    $game->setGameStateValue("cardIdSurpriseCounter", -1);
-
-    return true;  
-
+    return true;
   }
 
   private function checkTempHandsForDiscard($player_id)
