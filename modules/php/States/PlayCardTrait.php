@@ -17,10 +17,9 @@ trait PlayCardTrait
     $player_id = $game->getActivePlayerId();
 
     // If any card is still in "pending" play for others to Surprise on,
-    // play it now if nobody Surprise countered, or just discard it (and the Surprise used to counter it)
+    // play it now if nobody Surprise countered, or let Surprise counter it
     if ($this->checkSurpriseCounterPlay())
-    {
-      $game->gamestate->nextstate("continuePlay"); // force arg refresh
+    {      
       return;
     }
 
@@ -82,46 +81,46 @@ trait PlayCardTrait
     $game = Utils::getGame();
     $surpriseTargetId = $game->getGameStateValue("cardIdSurpriseTarget");
 
-    $surprised = false;
+    if ($surpriseTargetId == -1)
+      return false;
 
-    if ($surpriseTargetId != -1) {
-      $surpriseCounterId = $game->getGameStateValue("cardIdSurpriseCounter");
+    $surpriseCounterId = $game->getGameStateValue("cardIdSurpriseCounter");
 
-      // Surprise countered the card played
-      if ($surpriseCounterId != -1) {
+    // Surprise countered the card played
+    if ($surpriseCounterId != -1) {
 
-        $targetCard = $game->cards->getCard($surpriseTargetId);
-        $surpriseCard = $game->cards->getCard($surpriseCounterId);
-        $surpriseCardDef = $game->getCardDefinitionFor($surpriseCard);
-        $surprisePlayerId = $surpriseCard["location_arg"];
+      $targetCard = $game->cards->getCard($surpriseTargetId);
+      $surpriseCard = $game->cards->getCard($surpriseCounterId);
+      $surpriseCardDef = $game->getCardDefinitionFor($surpriseCard);
+      $surprisePlayerId = $surpriseCard["location_arg"];
 
-        $surpriseCardDef->outOfTurnCounterPlay($surpriseTargetId);
+      $surpriseCardDef->outOfTurnCounterPlay($surpriseTargetId);
 
-        $players = $game->loadPlayersBasicInfos();
-        $game->notifyAllPlayers("surprise", 
-          clienttranslate('${player_name} uses <b>${card_surprise}</b> as surprise against <b>${card_target}</b>'),
-          [
-            "i18n" => ["card_target", "card_surprise"],
-            "player_name" => $players[$surprisePlayerId]["player_name"],
-            "card_surprise" => $game->getCardDefinitionFor($surpriseCard)->getName(),
-            "card_target" => $game->getCardDefinitionFor($targetCard)->getName(),
-          ]);
+      $players = $game->loadPlayersBasicInfos();
+      $game->notifyAllPlayers("surprise", 
+        clienttranslate('${player_name} uses <b>${card_surprise}</b> as surprise against <b>${card_target}</b>'),
+        [
+          "i18n" => ["card_target", "card_surprise"],
+          "player_name" => $players[$surprisePlayerId]["player_name"],
+          "card_surprise" => $game->getCardDefinitionFor($surpriseCard)->getName(),
+          "card_target" => $game->getCardDefinitionFor($targetCard)->getName(),
+        ]);
 
-        // the Surprised card does still count as played
-        $game->incGameStateValue("playedCards", 1);
-        $surprised = true;
-      }
-      // allowed to play, just do it again from active player hand
-      else {
-        $player_id = $game->getActivePlayerId();
-        self::_action_playCard($surpriseTargetId, $player_id, true);  
-      }
-
-      $game->setGameStateValue("cardIdSurpriseTarget", -1);
-      $game->setGameStateValue("cardIdSurpriseCounter", -1);
-
-      return $surprised;
+      // the Surprised card does still count as played
+      $game->incGameStateValue("playedCards", 1);
+      // and we should force refresh args for PlayCard state
+      $game->gamestate->nextstate("continuePlay"); // force arg refresh
     }
+    // allowed to play, just do it again from active player hand
+    else {
+      $player_id = $game->getActivePlayerId();
+      self::_action_playCard($surpriseTargetId, $player_id, true);
+    }
+
+    $game->setGameStateValue("cardIdSurpriseTarget", -1);
+    $game->setGameStateValue("cardIdSurpriseCounter", -1);
+
+    return true;  
 
   }
 

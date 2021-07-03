@@ -157,6 +157,7 @@ $machinestates = [
     "possibleactions" => ["discardKeepers"],
     "transitions" => [
       "keeperLimitChecked" => STATE_PLAY_CARD,
+      "endOfTurn" => STATE_ENFORCE_HAND_LIMIT_SELF,
       "endGame" => STATE_GAME_END,
     ],
   ],
