@@ -214,10 +214,10 @@ $machinestates = [
   STATE_RESOLVE_ACTION => [
     "name" => "actionResolve",
     "description" => clienttranslate(
-      '${actplayer} must resolve their action: ${action_name}'
+      '${actplayer} must resolve their action: <i>${action_name}</i>'
     ),
     "descriptionmyturn" => clienttranslate(
-      '${you} must resolve your action: ${action_name}'
+      '${you} must resolve your action: <i>${action_name}</i>'
     ),
     "type" => "activeplayer",
     "args" => "arg_resolveAction",
@@ -247,10 +247,10 @@ $machinestates = [
   STATE_RESOLVE_FREE_RULE => [
     "name" => "freeRuleResolve",
     "description" => clienttranslate(
-      '${actplayer} must resolve their free play: ${action_name}'
+      '${actplayer} must resolve their free play: <i>${action_name}</i>'
     ),
     "descriptionmyturn" => clienttranslate(
-      '${you} must resolve your free play: ${action_name}'
+      '${you} must resolve your free play: <i>${action_name}</i>'
     ),
     "type" => "activeplayer",
     "args" => "arg_resolveFreeRule",
@@ -275,10 +275,10 @@ $machinestates = [
   STATE_RESOLVE_CREEPER_INPLAY => [
     "name" => "creeperResolveInPlay",
     "description" => clienttranslate(
-      '${actplayer} must resolve Creeper: ${action_name}'
+      '${actplayer} must resolve Creeper: <i>${action_name}</i>'
     ),
     "descriptionmyturn" => clienttranslate(
-      '${you} must resolve Creeper: ${action_name}'
+      '${you} must resolve Creeper: <i>${action_name}</i>'
     ),
     "type" => "multipleactiveplayer",
     "args" => "arg_resolveCreeper",
@@ -303,10 +303,10 @@ $machinestates = [
   STATE_RESOLVE_CREEPER_TURNSTART => [
     "name" => "creeperResolveTurnStart",
     "description" => clienttranslate(
-      '${actplayer} must resolve Creeper: ${action_name}'
+      '${actplayer} must resolve Creeper: <i>${action_name}</i>'
     ),
     "descriptionmyturn" => clienttranslate(
-      '${you} must resolve Creeper: ${action_name}'
+      '${you} must resolve Creeper: <i>${action_name}</i>'
     ),
     "type" => "activeplayer",
     "args" => "arg_resolveCreeper",
