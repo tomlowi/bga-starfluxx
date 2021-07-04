@@ -374,11 +374,6 @@ trait PlayCardTrait
         break;
     }
 
-    self::dump("===SURPRISE-CHK===", [
-      "target" => $card,
-      "surprise" => $surprise,
-    ]);
-
     if ($surprise != null && $surprise["player_id"] != $player_id) {
       self::setGameStateValue("cardIdSurpriseTarget", $card_id);
       return "checkForSurprises";

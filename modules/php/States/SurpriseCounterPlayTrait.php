@@ -23,10 +23,6 @@ trait SurpriseCounterPlayTrait
 
     $gamestate = Utils::getGame()->gamestate;
 
-    self::dump("===st_allowSurpriseCounterPlay===", [
-      "playersForSuprise" => $playersForSuprise
-    ]);
-
     // Activate all players that might choose to Surprise counter the card played
     $stateTransition = "surprisePlayChecked";
     if (empty($playersForSuprise)) {
