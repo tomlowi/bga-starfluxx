@@ -703,6 +703,24 @@ class Utils
     if (!empty($creepers_attached))
     {
       foreach ($creepers_attached as $creeper_card) {
+        $creeper_definition = $game->getCardDefinitionFor($creeper_card);
+        $game->notifyAllPlayers(
+          "cardFromTableToHand", $notificationMsg,
+          [
+            "i18n" => ["card_name"],
+            "card" => $creeper_card,
+            "player_name" => $active_player_name,
+            "player_name1" => $origin_player_name,
+            "player_name2" => $destination_player_name,
+            "card_name" => $creeper_definition->getName(),
+            "player_id" => $destination_player_id,
+            "destination_player_id" => $destination_player_id,
+            "origin_player_id" => $origin_player_id,
+            "handCount" => $game->cards->countCardInLocation("hand", $destination_player_id),
+            "creeperCount" => Utils::getPlayerCreeperCount($destination_player_id),
+          ]
+        );
+
         $game->playCreeperCard($destination_player_id, $creeper_card);
       }
     }

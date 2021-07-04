@@ -2,6 +2,7 @@
 namespace StarFluxx\Cards\Actions;
 
 use StarFluxx\Game\Utils;
+use StarFluxx\Cards\Rules\RuleCardFactory;
 use starfluxx;
 
 class ActionVeto extends ActionCard
