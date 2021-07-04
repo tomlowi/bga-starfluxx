@@ -660,6 +660,7 @@ class Utils
         $cardsToMove[] = $attachedCard;
         $game->cards->moveCard($attachedCard["id"], "hand", $destination_player_id);
 
+        $game->setGameStateValue("creeperBrainParasitesAttachedTo", -1);
         $creepers_attached[] = $attachedCard;
       }
       if ($card["id"] == $game->getGameStateValue("creeperEvilAttachedTo")) {
@@ -668,6 +669,7 @@ class Utils
         $cardsToMove[] = $attachedCard;
         $game->cards->moveCard($attachedCard["id"], "hand", $destination_player_id);
 
+        $game->setGameStateValue("creeperEvilAttachedTo", -1);
         $creepers_attached[] = $attachedCard;
       }
       if ($card["id"] == $game->getGameStateValue("creeperMalfunctionAttachedTo")) {
@@ -676,6 +678,7 @@ class Utils
         $cardsToMove[] = $attachedCard;
         $game->cards->moveCard($attachedCard["id"], "hand", $destination_player_id);
 
+        $game->setGameStateValue("creeperMalfunctionAttachedTo", -1);
         $creepers_attached[] = $attachedCard;
       }      
     }
