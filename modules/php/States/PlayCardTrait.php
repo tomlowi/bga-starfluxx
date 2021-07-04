@@ -16,6 +16,13 @@ trait PlayCardTrait
     $game = Utils::getGame();
     $player_id = $game->getActivePlayerId();
 
+    // If any card is still in "pending" play for others to Surprise on,
+    // play it now if nobody Surprise countered, or let Surprise counter it
+    if ($this->checkSurpriseCounterPlay())
+    {      
+      return;
+    }
+
     // If any card is a force move, play it
     $forcedCardId = $game->getGameStateValue("forcedCard");
 
@@ -67,6 +74,59 @@ trait PlayCardTrait
     if (!$this->activePlayerMustPlayMoreCards($player_id)) {
       $game->gamestate->nextstate("endOfTurn");
     }
+  }
+
+  private function checkSurpriseCounterPlay() 
+  {
+    $game = Utils::getGame();
+    $surpriseTargetId = $game->getGameStateValue("cardIdSurpriseTarget");
+
+    if ($surpriseTargetId == -1) {
+      return false;
+    }      
+
+    $surpriseCounterId = $game->getGameStateValue("cardIdSurpriseCounter");
+
+    // some Surprise countered the card played
+    if ($surpriseCounterId != -1) {
+
+      $targetCard = $game->cards->getCard($surpriseTargetId);
+      $surpriseCard = $game->cards->getCard($surpriseCounterId);
+      $surpriseCardDef = $game->getCardDefinitionFor($surpriseCard);
+      $surprisePlayerId = $surpriseCard["location_arg"];
+
+      $surpriseCardDef->outOfTurnCounterPlay($surpriseTargetId);
+
+      $players = $game->loadPlayersBasicInfos();
+      $game->notifyAllPlayers("surprise", 
+        clienttranslate('${player_name} uses <b>${card_surprise}</b> as surprise against <b>${card_target}</b>'),
+        [
+          "i18n" => ["card_target", "card_surprise"],
+          "player_name" => $players[$surprisePlayerId]["player_name"],
+          "card_surprise" => $game->getCardDefinitionFor($surpriseCard)->getName(),
+          "card_target" => $game->getCardDefinitionFor($targetCard)->getName(),
+        ]);
+
+      // make sure we don't keep looping back in here (so reset *before* nextstate)
+      $game->setGameStateValue("cardIdSurpriseTarget", -1);
+      $game->setGameStateValue("cardIdSurpriseCounter", -1);
+    
+      // the Surprised card does still count as played
+      $game->incGameStateValue("playedCards", 1);
+      // and we should force refresh args for PlayCard state
+      $game->gamestate->nextstate("continuePlay");
+    }
+    // no Surprise, it is allowed to play: just do it again from active player hand
+    else {
+      $player_id = $game->getActivePlayerId();
+      self::_action_playCard($surpriseTargetId, $player_id, true);
+
+      // make sure we don't keep looping back in here (but only reset *after* play)
+      $game->setGameStateValue("cardIdSurpriseTarget", -1);
+      $game->setGameStateValue("cardIdSurpriseCounter", -1);      
+    }
+
+    return true;
   }
 
   private function checkTempHandsForDiscard($player_id)
@@ -283,6 +343,45 @@ trait PlayCardTrait
     self::_action_playCard($card_id, $player_id, false, true);
   }
 
+  private function _action_playCard_checkForSurprises($player_id, $card)
+  {
+    $card_id = $card["id"];
+    $alreadyChecked = self::getGameStateValue("cardIdSurpriseTarget");
+    if ($alreadyChecked == $card_id) {
+      return null;
+    }
+
+    $card_type = $card["type"];
+    $surprise = null;
+    switch ($card_type) {
+      case "keeper":
+        // That's Mine = 318
+        $surprise = Utils::findPlayerWithSurpriseInHand(318);
+        break;
+      case "goal":
+        // Canceled Plans = 321
+        $surprise = Utils::findPlayerWithSurpriseInHand(321);
+        break;
+      case "rule":
+        // Veto = 319
+        $surprise = Utils::findPlayerWithSurpriseInHand(319);
+        break;
+      case "action":
+        // BelayThat = 320
+        $surprise = Utils::findPlayerWithSurpriseInHand(320);
+        break;
+      default:
+        break;
+    }
+
+    if ($surprise != null && $surprise["player_id"] != $player_id) {
+      self::setGameStateValue("cardIdSurpriseTarget", $card_id);
+      return "checkForSurprises";
+      }
+
+    return null;
+  }
+
   private function _action_playCard(
     $card_id,
     $player_id,
@@ -298,6 +397,21 @@ trait PlayCardTrait
         starfluxx::totranslate("You do not have this card in hand")
       );
     }
+    
+    // check if some other players have Surprise actions that could prevent this play
+    // If so, ask all players (multi) if they want to play a Surprise 
+    // (prevent exposing which player actually has as Surprise)
+    // = state "checkForSurprises"
+    // If no Surprise, only then let the play go through
+    // If Surprised, allow more Surprise-cancelling-Surprise until decided if the card can be played
+    $stateTransition = self::_action_playCard_checkForSurprises($player_id, $card);
+    if ($stateTransition != null) {
+      $game->gamestate->nextstate($stateTransition);
+      return;
+    }
+
+    // @TODO: It's a Trap is special: this should also be checked again after resolving Actions,
+    // and after resolving any Free Rule/Keeper plays that might steal keepers.
 
     $card_type = $card["type"];
     $stateTransition = null;
@@ -325,6 +439,8 @@ trait PlayCardTrait
         die("Not implemented: Card type $card_type does not exist");
         break;
     }
+
+    self::setGameStateValue("cardIdSurpriseTarget", -1);
 
     if ($incrementPlayedCards) {
       $game->incGameStateValue("playedCards", 1);

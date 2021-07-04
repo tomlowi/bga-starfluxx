@@ -331,6 +331,25 @@ class Utils
     ];
   }
 
+  public static function findPlayerWithSurpriseInHand($actionUniqueId)
+  {
+    $game = Utils::getGame();
+    // check who has this surprise Action in hand cards now
+    $action_card = array_values(
+      $game->cards->getCardsOfType("action", $actionUniqueId)
+    )[0];
+    // if nobody, nothing to do
+    if ($action_card["location"] != "hand") {
+      return null;
+    }
+
+    $action_player_id = $action_card["location_arg"];
+    return [
+      "player_id" => $action_player_id,
+      "action_card" => $action_card,
+    ];
+  }
+
   public static function checkForMalfunction($card_id) 
   {
     $game = Utils::getGame();
@@ -641,6 +660,7 @@ class Utils
         $cardsToMove[] = $attachedCard;
         $game->cards->moveCard($attachedCard["id"], "hand", $destination_player_id);
 
+        $game->setGameStateValue("creeperBrainParasitesAttachedTo", -1);
         $creepers_attached[] = $attachedCard;
       }
       if ($card["id"] == $game->getGameStateValue("creeperEvilAttachedTo")) {
@@ -649,6 +669,7 @@ class Utils
         $cardsToMove[] = $attachedCard;
         $game->cards->moveCard($attachedCard["id"], "hand", $destination_player_id);
 
+        $game->setGameStateValue("creeperEvilAttachedTo", -1);
         $creepers_attached[] = $attachedCard;
       }
       if ($card["id"] == $game->getGameStateValue("creeperMalfunctionAttachedTo")) {
@@ -657,6 +678,7 @@ class Utils
         $cardsToMove[] = $attachedCard;
         $game->cards->moveCard($attachedCard["id"], "hand", $destination_player_id);
 
+        $game->setGameStateValue("creeperMalfunctionAttachedTo", -1);
         $creepers_attached[] = $attachedCard;
       }      
     }

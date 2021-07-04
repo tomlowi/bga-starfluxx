@@ -226,4 +226,12 @@ class action_starfluxx extends APP_GameAction
     $this->game->action_selectTempHandCard($card_id);
     self::ajaxResponse();
   }
+
+  public function decideSurpriseCounterPlay()
+  {
+    self::setAjaxMode();
+    $card_id = self::getArg("card_id", AT_posint, false);
+    $this->game->action_decideSurpriseCounterPlay($card_id);
+    self::ajaxResponse();
+  }
 }
