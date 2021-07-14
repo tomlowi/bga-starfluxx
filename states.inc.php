@@ -61,6 +61,7 @@ if (!defined("STATE_GAME_SETUP")) {
   define("STATE_ENFORCE_KEEPERS_LIMIT_SELF", 24);
   define("STATE_GOAL_CLEANING", 25);
   define("STATE_RESOLVE_ACTION", 30);
+  define("STATE_RESOLVE_ACTION_OTHER", 31);
   define("STATE_RESOLVE_FREE_RULE", 33);
   define("STATE_RESOLVE_CREEPER_TURNSTART", 34);
   define("STATE_RESOLVE_CREEPER_INPLAY", 35);
@@ -122,6 +123,7 @@ $machinestates = [
       "zombiePass" => STATE_ENFORCE_HAND_LIMIT_SELF,
 
       "checkForSurprises" => STATE_ALLOW_SURPRISE_COUNTER_PLAY,
+      "resolveActionByOthers" => STATE_RESOLVE_ACTION_OTHER,
     ],
   ],
 
@@ -239,7 +241,7 @@ $machinestates = [
       "keepersExchangeOccured" => STATE_ENFORCE_KEEPERS_LIMIT_OTHERS,
       "rulesChanged" => STATE_GOAL_CLEANING,
       "endGame" => STATE_GAME_END,
-      "resolveActionCard" => STATE_RESOLVE_ACTION,
+      "resolveActionCard" => STATE_RESOLVE_ACTION,      
       "zombiePass" => STATE_PLAY_CARD,
       "endOfTurn" => STATE_ENFORCE_HAND_LIMIT_SELF,
     ],
@@ -411,6 +413,28 @@ $machinestates = [
     "transitions" => [
       //"surprisePlayChecked" => STATE_ALLOW_SURPRISE_CANCEL_SURPRISE,
       "surprisePlayChecked" => STATE_PLAY_CARD,
+      "zombiePass" => STATE_PLAY_CARD,
+      "endOfTurn" => STATE_ENFORCE_HAND_LIMIT_SELF,
+      "endGame" => STATE_GAME_END,
+    ],
+  ],
+
+  STATE_RESOLVE_ACTION_OTHER => [
+    "name" => "actionResolveForOther",
+    "description" => clienttranslate(
+      'Some players must resolve the action: <i>${action_name}</i>'
+    ),
+    "descriptionmyturn" => clienttranslate(
+      '${you} must resolve the action: <i>${action_name}</i>'
+    ),
+    "type" => "multipleactiveplayer",
+    "args" => "arg_actionResolveForOther",
+    "action" => "st_actionResolveForOther",
+    "possibleactions" => [
+      "resolveActionCardSelection"
+    ],
+    "transitions" => [
+      "continuePlay" => STATE_PLAY_CARD,
       "zombiePass" => STATE_PLAY_CARD,
       "endOfTurn" => STATE_ENFORCE_HAND_LIMIT_SELF,
       "endGame" => STATE_GAME_END,

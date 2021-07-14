@@ -35,6 +35,7 @@ define([
   g_gamethemeurl + "modules/js/states/creeperResolve.js",
   g_gamethemeurl + "modules/js/states/tempHandPlay.js",
   g_gamethemeurl + "modules/js/states/surpriseCounterPlay.js",
+  g_gamethemeurl + "modules/js/states/actionResolveOther.js",
 ], function (dojo, declare) {
   return declare(
     "bgagame.starfluxx",
@@ -50,6 +51,7 @@ define([
       starfluxx.states.creeperResolve,
       starfluxx.states.tempHandPlay,
       starfluxx.states.surpriseCounterPlay,
+      starfluxx.states.actionResolveOther,
     ],
     {
       constructor: function () {
@@ -432,6 +434,10 @@ define([
             this.onEnteringStateSurpriseCounterPlay(args);
             break;
 
+          case "actionResolveForOther":
+              this.onEnteringStateActionResolveOther(args);
+              break;
+
           case "dummy":
             break;
         }
@@ -485,6 +491,10 @@ define([
             this.onLeavingStateSurpriseCounterPlay();
             break;
 
+          case "actionResolveForOther":
+            this.onLeavingStateActionResolveOther();
+            break;
+
           case "dummy":
             break;
         }
@@ -527,6 +537,9 @@ define([
               break;
             case "surpriseCounterPlay":
               this.onUpdateActionButtonsSurpriseCounterPlay(args);
+              break;
+            case "actionResolveForOther":
+              this.onUpdateActionButtonsActionResolveOther(args);
               break;
           }
         }
