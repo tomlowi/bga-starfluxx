@@ -54,5 +54,8 @@ class ActionDistressCall extends ActionCard
 
     // move this card itself back to the discard pile
     $game->cards->playCard($this->getCardId());
+
+    // we gave cards to other players: check for hand limits
+    return "handLimitRulePlayed";
   }
 }
