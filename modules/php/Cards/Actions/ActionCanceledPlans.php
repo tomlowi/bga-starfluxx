@@ -20,7 +20,7 @@ class ActionCanceledPlans extends ActionCard
     // a specific Goal card to discard, or a random card is discarded - *not* chosen by the player then
 
     $this->help = clienttranslate(
-      "Select any goal card to discard from your hand, or select nothing and get a random card discarded."
+      "Select any Goal card to discard from your hand, or select nothing and get a random card discarded."
     );
   }
 
@@ -58,7 +58,7 @@ class ActionCanceledPlans extends ActionCard
 
   public function resolvedByOther($player_id, $args)
   {
-    // if a card was selected, validate it is a goal card in hand of player and discard
+    // if a card was selected, validate it is a Goal card in hand of player and discard
     // if not, select any random card from player hand and discard that
     $card = $args["card"];
 
@@ -70,7 +70,7 @@ class ActionCanceledPlans extends ActionCard
     ) {
       Utils::throwInvalidUserAction(
         starfluxx::totranslate(
-          "You must discard a goal card from your hand"
+          "You must discard a Goal card from your hand"
         )
       );
     }
