@@ -1,11 +1,12 @@
 define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
-  return declare("starfluxx.states.surpriseCounterPlay", null, {
-    onEnteringStateSurpriseCounterPlay: function (args) {
-      console.log("Entering state: SurpriseCounterPlay", args);
+  return declare("starfluxx.states.surpriseCancelPlay", null, {
+    
+    onEnteringStateSurpriseCancelSurprise: function (args) {
+      console.log("Entering state: SurpriseCancelSurprise", args);
     },
 
-    onUpdateActionButtonsSurpriseCounterPlay: function (args) {
-      console.log("Update Action Buttons: SurpriseCounterPlay", args);
+    onUpdateActionButtonsSurpriseCancelSurprise: function (args) {
+      console.log("Update Action Buttons: SurpriseCancelSurprise", args);
 
       dojo.empty("tmpSelectCards");
       var tmpStockId = "tmpSurpriseStock";
@@ -31,19 +32,19 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
           this.handStock,
           "onChangeSelection",
           this,
-          "onSelectCardSurpriseCounterPlay"
+          "onSelectCardSurpriseCancelSurprise"
         );
 
         this.addActionButton(
           "button_1",
           _("No Surprise"),
-          "onNoSurpriseCounterPlay"
+          "onNoSurpriseCancelSurprise"
         );
       }
     },
 
-    onLeavingStateSurpriseCounterPlay: function () {
-      console.log("Leaving state: SurpriseCounterPlay");
+    onLeavingStateSurpriseCancelSurprise: function () {
+      console.log("Leaving state: SurpriseCancelSurprise");
 
       if (this.tmpSurpriseStock !== undefined) {
         delete this.tmpSurpriseStock;
@@ -58,21 +59,21 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
       delete this._discardCount;
     },
 
-    onSelectCardSurpriseCounterPlay: function () {
-      var action = "decideSurpriseCounterPlay";
+    onSelectCardSurpriseCancelSurprise: function () {
+      var action = "decideSurpriseCancelSurprise";
       var items = this.handStock.getSelectedItems();
 
-      console.log("decideSurpriseCounterPlay: yes", items, this.currentState);
+      console.log("decideSurpriseCancelSurprise: yes", items, this.currentState);
 
       if (items.length == 0) return;
 
-      this.ajaxAction("decideSurpriseCounterPlay", {
+      this.ajaxAction("decideSurpriseCancelSurprise", {
         card_id: items[0].id,
       });
     },
 
-    onNoSurpriseCounterPlay: function () {
-      this.ajaxAction("decideSurpriseCounterPlay", {
+    onNoSurpriseCancelSurprise: function () {
+      this.ajaxAction("decideSurpriseCancelSurprise", {
         card_id: null,
       });
     },

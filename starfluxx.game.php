@@ -266,7 +266,8 @@ class starfluxx extends Table
     }
 
     //$this->testForceCardDrawFor("action", 315, $first_player_id);
-    //$this->testForceCardDrawFor("rule", 209, $first_player_id);
+    $this->testForceCardDrawFor("rule", 202, $first_player_id);
+    $this->testForceCardDrawFor("rule", 207, $first_player_id);
 
     // reset to start with correct first active player
     $this->gamestate->changeActivePlayer($first_player_id);
@@ -829,6 +830,7 @@ class starfluxx extends Table
   use StarFluxx\States\ResolveCreeperTrait;
   use StarFluxx\States\TempHandPlayTrait;
   use StarFluxx\States\SurpriseCounterPlayTrait;
+  use StarFluxx\States\SurpriseCancelPlayTrait;
   use StarFluxx\States\ResolveActionOtherTrait;
 
   //////////////////////////////////////////////////////////////////////////////

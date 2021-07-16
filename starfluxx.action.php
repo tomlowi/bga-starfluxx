@@ -235,6 +235,14 @@ class action_starfluxx extends APP_GameAction
     self::ajaxResponse();
   }
 
+  public function decideSurpriseCancelSurprise()
+  {
+    self::setAjaxMode();
+    $card_id = self::getArg("card_id", AT_posint, false);
+    $this->game->action_decideSurpriseCancelSurprise($card_id);
+    self::ajaxResponse();
+  }
+
   public function resolveActionForOtherByCardSelection()
   {
     self::setAjaxMode();

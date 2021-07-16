@@ -76,6 +76,12 @@ trait SurpriseCounterPlayTrait
         );
       }
       self::setGameStateValue("cardIdSurpriseCounter", $card_id);
+
+      // check if other players have more Surprises that might cancel this
+      if (Utils::otherPlayersWithSurpriseInHand($player_id)) {
+        $stateTransition = "checkForSurpriseCancels";
+      }
+
       // this player decided to play Surprise already: all others can be skipped
       $game->gamestate->setAllPlayersNonMultiactive($stateTransition);
     }
