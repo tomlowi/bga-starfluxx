@@ -12,7 +12,9 @@ trait SurpriseCancelPlayTrait
     // Only other players can Cancel the last Surprise card played
     $game = Utils::getGame();
     $last_surprise_player_id = self::getActivePlayerId();
-    $last_surprise = array_pop($game->cards->getCardsInLocation("surprises"));
+
+    $surprise_cards = $game->cards->getCardsInLocation("surprises");
+    $last_surprise = array_pop($surprise_cards);
     if ($last_surprise != null) {
       $last_surprise_player_id = $last_surprise["location_arg"];
     }
@@ -42,7 +44,7 @@ trait SurpriseCancelPlayTrait
 
     // include all cards in the Surprise Queue
     $surprise_cards = $game->cards->getCardsInLocation("surprises");
-    array_unshift($card, $surprise_cards);
+    array_unshift($surprise_cards, $card);
 
     return [
       "i18n" => ["playedCardName"],
@@ -80,6 +82,18 @@ trait SurpriseCancelPlayTrait
       }
       // move card to surprises queue, but keep it registered for this player
       $game->cards->moveCard($card_id, "surprises", $player_id);
+
+      // notification
+      $players = $game->loadPlayersBasicInfos();
+      $surpriseCard = $game->cards->getCard($card_id);
+
+      $game->notifyAllPlayers("surprise", 
+      clienttranslate('${player_name} adds <b>${card_surprise}</b> to the Surprise queue'),
+      [
+        "i18n" => ["card_surprise"],
+        "player_name" => $players[$player_id]["player_name"],
+        "card_surprise" => $game->getCardDefinitionFor($surpriseCard)->getName(),
+      ]);
 
       // check if other players have more Surprises that might cancel this
       if (Utils::otherPlayersWithSurpriseInHand($player_id)) {

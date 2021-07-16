@@ -398,10 +398,10 @@ $machinestates = [
   STATE_ALLOW_SURPRISE_CANCEL_SURPRISE => [
     "name" => "surpriseCancelSurprise",
     "description" => clienttranslate(
-      'Some players may choose to cancel the Surprise on <i>${surpriseName}</i>'
+      'Some players may choose to cancel the Surprise on <i>${playedCardName}</i>'
     ),
     "descriptionmyturn" => clienttranslate(
-      '${you} can choose to cancel the Surprise on <i>${surpriseName}</i>'
+      '${you} can choose to cancel the Surprise on <i>${playedCardName}</i>'
     ),
     "type" => "multipleactiveplayer",
     "args" => "arg_allowSurpriseCancelSurprise",

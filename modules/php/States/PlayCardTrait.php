@@ -116,6 +116,7 @@ trait PlayCardTrait
       if (count($surprise_cards) % 2 == 0) {
         // reset counter surprise, so original card can be played
         $game->setGameStateValue("cardIdSurpriseCounter", -1);
+        $surpriseCounterId = -1;
         // discard all canceled surprises
         $this->discardCanceledSurprises($surprise_cards, null);
       }
@@ -414,8 +415,20 @@ trait PlayCardTrait
 
     if ($surprise != null && $surprise["player_id"] != $player_id) {
       self::setGameStateValue("cardIdSurpriseTarget", $card_id);
+
+      $game = Utils::getGame();
+      $players = $game->loadPlayersBasicInfos();
+
+      $game->notifyAllPlayers("surprise", 
+      clienttranslate('${player_name} wants to play <b>${card_name}</b>'),
+      [
+        "i18n" => ["card_name"],
+        "player_name" => $players[$player_id]["player_name"],
+        "card_name" => $game->getCardDefinitionFor($card)->getName(),
+      ]);
+
       return "checkForSurprises";
-      }
+    }
 
     return null;
   }

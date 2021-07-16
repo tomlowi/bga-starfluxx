@@ -689,14 +689,18 @@ define([
         // Note that "card_type_id" contains the type of the item, so you can do special actions depending on the item type
       },
 
-      addCardsToStock: function (stock, cards, keepOrder) {
+      addCardsToStock: function (stock, cards, keepOrder, byLocation = true) {
         for (var card_id in cards) {
           var card = cards[card_id];
           stock.addToStockWithId(card.type_arg, card.id);
           if (keepOrder) {
-            stock.changeItemsWeight({
-              [card.type_arg]: parseInt(card.location_arg),
-            });
+            if (byLocation) {
+              stock.changeItemsWeight({
+                [card.type_arg]: parseInt(card.location_arg),
+              });
+            } else {
+              stock.changeItemsWeight({ [card.type_arg]: 1 });
+            }
           }
         }
       },

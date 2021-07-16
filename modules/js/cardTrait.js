@@ -61,15 +61,20 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
       });
 
       var origin;
+      var originStock = null;
       if (typeof stock !== "undefined") {
-        origin = stock.getItemDivId(card.id);
-      } else if (typeof player_id !== "undefined") {
+        originStock = stock.getItemDivId(card.id);
+        if (originStock != null)
+          origin = originStock;
+      }
+      
+      if (originStock == null && typeof player_id !== "undefined") {
         origin = "player_board_" + player_id;
       }
 
       this.discardStock.addToStockWithId(card.type_arg, card.id, origin);
 
-      if (typeof stock !== "undefined") {
+      if (originStock != null) {
         stock.removeFromStockById(card.id);
       }
     },
@@ -219,7 +224,7 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
       }
 
       if (discardFromHand) {
-        this.discardCard(card, this.handStock);
+        this.discardCard(card, this.handStock, player_id);
       } else {
         this.discardCard(card, undefined, player_id);
       }
@@ -231,7 +236,7 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
       var player_id = notif.args.player_id;
       var cards = notif.args.cards;
 
-      if (player_id == this.player_id) {
+      if (player_id == this.player_id) {        
         this.discardCards(cards, this.handStock);
       } else {
         this.discardCards(cards, undefined, player_id);

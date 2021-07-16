@@ -1,26 +1,28 @@
 define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
   return declare("starfluxx.states.surpriseCancelPlay", null, {
     
-    onEnteringStateSurpriseCancelSurprise: function (args) {
-      console.log("Entering state: SurpriseCancelSurprise", args);
-    },
-
-    onUpdateActionButtonsSurpriseCancelSurprise: function (args) {
-      console.log("Update Action Buttons: SurpriseCancelSurprise", args);
+    onEnteringStateSurpriseCancelSurprise: function (stateArgs) {
+      console.log("Entering state: SurpriseCancelSurprise", stateArgs);
 
       dojo.empty("tmpSelectCards");
       var tmpStockId = "tmpSurpriseStock";
       dojo.place("<h3>" + _("Surprise Queue") + "</h3>", "tmpSelectCards");
       dojo.place('<div id="tmpSurpriseStock"></div>', "tmpSelectCards");
+      
       // show the cards waiting in the Surprise "queue" to everyone
+      var args = stateArgs.args;
       var tmpSurpriseStock = this.createCardStock(tmpStockId, [
         "keeper",
         "goal",
         "rule",
         "action"
       ]);
-      this.addCardsToStock(tmpSurpriseStock, args.surpriseCards);
+      this.addCardsToStock(tmpSurpriseStock, args.surpriseCards, true, false);
       tmpSurpriseStock.setSelectionMode(0);
+    },
+
+    onUpdateActionButtonsSurpriseCancelSurprise: function (args) {
+      console.log("Update Action Buttons: SurpriseCancelSurprise", args);
 
       if (this.isCurrentPlayerActive()) {
         this.handStock.setSelectionMode(1);

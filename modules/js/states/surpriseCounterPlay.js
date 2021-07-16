@@ -18,7 +18,7 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
         "rule",
         "action"
       ]);
-      this.addCardsToStock(tmpSurpriseStock, args.surpriseCards);
+      this.addCardsToStock(tmpSurpriseStock, args.surpriseCards, true, false);
       tmpSurpriseStock.setSelectionMode(0);
 
       if (this.isCurrentPlayerActive()) {
