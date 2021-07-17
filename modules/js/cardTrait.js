@@ -515,10 +515,7 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
       if (player_owner == null)
         return;
       
-      var background_color = "ffffff";
-      // unless player color is white itself
-      if (player_owner.color == background_color)
-        background_color = "000000";
+      var background_color = "ebd5bd"; // same as player panels
       var cardOverlayOwner = this.format_block(
         "jstpl_cardOverlay_owner",
         {
