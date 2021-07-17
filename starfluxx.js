@@ -35,6 +35,7 @@ define([
   g_gamethemeurl + "modules/js/states/creeperResolve.js",
   g_gamethemeurl + "modules/js/states/tempHandPlay.js",
   g_gamethemeurl + "modules/js/states/surpriseCounterPlay.js",
+  g_gamethemeurl + "modules/js/states/surpriseCancelPlay.js",
   g_gamethemeurl + "modules/js/states/actionResolveOther.js",
 ], function (dojo, declare) {
   return declare(
@@ -51,6 +52,7 @@ define([
       starfluxx.states.creeperResolve,
       starfluxx.states.tempHandPlay,
       starfluxx.states.surpriseCounterPlay,
+      starfluxx.states.surpriseCancelPlay,
       starfluxx.states.actionResolveOther,
     ],
     {
@@ -434,6 +436,10 @@ define([
             this.onEnteringStateSurpriseCounterPlay(args);
             break;
 
+          case "surpriseCancelSurprise":
+            this.onEnteringStateSurpriseCancelSurprise(args);
+            break;
+
           case "actionResolveForOther":
               this.onEnteringStateActionResolveOther(args);
               break;
@@ -491,6 +497,10 @@ define([
             this.onLeavingStateSurpriseCounterPlay();
             break;
 
+          case "surpriseCancelSurprise":
+            this.onLeavingStateSurpriseCancelSurprise();
+            break;
+
           case "actionResolveForOther":
             this.onLeavingStateActionResolveOther();
             break;
@@ -537,6 +547,9 @@ define([
               break;
             case "surpriseCounterPlay":
               this.onUpdateActionButtonsSurpriseCounterPlay(args);
+              break;
+            case "surpriseCancelSurprise":
+              this.onUpdateActionButtonsSurpriseCancelSurprise(args);
               break;
             case "actionResolveForOther":
               this.onUpdateActionButtonsActionResolveOther(args);
@@ -676,14 +689,18 @@ define([
         // Note that "card_type_id" contains the type of the item, so you can do special actions depending on the item type
       },
 
-      addCardsToStock: function (stock, cards, keepOrder) {
+      addCardsToStock: function (stock, cards, keepOrder, byLocation = true) {
         for (var card_id in cards) {
           var card = cards[card_id];
           stock.addToStockWithId(card.type_arg, card.id);
           if (keepOrder) {
-            stock.changeItemsWeight({
-              [card.type_arg]: parseInt(card.location_arg),
-            });
+            if (byLocation) {
+              stock.changeItemsWeight({
+                [card.type_arg]: parseInt(card.location_arg),
+              });
+            } else {
+              stock.changeItemsWeight({ [card.type_arg]: 1 });
+            }
           }
         }
       },

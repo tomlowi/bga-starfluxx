@@ -140,9 +140,13 @@
 		</div>
 </div>`;
 
+var jstpl_cardOverlay_owner = `<div class="flx-card-overlay-owner">
+  <span style="color: #\${player_color}; background-color: #\${back_color}">\${player_name}</span>
+</div>`;
+
 var jstpl_cardOverlay_title = `<div class="flx-card-overlay-title">
 		<div class="flx-card-title flx-card-title-base flx-card-title-\${type}" 
-          id="flx-card-overlay-title-\${id}">
+          id="flx-card-title-\${id}">
 			<div class="card-overlay-title">
         <div class="card-type">\${typeName}</div>
 			</div>

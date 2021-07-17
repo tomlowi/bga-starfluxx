@@ -76,6 +76,28 @@ trait PlayCardTrait
     }
   }
 
+  private function discardCanceledSurprises($surprise_cards, $except_id)
+  {
+    $game = Utils::getGame();
+    // first discard all
+    foreach ($surprise_cards as $card_id => $card) {
+      if ($except_id != null && $except_id == $card_id)
+        continue;
+      $game->cards->playCard($card_id);
+    }
+    // then get total discard count once and notify per player 
+    $discardCount =$game->cards->countCardInLocation("discard");
+    foreach ($surprise_cards as $card_id => $card) {
+      $player_id = $card["location_arg"];
+      $game->notifyAllPlayers("handDiscarded", "", [
+        "player_id" => $player_id,
+        "cards" => [$card],
+        "discardCount" => $discardCount,
+        "handCount" => $game->cards->countCardInLocation("hand", $player_id),
+      ]);  
+    }
+  }
+
   private function checkSurpriseCounterPlay() 
   {
     $game = Utils::getGame();
@@ -87,7 +109,24 @@ trait PlayCardTrait
 
     $surpriseCounterId = $game->getGameStateValue("cardIdSurpriseCounter");
 
-    // some Surprise countered the card played
+    // check how many surprise cards are in the Surprise queue
+    // if even => all Surprises canceled each other out
+    if ($surpriseCounterId != -1) {
+      $surprise_cards = $game->cards->getCardsInLocation("surprises");
+      if (count($surprise_cards) % 2 == 0) {
+        // reset counter surprise, so original card can be played
+        $game->setGameStateValue("cardIdSurpriseCounter", -1);
+        $surpriseCounterId = -1;
+        // discard all canceled surprises
+        $this->discardCanceledSurprises($surprise_cards, null);
+      }
+      else if (count($surprise_cards) > 1) {
+        // discard all canceled surprises, only the first 1 played remains active
+        $this->discardCanceledSurprises($surprise_cards, $surpriseCounterId);
+      }
+    }
+
+    // some Surprise countered the card played (and was not canceled by another Surprise)
     if ($surpriseCounterId != -1) {
 
       $targetCard = $game->cards->getCard($surpriseTargetId);
@@ -123,7 +162,7 @@ trait PlayCardTrait
 
       // make sure we don't keep looping back in here (but only reset *after* play)
       $game->setGameStateValue("cardIdSurpriseTarget", -1);
-      $game->setGameStateValue("cardIdSurpriseCounter", -1);      
+      $game->setGameStateValue("cardIdSurpriseCounter", -1);
     }
 
     return true;
@@ -376,8 +415,20 @@ trait PlayCardTrait
 
     if ($surprise != null && $surprise["player_id"] != $player_id) {
       self::setGameStateValue("cardIdSurpriseTarget", $card_id);
+
+      $game = Utils::getGame();
+      $players = $game->loadPlayersBasicInfos();
+
+      $game->notifyAllPlayers("surprise", 
+      clienttranslate('${player_name} wants to play <b>${card_name}</b>'),
+      [
+        "i18n" => ["card_name"],
+        "player_name" => $players[$player_id]["player_name"],
+        "card_name" => $game->getCardDefinitionFor($card)->getName(),
+      ]);
+
       return "checkForSurprises";
-      }
+    }
 
     return null;
   }

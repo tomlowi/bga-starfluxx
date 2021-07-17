@@ -331,6 +331,19 @@ class Utils
     ];
   }
 
+  public static function otherPlayersWithSurpriseInHand($player_id)
+  {
+    $surprises = [317, 318, 319, 320, 321];
+    for ($i = 0; $i < count($surprises); $i++) {
+      $surprise_player = Utils::findPlayerWithSurpriseInHand($surprises[$i]);
+      if ($surprise_player != null && $surprise_player["player_id"] != $player_id) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   public static function findPlayerWithSurpriseInHand($actionUniqueId)
   {
     $game = Utils::getGame();

@@ -76,6 +76,27 @@ trait SurpriseCounterPlayTrait
         );
       }
       self::setGameStateValue("cardIdSurpriseCounter", $card_id);
+
+      // move card to surprises queue, but keep it registered for this player
+      $game->cards->moveCard($card_id, "surprises", $player_id);
+
+      // check if other players have more Surprises that might cancel this
+      if (Utils::otherPlayersWithSurpriseInHand($player_id)) {
+
+        $players = $game->loadPlayersBasicInfos();
+        $surpriseCard = $game->cards->getCard($card_id);
+
+        $game->notifyAllPlayers("surprise", 
+        clienttranslate('${player_name} adds <b>${card_surprise}</b> to the Surprise queue'),
+        [
+          "i18n" => ["card_surprise"],
+          "player_name" => $players[$player_id]["player_name"],
+          "card_surprise" => $game->getCardDefinitionFor($surpriseCard)->getName(),
+        ]);
+
+        $stateTransition = "checkForSurpriseCancels";
+      }
+
       // this player decided to play Surprise already: all others can be skipped
       $game->gamestate->setAllPlayersNonMultiactive($stateTransition);
     }
