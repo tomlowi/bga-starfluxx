@@ -515,11 +515,16 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
       if (player_owner == null)
         return;
       
+      var background_color = "ffffff";
+      // unless player color is white itself
+      if (player_owner.color == background_color)
+        background_color = "000000";
       var cardOverlayOwner = this.format_block(
         "jstpl_cardOverlay_owner",
         {
           player_name: player_owner.name,
           player_color: player_owner.color,
+          back_color: background_color,
         }
       );
       dojo.place(cardOverlayOwner, divCardId);

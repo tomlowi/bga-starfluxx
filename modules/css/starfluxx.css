@@ -356,10 +356,11 @@ body {
 
 .flx-card-overlay-owner {
   position: absolute;
-  top: -5px;
+  top: -8px;
   right: 0px;
   font-weight: bolder;
   font-size: 14px;
+  padding: 1px;
 }
 
 .flx-tmp-hand:empty {

@@ -1,13 +1,15 @@
 define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
   return declare("starfluxx.states.surpriseCounterPlay", null, {
-    onEnteringStateSurpriseCounterPlay: function (args) {
-      console.log("Entering state: SurpriseCounterPlay", args);
+    onEnteringStateSurpriseCounterPlay: function (stateArgs) {
+      console.log("Entering state: SurpriseCounterPlay", stateArgs);
 
       dojo.empty("tmpSelectCards");
       var tmpStockId = "tmpSurpriseStock";
       dojo.place("<h3>" + _("Surprise Queue") + "</h3>", "tmpSelectCards");
       dojo.place('<div id="tmpSurpriseStock"></div>', "tmpSelectCards");
+
       // show the cards waiting in the Surprise "queue" to everyone
+      var args = stateArgs.args;
       var tmpSurpriseStock = this.createCardStock(tmpStockId, [
         "keeper",
         "goal",

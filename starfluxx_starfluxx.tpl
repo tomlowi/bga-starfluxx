@@ -141,7 +141,7 @@
 </div>`;
 
 var jstpl_cardOverlay_owner = `<div class="flx-card-overlay-owner">
-  <span style="color: #\${player_color}">\${player_name}</span>
+  <span style="color: #\${player_color}; background-color: #\${back_color}">\${player_name}</span>
 </div>`;
 
 var jstpl_cardOverlay_title = `<div class="flx-card-overlay-title">
