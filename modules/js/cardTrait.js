@@ -504,5 +504,27 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
           .play();
       }
     },
+
+    display_surpriseCardOwner: function(stock_name, card_id, player_id) {
+
+      var divCardId = stock_name + "_item_" + card_id;
+      if (dojo.byId(divCardId) == null)
+        return;
+
+      var player_owner = this.gamedatas.players[player_id];
+      if (player_owner == null)
+        return;
+      
+      var cardOverlayOwner = this.format_block(
+        "jstpl_cardOverlay_owner",
+        {
+          player_name: player_owner.name,
+          player_color: player_owner.color,
+        }
+      );
+      dojo.place(cardOverlayOwner, divCardId);
+
+    },
+
   });
 });
