@@ -58,11 +58,18 @@ class GoalTwoKeepers extends GoalCard
     }
 
     // https://faq.looneylabs.com/fluxx-games/star-fluxx#1265
-    // Active player with holographic projector takes precedence over other player that has both keepers!
+    // Active player with holographic projector takes precedence over other player victory!
 
-    if ($holograph_player_id != null && $holograph_player_id == $active_player_id) {
-      if ($first_keeper_player_id == $holograph_player_id 
-          || $second_keeper_player_id == $holograph_player_id) {
+    if ($holograph_player_id != null && $holograph_player_id == $active_player_id
+        && $first_keeper_player_id != $second_keeper_player_id) {
+
+      // Holograph can win with other player's keeper, unless that has a creeper attached!
+      // (because that creeper is holographed together so prevents win)
+      if ( ($first_keeper_player_id == $holograph_player_id 
+            && Utils::countNumberOfCreeperAttached($first_keeper_card["id"]) == 0)
+          || ($second_keeper_player_id == $holograph_player_id
+            && Utils::countNumberOfCreeperAttached($second_keeper_card["id"]) == 0)
+          ) {
 
         $players = $game->loadPlayersBasicInfos();
         $holograph_player_name = $players[$holograph_player_id]["player_name"];
@@ -84,7 +91,8 @@ class GoalTwoKeepers extends GoalCard
         return $holograph_player_id;
       }      
     }
-    else if ($first_keeper_player_id == $second_keeper_player_id) {
+    
+    if ($first_keeper_player_id == $second_keeper_player_id) {
       return $first_keeper_card["location_arg"];
     }
 

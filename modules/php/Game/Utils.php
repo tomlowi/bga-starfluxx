@@ -371,6 +371,30 @@ class Utils
     return $card_id == $keeper_id_malfunction;
   }
 
+  public static function checkForEvil($card_id) 
+  {
+    $game = Utils::getGame();
+    $keeper_id_evil = $game->getGameStateValue("creeperEvilAttachedTo");
+
+    return $card_id == $keeper_id_evil;
+  }
+
+  public static function checkForBrainParasites($card_id)
+  {
+    $game = Utils::getGame();
+    $keeper_id_brainparasites = $game->getGameStateValue("creeperBrainParasitesAttachedTo");
+
+    return $card_id == $keeper_id_brainparasites;
+  }
+
+  public static function countNumberOfCreeperAttached($card_id)
+  {
+    return (self::checkForMalfunction($card_id) ? 1 : 0)
+      + (self::checkForEvil($card_id) ? 1 : 0)
+      + (self::checkForBrainParasites($card_id) ? 1 : 0)
+      ;
+  }
+
   public static function checkTargetCardReplaceWithExpendableCrewman($card, $active_player_id, 
     $origin_player_id, $origin_player_name)
   {
