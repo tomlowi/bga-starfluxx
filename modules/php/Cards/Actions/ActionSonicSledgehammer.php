@@ -122,39 +122,43 @@ class ActionSonicSledgehammer extends ActionCard
       }
 
       if (count($discards_for_player) == 0) {
+        $discardFromHand = null;
         $handcards = $game->cards->getCardsInLocation("hand", $from_player_id);
         $cardsCount = count($handcards);
         if ($cardsCount > 0) {
           $i = bga_rand(0, $cardsCount - 1);
-          $discard = array_values($handcards)[$i];
+          $discardFromHand = array_values($handcards)[$i];
         }
 
-        $cards = $game->discardCardsFromLocation(
-          [ $discard["id"] ],
-          "hand",
-          $from_player_id,
-          null
-        );
-
-        $game->notifyAllPlayers(
-          "actionResolved",
-          clienttranslate(
-            '${player_name} uses <b>${card_name}</b> to discard a random hand card from ${player_name2}'
-          ),
-          [
-            "i18n" => ["card_name"],
-            "player_name" => $players[$player_id]["player_name"],
-            "player_name2" => $players[$from_player_id]["player_name"],
-            "card_name" => $trigger_name,
-          ]
-        );
-    
-        $game->notifyAllPlayers("handDiscarded", "", [
-          "player_id" => $from_player_id,
-          "cards" => $cards,
-          "discardCount" => $game->cards->countCardInLocation("discard"),
-          "handCount" => $game->cards->countCardInLocation("hand", $from_player_id),
-        ]);
+        if ($discardFromHand != null)
+        {
+          $cards = $game->discardCardsFromLocation(
+            [ $discardFromHand["id"] ],
+            "hand",
+            $from_player_id,
+            null
+          );
+  
+          $game->notifyAllPlayers(
+            "actionResolved",
+            clienttranslate(
+              '${player_name} uses <b>${card_name}</b> to discard a random hand card from ${player_name2}'
+            ),
+            [
+              "i18n" => ["card_name"],
+              "player_name" => $players[$player_id]["player_name"],
+              "player_name2" => $players[$from_player_id]["player_name"],
+              "card_name" => $trigger_name,
+            ]
+          );
+      
+          $game->notifyAllPlayers("handDiscarded", "", [
+            "player_id" => $from_player_id,
+            "cards" => $cards,
+            "discardCount" => $game->cards->countCardInLocation("discard"),
+            "handCount" => $game->cards->countCardInLocation("hand", $from_player_id),
+          ]);
+        }
       }
     }
   }
