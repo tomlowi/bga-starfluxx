@@ -33,13 +33,15 @@ class ActionDistressCall extends ActionCard
       $game->performDrawCards($player_id, 1, true);                  
     }
     // then check for creepers and draw extra 2 per Creeper
+    // Note: see https://faq.looneylabs.com/question/287 + answer from Andy on bug #45304
+    // the first card drawn already counts for the total
     foreach ($players as $player_id => $player) {
 
       $creeperCount = Utils::getPlayerCreeperCount($player_id);
       if ($creeperCount == 0)
         continue;
 
-      $game->performDrawCards($player_id, $creeperCount*2, true);
+      $game->performDrawCards($player_id, $creeperCount*2 - 1, true);
       // this also means re-check and draw extra for creepers just drawn
       $extraCreeperCount = 0;
       do {
