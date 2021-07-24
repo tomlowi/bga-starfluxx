@@ -73,5 +73,8 @@ class KeeperTeleporter extends KeeperCard
     );
     Utils::moveKeeperToPlayer($player_id, $card,
       $player_id, $selected_player_id, $notificationMsg);
+
+    // might have pushed other player over keeper limit
+    return "keepersExchangeOccured";
   }
 }
