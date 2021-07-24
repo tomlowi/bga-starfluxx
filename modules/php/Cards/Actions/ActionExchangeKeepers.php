@@ -93,9 +93,11 @@ class ActionExchangeKeepers extends ActionCard
     );
 
     // switch the keeper locations
-    Utils::moveKeeperToPlayer($player_id, $myKeeper,
-        $player_id, $other_player_id, "");
+    // make sure my Expendable Crewman doesn't interfer or come back to me, 
+    // because other player doesn't really have it until the Exchange is fully completed
     Utils::moveKeeperToPlayer($player_id, $otherKeeper,
         $other_player_id, $player_id, "");
+    Utils::moveKeeperToPlayer($player_id, $myKeeper,
+        $player_id, $other_player_id, "", false);
   }
 }
