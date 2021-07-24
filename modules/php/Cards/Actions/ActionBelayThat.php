@@ -41,7 +41,7 @@ class ActionBelayThat extends ActionCard
     return "resolveActionByOthers";
   }
 
-  public $interactionNeeded = "handCardOptionalSelection";
+  public $interactionOther = "handCardOptionalSelection";
 
   public function resolvedByOther($player_id, $args)
   {

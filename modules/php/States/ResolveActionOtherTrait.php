@@ -37,7 +37,7 @@ trait ResolveActionOtherTrait
       "i18n" => ["action_name"],
       "action_id" => $actionCard->getCardId(),
       "action_name" => $actionCard->getName(),
-      "action_type" => $actionCard->interactionNeeded,
+      "action_type" => $actionCard->interactionOther,
       "action_args" => $actionCard->resolveArgs(),
       "action_help" => $actionCard->getHelp(),
     ];

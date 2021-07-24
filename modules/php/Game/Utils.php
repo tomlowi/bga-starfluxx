@@ -763,4 +763,41 @@ class Utils
     }
 
   }
+
+  public static function checkBeamUsUpCouldTeleportBeingsFrom($check_player_id)
+  {
+    // https://faq.looneylabs.com/question/1621
+    // It's A Trap can be used to counter Beam Us Up, *if* the Teleporter is in play
+    // and the player holding the It's A Trap card in hand actually has any beings that
+    // would be affected by Beam Us Up (= keepers with brains)
+    $game = Utils::getGame();
+
+    // Teleporter must be in play with some other player
+    $keeperTeleporter = 16;
+    $teleporter_player = Utils::findPlayerWithKeeper($keeperTeleporter);
+    if ($teleporter_player == null || $teleporter_player["player_id"] == $check_player_id)
+    {
+      return false;
+    }
+    // Teleporter must be working (no Malfunction)
+    if (Utils::checkForMalfunction($teleporter_player["keeper_card"]["id"]))
+    {
+      return false;
+    }
+    // This player must have keepers in play that have brains
+    $player_cards = $game->cards->getCardsInLocation("keepers", $check_player_id);
+    foreach ($player_cards as $card_id => $card) {
+      // "beings" = keepers with brains, see https://faq.looneylabs.com/question/462
+      if ($card["type"] == "keeper") {
+        $card_definition = $game->getCardDefinitionFor($card);
+        if ($card_definition->getKeeperType() == "brains") {
+          // Yes, this player could loose keepers to the Teleporter when BeamUsUp is played
+          return true;
+        }
+      }
+    }
+
+    // No, this player would not loose keepers to the Teleporter by BeamUsUp
+    return false;
+  }
 }

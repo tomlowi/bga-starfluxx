@@ -117,6 +117,9 @@ trait SurpriseCounterPlayTrait
 
     $target_card = $game->cards->getCard($target_card_id);
     $target_type = $target_card["type"];
+    $target_unique = $target_card["type_arg"];
+
+    $surprise_player_id = $surprise_card["location_arg"];
     
     $valid_surprise = false;
     switch ($target_type)
@@ -135,7 +138,11 @@ trait SurpriseCounterPlayTrait
         break;
       case "action":
         // BelayThat = 320
-        $valid_surprise = $surprise_card_def->getUniqueId() == 320;
+        $valid_surprise = $surprise_card_def->getUniqueId() == 320
+        // or It's A Trap = 317 sometimes can also be used against BeamUsUp = 311 action        
+          || ($surprise_card_def->getUniqueId() == 317 && $target_unique == 311
+              && Utils::checkBeamUsUpCouldTeleportBeingsFrom($surprise_player_id))
+          ;
         break;
     }
 

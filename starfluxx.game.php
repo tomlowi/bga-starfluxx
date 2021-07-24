@@ -257,15 +257,19 @@ class starfluxx extends Table
     // Check who should be the first active player
     $this->activeNextPlayer();
     $first_player_id = $this->getActivePlayerId();
-
+    $other_player_id = $first_player_id;
     // If creepers are included, they must already be played when drawn:
     // so we need activated players for that!
     foreach ($players as $player_id => $player) {
       $this->gamestate->changeActivePlayer($player_id);
       $this->performDrawCards($player_id, $startingHand, true);
+      $other_player_id = $player_id;
     }
 
-    // $this->testForceCardDrawFor("action", 313, $first_player_id);
+    $this->testForceCardDrawFor("keeper", 16, $first_player_id);
+    $this->testForceCardDrawFor("action", 311, $first_player_id);
+    $this->testForceCardDrawFor("keeper", 12, $other_player_id);
+    $this->testForceCardDrawFor("action", 317, $other_player_id);
     // $this->testForceCardDrawFor("rule", 202, $first_player_id);
     // $this->testForceCardDrawFor("rule", 207, $first_player_id);
 

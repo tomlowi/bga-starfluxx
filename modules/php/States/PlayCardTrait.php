@@ -408,10 +408,33 @@ trait PlayCardTrait
       case "action":
         // BelayThat = 320
         $surprise = Utils::findPlayerWithSurpriseInHand(320);
+        // or It's A Trap = 317 sometimes can also be used against BeamUsUp action
+        $beamUsUp = 311;
+        if ($card["type_arg"] == $beamUsUp
+          && !($surprise != null && $surprise["player_id"] != $player_id)
+        )
+        {
+          $trap = Utils::findPlayerWithSurpriseInHand(317);
+          if ($trap["player_id"] != $player_id
+              && Utils::checkBeamUsUpCouldTeleportBeingsFrom($trap["player_id"]))
+          {
+            $surprise = $trap;
+          }
+        }
         break;
       default:
         break;
     }
+
+    // @TODO: It's a Trap is special: this should also be checked again after resolving some Actions,
+    // and after resolving any Keeper special ability that might steal another keeper.
+    // BeamUsUp: allow cancel when played if It's A Trap player has keepers with brains and Teleporter in play
+    // Steal a Keeper: yes, after resolving, if the target player has It's A Trap
+    // That's Mine: yes, after resolving, if the target player has It's A Trap
+    // Exchange Keepers: no, Exchange is not stealing (https://faq.looneylabs.com/question/465)
+    //  => likewise, Brain Transference also not
+    // Sonic Sledgehammer: no, Trashing is not stealing (https://faq.looneylabs.com/question/907)
+    // + all Keeper abilities that take Keeper from target player with It's A Trap 
 
     if ($surprise != null && $surprise["player_id"] != $player_id) {
       self::setGameStateValue("cardIdSurpriseTarget", $card_id);
@@ -460,9 +483,6 @@ trait PlayCardTrait
       $game->gamestate->nextstate($stateTransition);
       return;
     }
-
-    // @TODO: It's a Trap is special: this should also be checked again after resolving Actions,
-    // and after resolving any Free Rule/Keeper plays that might steal keepers.
 
     $card_type = $card["type"];
     $stateTransition = null;

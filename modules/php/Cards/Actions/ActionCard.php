@@ -19,8 +19,10 @@ class ActionCard extends Card
   }
 
   // Indicates which interaction is expected by this Action
-  // null indicated that this action  can be handled without client-side interaction
+  // null indicated that this action can be handled without client-side interaction
   public $interactionNeeded = null;
+  // Some Action cards also need all other players to do some client interaction
+  public $interactionOther = null;
 
   // Implements the immediate effect when this action is played
   public function immediateEffectOnPlay($player_id)

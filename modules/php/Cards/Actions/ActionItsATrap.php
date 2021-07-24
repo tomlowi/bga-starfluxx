@@ -47,7 +47,8 @@ class ActionItsATrap extends ActionCard
     return "resolveActionByOthers";
   }
 
-  public $interactionNeeded = "handCardOptionalSelection";
+  public $interactionOther = "handCardOptionalSelection";
+  public $interactionExtra = "keeperSelectionOther";
 
   public function resolvedByOther($player_id, $args)
   {
@@ -91,6 +92,55 @@ class ActionItsATrap extends ActionCard
       "discardCount" => $game->cards->countCardInLocation("discard"),
       "handCount" => $game->cards->countCardInLocation("hand", $player_id),
     ]);
+  }
+
+  public function outOfTurnCounterPlay($surpriseTargetId)
+  {
+    $game = Utils::getGame();
+
+    $surpriseCounterId = $this->getCardId();
+
+    $targetCard = $game->cards->getCard($surpriseTargetId);
+    $targetPlayerId = $targetCard["location_arg"];
+    $surpriseCard = $game->cards->getCard($surpriseCounterId);
+    $surprisePlayerId = $surpriseCard["location_arg"];
+
+    if ($targetCard["type"] == "action")
+    {
+      $game->cards->playCard($surpriseTargetId);
+      // Cancel the Action played => discard it, and discard this card    
+      $discardCount =$game->cards->countCardInLocation("discard");
+      $game->notifyAllPlayers("handDiscarded", "", [
+        "player_id" => $targetPlayerId,
+        "cards" => [$targetCard],
+        "discardCount" => $discardCount,
+        "handCount" => $game->cards->countCardInLocation("hand", $targetPlayerId),
+      ]);      
+    } 
+    else if ($targetCard["type"] == "keeper")
+    {
+      // this was the keeper stolen from us: take it back
+      $notificationMsg = clienttranslate(
+        '${player_name} retrieves <b>${card_name}</b>'
+      );
+      Utils::moveKeeperToPlayer($surprisePlayerId, $targetCard,
+        $targetPlayerId, $surprisePlayerId, $notificationMsg);
+    }
+    
+    $game->cards->playCard($surpriseCounterId);
+
+    $game->notifyAllPlayers("handDiscarded", "", [
+      "player_id" => $surprisePlayerId,
+      "cards" => [$surpriseCard],
+      "discardCount" => $discardCount,
+      "handCount" => $game->cards->countCardInLocation("hand", $surprisePlayerId),
+    ]);
+
+    // @TODO: Steal a Keeper from the player that tried to steal from you
+    // That is either the active Player, or the player with Teleporter (for BeamUsUp)!
+    // see https://faq.looneylabs.com/question/1621
+
+    // extra state needed again? => $interactionExtra
   }
 
 }
