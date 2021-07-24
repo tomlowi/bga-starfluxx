@@ -25,7 +25,7 @@ class KeeperCuteFuzzyAlienCreature extends KeeperCard
     $game = Utils::getGame();
 
     $card = $game->cards->getCard($this->getCardId());
-    $game->cards->insertCardOnExtremePosition($card["id"], "deck", 1);
+    $game->cards->insertCardOnExtremePosition($card["id"], "deck", true);
 
     // Then we notify players and update the discard pile
     $game->notifyAllPlayers(

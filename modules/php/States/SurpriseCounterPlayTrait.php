@@ -13,22 +13,22 @@ trait SurpriseCounterPlayTrait
 
   public function st_allowSurpriseCounterPlay()
   {
-    $playersForSuprise = self::loadPlayersBasicInfos();
+    $playersForSurprise = self::loadPlayersBasicInfos();
     // Only other players can Suprise the card played by the active player.
     $active_player_id = self::getActivePlayerId();
 
-    if (array_key_exists($active_player_id, $playersForSuprise)) {
-      unset($playersForSuprise[$active_player_id]);
+    if (array_key_exists($active_player_id, $playersForSurprise)) {
+      unset($playersForSurprise[$active_player_id]);
     }
 
     $gamestate = Utils::getGame()->gamestate;
 
     // Activate all players that might choose to Surprise counter the card played
     $stateTransition = "surprisePlayChecked";
-    if (empty($playersForSuprise)) {
+    if (empty($playersForSurprise)) {
       $gamestate->setAllPlayersNonMultiactive($stateTransition);
     } else {
-      $gamestate->setPlayersMultiactive(array_keys($playersForSuprise), $stateTransition, true);
+      $gamestate->setPlayersMultiactive(array_keys($playersForSurprise), $stateTransition, true);
     }  
   }
 

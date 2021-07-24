@@ -124,6 +124,8 @@ $machinestates = [
 
       "checkForSurprises" => STATE_ALLOW_SURPRISE_COUNTER_PLAY,
       "resolveActionByOthers" => STATE_RESOLVE_ACTION_OTHER,
+      "surprisePlayChecked" => STATE_PLAY_CARD,
+      "surpriseCancelChecked" => STATE_PLAY_CARD,
     ],
   ],
 
