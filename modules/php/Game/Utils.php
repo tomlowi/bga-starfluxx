@@ -331,6 +331,25 @@ class Utils
     ];
   }
 
+  public static function listPlayersWithSurpriseInHandFor($target_card)
+  {
+    $game = Utils::getGame();
+    $surprise_players = [];
+
+    $surprises = [317, 318, 319, 320, 321];
+    for ($i = 0; $i < count($surprises); $i++) {
+      $surprise_player = Utils::findPlayerWithSurpriseInHand($surprises[$i]);
+      if ($surprise_player != null
+        && Utils::checkCardIsValidSurpriseCounterFor($surprise_player["action_card"], $target_card)
+      )
+      {
+        $surprise_players[$surprise_player["player_id"]] = $surprise_player["action_card"];
+      }
+    }
+
+    return $surprise_players;
+  }
+
   public static function otherPlayersWithSurpriseInHand($player_id)
   {
     $surprises = [317, 318, 319, 320, 321];
@@ -361,6 +380,62 @@ class Utils
       "player_id" => $action_player_id,
       "action_card" => $action_card,
     ];
+  }
+
+  public static function checkCardIsValidSurpriseCounterFor($surprise_card, $target_card)
+  {
+    $game = Utils::getGame();
+    $surprise_card_def = $game->getCardDefinitionFor($surprise_card);
+
+    if ($surprise_card["type"] != "action"
+      || $surprise_card_def->getActionType() != "surprise") {
+        return false;
+      }
+    
+    $target_type = $target_card["type"];
+    $target_unique = $target_card["type_arg"];
+
+    $surprise_player_id = $surprise_card["location_arg"];
+
+    $lastStolenKeeperId = $game->getGameStateValue("cardIdStolenKeeper");
+    
+    $valid_surprise = false;
+    switch ($target_type)
+    {
+      case "keeper":
+        if ($lastStolenKeeperId == $target_card["id"])
+        { // Last Keeper Stolen from play => can be countered with It's A Trap
+          $valid_surprise = $surprise_card_def->getUniqueId() == 317;
+        }
+        else
+        { // Keeper played from hand
+          // That's Mine = 318
+          $valid_surprise = $surprise_card_def->getUniqueId() == 318;
+        }
+        break;
+      case "goal":
+        // Canceled Plans = 321
+        $valid_surprise = $surprise_card_def->getUniqueId() == 321;
+        break;
+      case "rule":
+        // Veto = 319
+        $valid_surprise = $surprise_card_def->getUniqueId() == 319;
+        break;
+      case "action":
+        $target_card_def = $game->getCardDefinitionFor($target_card);
+        // BelayThat = 320
+        $valid_surprise = $surprise_card_def->getUniqueId() == 320
+        // or It's A Trap = 317 sometimes can also be used against BeamUsUp = 311 action        
+          || ($surprise_card_def->getUniqueId() == 317 && $target_unique == 311
+              && Utils::checkBeamUsUpCouldTeleportBeingsFrom($surprise_player_id))
+        // or if the action is a Surprise itself (played during turn),
+        // it can also be countered with any other Surprise
+          || ($target_card_def->getActionType() == "surprise")
+          ;
+        break;
+    }
+
+    return $valid_surprise;
   }
 
   public static function checkForMalfunction($card_id) 

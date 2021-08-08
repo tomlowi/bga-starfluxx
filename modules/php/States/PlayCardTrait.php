@@ -408,41 +408,10 @@ trait PlayCardTrait
       return null;
     }
 
-    $card_type = $card["type"];
-    $surprise = null;
-    switch ($card_type) {
-      case "keeper":
-        // That's Mine = 318
-        $surprise = Utils::findPlayerWithSurpriseInHand(318);
-        break;
-      case "goal":
-        // Canceled Plans = 321
-        $surprise = Utils::findPlayerWithSurpriseInHand(321);
-        break;
-      case "rule":
-        // Veto = 319
-        $surprise = Utils::findPlayerWithSurpriseInHand(319);
-        break;
-      case "action":
-        // BelayThat = 320
-        $surprise = Utils::findPlayerWithSurpriseInHand(320);
-        // or It's A Trap = 317 sometimes can also be used against BeamUsUp action
-        $beamUsUp = 311;
-        if ($card["type_arg"] == $beamUsUp
-          && !($surprise != null && $surprise["player_id"] != $player_id)
-        )
-        {
-          $trap = Utils::findPlayerWithSurpriseInHand(317);
-          if ($trap["player_id"] != $player_id
-              && Utils::checkBeamUsUpCouldTeleportBeingsFrom($trap["player_id"]))
-          {
-            $surprise = $trap;
-          }
-        }
-        break;
-      default:
-        break;
-    }
+    $surprise_players = Utils::listPlayersWithSurpriseInHandFor($card);
+    $surprise_player_ids = array_keys($surprise_players);
+    $possibleSurprises = count($surprise_player_ids) > 1
+      || (count($surprise_player_ids) == 1 && $surprise_player_ids[0] != $player_id);
 
     // It's a Trap is special: this should also be checked again after resolving some Actions,
     // and after resolving any Keeper special ability that might steal another keeper.
@@ -454,7 +423,7 @@ trait PlayCardTrait
     // Sonic Sledgehammer: no, Trashing is not stealing (https://faq.looneylabs.com/question/907)
     // + all Keeper abilities that take Keeper from target player with It's A Trap 
 
-    if ($surprise != null && $surprise["player_id"] != $player_id) {
+    if ($possibleSurprises) {
       self::setGameStateValue("cardIdSurpriseTarget", $card_id);
 
       $game = Utils::getGame();

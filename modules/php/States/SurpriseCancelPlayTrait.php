@@ -8,9 +8,10 @@ trait SurpriseCancelPlayTrait
 {
   public function st_allowSurpriseCancelSurprise()
   {
-    $playersForSurprise = self::loadPlayersBasicInfos();
-    // Only other players can Cancel the last Surprise card played
     $game = Utils::getGame();
+    $gamestate = Utils::getGame()->gamestate;
+
+    // Only other players can Cancel the last Surprise card played
     $last_surprise_player_id = self::getActivePlayerId();
 
     $surprise_cards = $game->cards->getCardsInLocation("surprises");
@@ -19,11 +20,11 @@ trait SurpriseCancelPlayTrait
       $last_surprise_player_id = $last_surprise["location_arg"];
     }
 
+    $playersForSurprise = Utils::listPlayersWithSurpriseInHandFor($last_surprise);
+
     if (array_key_exists($last_surprise_player_id, $playersForSurprise)) {
       unset($playersForSurprise[$last_surprise_player_id]);
     }
-
-    $gamestate = Utils::getGame()->gamestate;
 
     // Activate all players that might choose to Surprise cancel the previous Surprise
     $stateTransition = "surpriseCancelChecked";
@@ -103,8 +104,11 @@ trait SurpriseCancelPlayTrait
       // this player decided to play Surprise already: all others can be skipped
       $game->gamestate->setAllPlayersNonMultiactive($stateTransition);
     }
-    // else: current player doesn't have Surprise or decided not to play it    
-    $game->gamestate->setPlayerNonMultiactive($player_id, $stateTransition);
+    else
+    {
+      // else: current player doesn't have Surprise or decided not to play it    
+      $game->gamestate->setPlayerNonMultiactive($player_id, $stateTransition);
+    }
   }
 
   private function checkCardIsValidSurpriseCancel($surprise_card_id)
