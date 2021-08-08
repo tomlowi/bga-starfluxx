@@ -83,5 +83,8 @@ class KeeperTheCaptain extends KeeperCard
     );
     Utils::moveKeeperToPlayer($player_id, $card,
       $other_player_id, $player_id, $notificationMsg);
+
+    // check if target player could counter this keeper steal
+    return Utils::checkCounterTrapForKeeperStolen($other_player_id, $card["id"]);
   }
 }

@@ -246,6 +246,7 @@ $machinestates = [
       "resolveActionCard" => STATE_RESOLVE_ACTION,      
       "zombiePass" => STATE_PLAY_CARD,
       "endOfTurn" => STATE_ENFORCE_HAND_LIMIT_SELF,
+      "checkForSurprises" => STATE_ALLOW_SURPRISE_COUNTER_PLAY,
     ],
   ],
 
@@ -276,6 +277,7 @@ $machinestates = [
       "endOfTurn" => STATE_ENFORCE_HAND_LIMIT_SELF,
       "handsExchangeOccured" => STATE_ENFORCE_HAND_LIMIT_OTHERS,
       "keepersExchangeOccured" => STATE_ENFORCE_KEEPERS_LIMIT_OTHERS,
+      "checkForSurprises" => STATE_ALLOW_SURPRISE_COUNTER_PLAY,
     ],
   ],
 
@@ -393,6 +395,7 @@ $machinestates = [
     "transitions" => [
       "checkForSurpriseCancels" => STATE_ALLOW_SURPRISE_CANCEL_SURPRISE,
       "surprisePlayChecked" => STATE_PLAY_CARD,
+      "resolveActionByOthers" => STATE_RESOLVE_ACTION_OTHER,
       "zombiePass" => STATE_PLAY_CARD,
       "endOfTurn" => STATE_ENFORCE_HAND_LIMIT_SELF,
       "endGame" => STATE_GAME_END,
@@ -416,6 +419,7 @@ $machinestates = [
     "transitions" => [
       "checkForSurpriseCancels" => STATE_ALLOW_SURPRISE_CANCEL_SURPRISE,
       "surpriseCancelChecked" => STATE_PLAY_CARD,
+      "resolveActionByOthers" => STATE_RESOLVE_ACTION_OTHER,
       "zombiePass" => STATE_PLAY_CARD,
       "endOfTurn" => STATE_ENFORCE_HAND_LIMIT_SELF,
       "endGame" => STATE_GAME_END,
@@ -434,7 +438,7 @@ $machinestates = [
     "args" => "arg_actionResolveForOther",
     "action" => "st_actionResolveForOther",
     "possibleactions" => [
-      "resolveActionCardSelection"
+      "resolveActionForOtherByCardSelection"
     ],
     "transitions" => [
       "continuePlay" => STATE_PLAY_CARD,

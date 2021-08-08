@@ -44,6 +44,11 @@ trait ResolveActionTrait
     $actionCard = ActionCardFactory::getCard($card["id"], $card["type_arg"]);
     $actionName = $actionCard->getName();
 
+    self::dump("===actionToResolve===", [
+      "card" => $card,
+      "name" => $actionName,
+    ]);
+
     self::setGameStateValue("actionToResolve", -1);
     $stateTransition = $actionCard->resolvedBy($player_id, $args);
 

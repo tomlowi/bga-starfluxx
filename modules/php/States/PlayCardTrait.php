@@ -108,6 +108,9 @@ trait PlayCardTrait
     }      
 
     $surpriseCounterId = $game->getGameStateValue("cardIdSurpriseCounter");
+    // surprise on played card, or on stolen keeper?
+    $lastStolenKeeperId = $game->getGameStateValue("cardIdStolenKeeper");
+    $trapStolenKeeper = ($lastStolenKeeperId == $surpriseTargetId);
 
     // check how many surprise cards are in the Surprise queue
     // if even => all Surprises canceled each other out
@@ -134,8 +137,6 @@ trait PlayCardTrait
       $surpriseCardDef = $game->getCardDefinitionFor($surpriseCard);
       $surprisePlayerId = $surpriseCard["location_arg"];
 
-      $surpriseCardDef->outOfTurnCounterPlay($surpriseTargetId);
-
       $players = $game->loadPlayersBasicInfos();
       $game->notifyAllPlayers("surprise", 
         clienttranslate('${player_name} uses <b>${card_surprise}</b> as surprise against <b>${card_target}</b>'),
@@ -146,23 +147,40 @@ trait PlayCardTrait
           "card_target" => $game->getCardDefinitionFor($targetCard)->getName(),
         ]);
 
+      $stateTransition = $surpriseCardDef->outOfTurnCounterPlay($surpriseTargetId);
+      self::dump("===SURPRISE===", [
+        "surprise" => $surpriseCard,
+        "target" => $targetCard,
+        "stateTransition" => $stateTransition,
+      ]);
+
       // make sure we don't keep looping back in here (so reset *before* nextstate)
       $game->setGameStateValue("cardIdSurpriseTarget", -1);
       $game->setGameStateValue("cardIdSurpriseCounter", -1);
     
       // the Surprised card does still count as played
-      $game->incGameStateValue("playedCards", 1);
+      if (!$trapStolenKeeper)
+      {
+        $game->incGameStateValue("playedCards", 1);
+      }
       // and we should force refresh args for PlayCard state
-      $game->gamestate->nextstate("continuePlay");
+      if ($stateTransition != null)
+        $game->gamestate->nextstate($stateTransition);
+      else
+        $game->gamestate->nextstate("continuePlay");
     }
     // no Surprise, it is allowed to play: just do it again from active player hand
+    // (except when not-countering a Stolen Keeper)
     else {
-      $player_id = $game->getActivePlayerId();
-      self::_action_playCard($surpriseTargetId, $player_id, true);
-
+      $player_id = $game->getActivePlayerId();      
+      if (!$trapStolenKeeper)
+      {
+        self::_action_playCard($surpriseTargetId, $player_id, true);
+      }
       // make sure we don't keep looping back in here (but only reset *after* play)
       $game->setGameStateValue("cardIdSurpriseTarget", -1);
       $game->setGameStateValue("cardIdSurpriseCounter", -1);
+
     }
 
     return true;
@@ -426,7 +444,7 @@ trait PlayCardTrait
         break;
     }
 
-    // @TODO: It's a Trap is special: this should also be checked again after resolving some Actions,
+    // It's a Trap is special: this should also be checked again after resolving some Actions,
     // and after resolving any Keeper special ability that might steal another keeper.
     // BeamUsUp: allow cancel when played if It's A Trap player has keepers with brains and Teleporter in play
     // Steal a Keeper: yes, after resolving, if the target player has It's A Trap
@@ -467,6 +485,10 @@ trait PlayCardTrait
     $card = $game->cards->getCard($card_id);
 
     if ($card["location"] != "hand" or $card["location_arg"] != $player_id) {
+      self::dump("===INVALID===", [
+        "player" => $player_id,
+        "card" => $card,
+      ]);
       Utils::throwInvalidUserAction(
         starfluxx::totranslate("You do not have this card in hand")
       );

@@ -112,9 +112,12 @@ class ActionThatsMine extends ActionCard
 
     // move this keeper to the current player
     $notificationMsg = clienttranslate(
-      '${player_name} stole <b>${card_name}</b> from ${player_name1}'
+      '${player_name} stole <b>${card_name}</b> from ${player_name2}'
     );
     Utils::moveKeeperToPlayer($player_id, $card,
-      $other_player_id, $player_id, $notificationMsg);    
+      $other_player_id, $player_id, $notificationMsg);
+    
+    // check if target player could counter this keeper steal
+    return Utils::checkCounterTrapForKeeperStolen($other_player_id, $card["id"]);
   }  
 }

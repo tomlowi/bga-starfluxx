@@ -79,7 +79,7 @@ class ActionCreeperReassignment extends ActionCard
 
     // move this creeper to the selected player
     $notificationMsg = clienttranslate(
-      '${player_name} moved <b>${card_name}</b> from ${player_name1} to ${player_name2}'
+      '${player_name} moved <b>${card_name}</b> from ${player_name2} to ${player_name3}'
     );
     Utils::moveKeeperToPlayer($player_id, $card,
       $other_player_id, $selected_player_id, $notificationMsg); 

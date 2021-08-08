@@ -9,22 +9,35 @@ trait ResolveActionOtherTrait
 {
   public function st_actionResolveForOther()
   {
-    $otherPlayers = self::loadPlayersBasicInfos();
-    // Only other then the active player must resolve this action
-    $active_player_id = self::getActivePlayerId();
+    $multiActivePlayers = [];
 
-    if (array_key_exists($active_player_id, $otherPlayers)) {
-      unset($otherPlayers[$active_player_id]);
+    // 1 specific other player must resolve this
+    $other_player_id = self::getGameStateValue("playerIdTrapper");
+    if ($other_player_id > -1)
+    {
+      $multiActivePlayers = [ $other_player_id ];
+    }
+    else
+    {
+      // Only other then the active player must resolve this action
+      $otherPlayers = self::loadPlayersBasicInfos();
+      $active_player_id = self::getActivePlayerId();
+
+      if (array_key_exists($active_player_id, $otherPlayers)) {
+        unset($otherPlayers[$active_player_id]);
+      }
+
+      $multiActivePlayers = array_keys($otherPlayers);
     }
 
     $gamestate = Utils::getGame()->gamestate;
 
     // Activate all players that should resolve this action
     $stateTransition = "continuePlay";
-    if (empty($otherPlayers)) {
+    if (empty($multiActivePlayers)) {
       $gamestate->setAllPlayersNonMultiactive($stateTransition);
     } else {
-      $gamestate->setPlayersMultiactive(array_keys($otherPlayers), $stateTransition, true);
+      $gamestate->setPlayersMultiactive($multiActivePlayers, $stateTransition, true);
     }  
   }
 

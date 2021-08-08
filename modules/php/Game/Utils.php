@@ -518,8 +518,8 @@ class Utils
       [
         "i18n" => ["card_name"],
         "player_name" => $active_player_name,
-        "player_name1" => $origin_player_name,
-        "player_name2" => $destination_player_name,
+        "player_name2" => $origin_player_name,
+        "player_name3" => $destination_player_name,
         "card_name" => $card_definition->getName(),
         "destination_player_id" => $destination_player_id,
         "origin_player_id" => $origin_player_id,
@@ -726,8 +726,8 @@ class Utils
         "i18n" => ["card_name"],
         "card" => $card,
         "player_name" => $active_player_name,
-        "player_name1" => $origin_player_name,
-        "player_name2" => $destination_player_name,
+        "player_name2" => $origin_player_name,
+        "player_name3" => $destination_player_name,
         "card_name" => $card_definition->getName(),
         "player_id" => $destination_player_id,
         "destination_player_id" => $destination_player_id,
@@ -747,8 +747,8 @@ class Utils
             "i18n" => ["card_name"],
             "card" => $creeper_card,
             "player_name" => $active_player_name,
-            "player_name1" => $origin_player_name,
-            "player_name2" => $destination_player_name,
+            "player_name2" => $origin_player_name,
+            "player_name3" => $destination_player_name,
             "card_name" => $creeper_definition->getName(),
             "player_id" => $destination_player_id,
             "destination_player_id" => $destination_player_id,
@@ -762,6 +762,12 @@ class Utils
       }
     }
 
+  }
+
+  public static function checkPlayerHasTrap($check_player_id)
+  {
+    $trap = Utils::findPlayerWithSurpriseInHand(317);
+    return $trap != null && $check_player_id == $trap["player_id"];
   }
 
   public static function checkBeamUsUpCouldTeleportBeingsFrom($check_player_id)
@@ -799,5 +805,24 @@ class Utils
 
     // No, this player would not loose keepers to the Teleporter by BeamUsUp
     return false;
+  }
+
+  public static function checkCounterTrapForKeeperStolen($target_player_id, $target_keeper_id)
+  {
+    $game = Utils::getGame();
+    $hasTrap = Utils::checkPlayerHasTrap($target_player_id);
+
+    if ($hasTrap)
+    {
+      $game->setGameStateValue("cardIdStolenKeeper", $target_keeper_id);
+      $game->setGameStateValue("cardIdSurpriseTarget", $target_keeper_id);
+  
+      // @TODO: check and make sure no creepers should be attached to the stolen keeper
+      // until it is decided that no surprise trap will be played on it
+
+      return "checkForSurprises";
+    }
+
+    return null;
   }
 }

@@ -11,6 +11,11 @@ trait SurpriseCounterPlayTrait
     return self::getGameStateValue("cardIdSurpriseTarget");
   }
 
+  private function getLastKeeperStolen()
+  {
+    return self::getGameStateValue("cardIdStolenKeeper");
+  }
+
   public function st_allowSurpriseCounterPlay()
   {
     $playersForSurprise = self::loadPlayersBasicInfos();
@@ -24,6 +29,15 @@ trait SurpriseCounterPlayTrait
     $gamestate = Utils::getGame()->gamestate;
 
     // Activate all players that might choose to Surprise counter the card played
+    // Normally, activate all but the active player so it isn't obvious who has the Surprise card(s) in hand
+    // Unless Keeper Steal + It's A Trap => only activate the player with the Trap (Keeper Stolen is known anyway)
+    $targetCardId = $this->getSurpriseTarget();
+    $lastKeeperStolen = $this->getLastKeeperStolen();
+    if ($targetCardId == $lastKeeperStolen) {
+      $trap = Utils::findPlayerWithSurpriseInHand(317);
+      $playersForSurprise = [ $trap["player_id"] => $trap ];
+    }
+
     $stateTransition = "surprisePlayChecked";
     if (empty($playersForSurprise)) {
       $gamestate->setAllPlayersNonMultiactive($stateTransition);
@@ -100,8 +114,12 @@ trait SurpriseCounterPlayTrait
       // this player decided to play Surprise already: all others can be skipped
       $game->gamestate->setAllPlayersNonMultiactive($stateTransition);
     }
-    // else: current player doesn't have Surprise or decided not to play it    
-    $game->gamestate->setPlayerNonMultiactive($player_id, $stateTransition);
+    else
+    {
+      // else: current player doesn't have Surprise or decided not to play it    
+      $game->gamestate->setPlayerNonMultiactive($player_id, $stateTransition);
+    }
+
   }
 
   private function checkCardIsValidSurpriseCounterFor($surprise_card_id, $target_card_id)
@@ -120,13 +138,22 @@ trait SurpriseCounterPlayTrait
     $target_unique = $target_card["type_arg"];
 
     $surprise_player_id = $surprise_card["location_arg"];
+
+    $lastStolenKeeperId = $game->getGameStateValue("cardIdStolenKeeper");
     
     $valid_surprise = false;
     switch ($target_type)
     {
       case "keeper":
-        // That's Mine = 318
-        $valid_surprise = $surprise_card_def->getUniqueId() == 318;
+        if ($lastStolenKeeperId == $target_card["id"])
+        { // Last Keeper Stolen from play => can be countered with It's A Trap
+          $valid_surprise = $surprise_card_def->getUniqueId() == 317;
+        }
+        else
+        { // Keeper played from hand
+          // That's Mine = 318
+          $valid_surprise = $surprise_card_def->getUniqueId() == 318;
+        }
         break;
       case "goal":
         // Canceled Plans = 321

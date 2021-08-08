@@ -2,6 +2,7 @@
 namespace StarFluxx\Cards\Actions;
 
 use StarFluxx\Game\Utils;
+use starfluxx;
 
 class ActionItsATrap extends ActionCard
 {
@@ -14,9 +15,19 @@ class ActionItsATrap extends ActionCard
       "<b>Out of turn:</b> Cancel any single game action in which another player is stealing a Keeper you have on the table, and instead you steal one of their Keepers. <b>During your turn:</b> All other players must choose a card from their hands to discard, while you draw 2.<br>This card can also cancel another Surprise."
     );
 
+    $this->interactionOther = $this->interactionOtherDuringTurn;
     $this->help = clienttranslate(
       "Select any card to discard from your hand, or select nothing and get a random card discarded."
     );
+
+    $game = Utils::getGame();
+    if ($game->getGameStateValue("playerIdTrappedTarget") > -1)
+    {
+      $this->interactionOther = $this->interactionOtherAsTrap;
+      $this->help = clienttranslate(
+        "Select a keeper card in front of the player that was trapped."
+      );
+    }
   }
 
   public function getActionType()
@@ -27,6 +38,7 @@ class ActionItsATrap extends ActionCard
   public function immediateEffectOnPlay($player_id)
   {
     $game = Utils::getGame();
+    $this->interactionOther = $this->interactionOtherDuringTurn;
 
     // Draw 2 extra cards
     $extraCards = 2;
@@ -36,8 +48,7 @@ class ActionItsATrap extends ActionCard
     $game->performDrawCards($player_id, $extraCards, true);
 
     // move this card itself back to the discard pile
-    $game->cards->playCard($this->getCardId());
-        
+    $game->cards->playCard($this->getCardId());        
 
     // force other players to react
     Utils::getGame()->setGameStateValue(
@@ -47,11 +58,21 @@ class ActionItsATrap extends ActionCard
     return "resolveActionByOthers";
   }
 
-  public $interactionOther = "handCardOptionalSelection";
-  public $interactionExtra = "keeperSelectionOther";
+  public $interactionOther = null;
+  public $interactionOtherDuringTurn = "handCardOptionalSelection";
+  public $interactionOtherAsTrap = "keeperSelectionOther";
 
   public function resolvedByOther($player_id, $args)
   {
+    $game = Utils::getGame();
+    // Out of turn Trap: resolve = keeper stolen back
+    if ($game->getGameStateValue("playerIdTrappedTarget") > -1)
+    {
+      $this->resolvedAsOutOfTurnTrap($player_id, $args);
+      return;
+    }
+
+    // During turn: normal resolve = other players discarding a card
     // if a card was selected, validate it is any card in hand of player and discard
     // if not, select any random card from player hand and discard that
     $card = $args["card"];
@@ -66,9 +87,7 @@ class ActionItsATrap extends ActionCard
           "You must discard any card from your hand"
         )
       );
-    }
-
-    $game = Utils::getGame();
+    }    
 
     if ($card == null) {
       $handCards = $game->cards->getCardsInLocation("hand", $player_id);
@@ -97,6 +116,7 @@ class ActionItsATrap extends ActionCard
   public function outOfTurnCounterPlay($surpriseTargetId)
   {
     $game = Utils::getGame();
+    $this->interactionOther = $this->interactionOtherAsTrap;
 
     $surpriseCounterId = $this->getCardId();
 
@@ -109,7 +129,7 @@ class ActionItsATrap extends ActionCard
     {
       $game->cards->playCard($surpriseTargetId);
       // Cancel the Action played => discard it, and discard this card    
-      $discardCount =$game->cards->countCardInLocation("discard");
+      $discardCount = $game->cards->countCardInLocation("discard");
       $game->notifyAllPlayers("handDiscarded", "", [
         "player_id" => $targetPlayerId,
         "cards" => [$targetCard],
@@ -124,7 +144,7 @@ class ActionItsATrap extends ActionCard
         '${player_name} retrieves <b>${card_name}</b>'
       );
       Utils::moveKeeperToPlayer($surprisePlayerId, $targetCard,
-        $targetPlayerId, $surprisePlayerId, $notificationMsg);
+        $targetPlayerId, $surprisePlayerId, $notificationMsg, false);
     }
     
     $game->cards->playCard($surpriseCounterId);
@@ -132,15 +152,74 @@ class ActionItsATrap extends ActionCard
     $game->notifyAllPlayers("handDiscarded", "", [
       "player_id" => $surprisePlayerId,
       "cards" => [$surpriseCard],
-      "discardCount" => $discardCount,
+      "discardCount" => $game->cards->countCardInLocation("discard"),
       "handCount" => $game->cards->countCardInLocation("hand", $surprisePlayerId),
     ]);
 
-    // @TODO: Steal a Keeper from the player that tried to steal from you
+    // Steal a Keeper from the player that tried to steal from you
     // That is either the active Player, or the player with Teleporter (for BeamUsUp)!
     // see https://faq.looneylabs.com/question/1621
+    $targetKeeperCount = Utils::getPlayerKeeperCount($targetPlayerId);
+    if ($targetKeeperCount == 0)
+    {
+      $players = $game->loadPlayersBasicInfos();
+      $game->notifyAllPlayers(
+        "actionDone",
+        clienttranslate('${player_name} has no other keepers to trap'),
+        [
+          "player_name" => $players[$targetPlayerId]["player_name"],
+        ]
+      );
+      return null;
+    }
 
-    // extra state needed again? => $interactionExtra
+    // track which player we should steal back from
+    $game->setGameStateValue("playerIdTrapper", $surprisePlayerId);
+    $game->setGameStateValue("playerIdTrappedTarget", $targetPlayerId);
+    $game->setGameStateValue("actionToResolve", $this->getCardId());    
+    return "resolveActionByOthers";
+  }
+
+  public function resolvedAsOutOfTurnTrap($player_id, $args)
+  {
+    $game = Utils::getGame();
+
+    $card = $args["card"];
+    $card_definition = $game->getCardDefinitionFor($card);
+
+    $card_type = $card["type"];
+    $card_location = $card["location"];
+    $other_player_id = $card["location_arg"];
+
+    $targetPlayerId = $game->getGameStateValue("playerIdTrappedTarget");
+
+    self::dump("===TRAP===", [
+      "args" => $args,
+      "card" => $card,
+      "target" => $targetPlayerId,
+    ]);
+
+    if (
+      $card_type != "keeper" ||
+      $card_location != "keepers" ||
+      $other_player_id != $targetPlayerId
+    ) {
+      Utils::throwInvalidUserAction(
+        starfluxx::totranslate(
+          "You must select a keeper card in front of the trapped player"
+        )
+      );
+    }
+
+    // move this keeper to the current player
+    $notificationMsg = clienttranslate(
+      '${player_name} trapped <b>${card_name}</b> from ${player_name2}'
+    );
+    Utils::moveKeeperToPlayer($player_id, $card,
+      $other_player_id, $player_id, $notificationMsg);
+
+    $game->setGameStateValue("playerIdTrapper", -1);
+    $game->setGameStateValue("playerIdTrappedTarget", -1);
   }
 
 }
