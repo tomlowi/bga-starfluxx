@@ -54,7 +54,7 @@ class ActionCanceledPlans extends ActionCard
     return "resolveActionByOthers";
   }
 
-  public $interactionNeeded = "handCardOptionalSelection";
+  public $interactionOther = "handCardOptionalSelection";
 
   public function resolvedByOther($player_id, $args)
   {
@@ -110,6 +110,7 @@ class ActionCanceledPlans extends ActionCard
     $targetCard = $game->cards->getCard($surpriseTargetId);
     $targetPlayerId = $targetCard["location_arg"];
     $surpriseCard = $game->cards->getCard($surpriseCounterId);
+    $surpriseCard["location_arg"] = $surpriseCard["location_arg"]  % OFFSET_PLAYER_LOCATION_ARG;
     $surprisePlayerId = $surpriseCard["location_arg"];
     $game->cards->playCard($surpriseTargetId);
     $game->cards->playCard($surpriseCounterId);

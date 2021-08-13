@@ -331,6 +331,25 @@ class Utils
     ];
   }
 
+  public static function listPlayersWithSurpriseInHandFor($target_card)
+  {
+    $game = Utils::getGame();
+    $surprise_players = [];
+
+    $surprises = [317, 318, 319, 320, 321];
+    for ($i = 0; $i < count($surprises); $i++) {
+      $surprise_player = Utils::findPlayerWithSurpriseInHand($surprises[$i]);
+      if ($surprise_player != null
+        && Utils::checkCardIsValidSurpriseCounterFor($surprise_player["action_card"], $target_card)
+      )
+      {
+        $surprise_players[$surprise_player["player_id"]] = $surprise_player["action_card"];
+      }
+    }
+
+    return $surprise_players;
+  }
+
   public static function otherPlayersWithSurpriseInHand($player_id)
   {
     $surprises = [317, 318, 319, 320, 321];
@@ -361,6 +380,62 @@ class Utils
       "player_id" => $action_player_id,
       "action_card" => $action_card,
     ];
+  }
+
+  public static function checkCardIsValidSurpriseCounterFor($surprise_card, $target_card)
+  {
+    $game = Utils::getGame();
+    $surprise_card_def = $game->getCardDefinitionFor($surprise_card);
+
+    if ($surprise_card["type"] != "action"
+      || $surprise_card_def->getActionType() != "surprise") {
+        return false;
+      }
+    
+    $target_type = $target_card["type"];
+    $target_unique = $target_card["type_arg"];
+
+    $surprise_player_id = $surprise_card["location_arg"];
+
+    $lastStolenKeeperId = $game->getGameStateValue("cardIdStolenKeeper");
+    
+    $valid_surprise = false;
+    switch ($target_type)
+    {
+      case "keeper":
+        if ($lastStolenKeeperId == $target_card["id"])
+        { // Last Keeper Stolen from play => can be countered with It's A Trap
+          $valid_surprise = $surprise_card_def->getUniqueId() == 317;
+        }
+        else
+        { // Keeper played from hand
+          // That's Mine = 318
+          $valid_surprise = $surprise_card_def->getUniqueId() == 318;
+        }
+        break;
+      case "goal":
+        // Canceled Plans = 321
+        $valid_surprise = $surprise_card_def->getUniqueId() == 321;
+        break;
+      case "rule":
+        // Veto = 319
+        $valid_surprise = $surprise_card_def->getUniqueId() == 319;
+        break;
+      case "action":
+        $target_card_def = $game->getCardDefinitionFor($target_card);
+        // BelayThat = 320
+        $valid_surprise = $surprise_card_def->getUniqueId() == 320
+        // or It's A Trap = 317 sometimes can also be used against BeamUsUp = 311 action        
+          || ($surprise_card_def->getUniqueId() == 317 && $target_unique == 311
+              && Utils::checkBeamUsUpCouldTeleportBeingsFrom($surprise_player_id))
+        // or if the action is a Surprise itself (played during turn),
+        // it can also be countered with any other Surprise
+          || ($target_card_def->getActionType() == "surprise")
+          ;
+        break;
+    }
+
+    return $valid_surprise;
   }
 
   public static function checkForMalfunction($card_id) 
@@ -518,8 +593,8 @@ class Utils
       [
         "i18n" => ["card_name"],
         "player_name" => $active_player_name,
-        "player_name1" => $origin_player_name,
-        "player_name2" => $destination_player_name,
+        "player_name2" => $origin_player_name,
+        "player_name3" => $destination_player_name,
         "card_name" => $card_definition->getName(),
         "destination_player_id" => $destination_player_id,
         "origin_player_id" => $origin_player_id,
@@ -726,8 +801,8 @@ class Utils
         "i18n" => ["card_name"],
         "card" => $card,
         "player_name" => $active_player_name,
-        "player_name1" => $origin_player_name,
-        "player_name2" => $destination_player_name,
+        "player_name2" => $origin_player_name,
+        "player_name3" => $destination_player_name,
         "card_name" => $card_definition->getName(),
         "player_id" => $destination_player_id,
         "destination_player_id" => $destination_player_id,
@@ -747,8 +822,8 @@ class Utils
             "i18n" => ["card_name"],
             "card" => $creeper_card,
             "player_name" => $active_player_name,
-            "player_name1" => $origin_player_name,
-            "player_name2" => $destination_player_name,
+            "player_name2" => $origin_player_name,
+            "player_name3" => $destination_player_name,
             "card_name" => $creeper_definition->getName(),
             "player_id" => $destination_player_id,
             "destination_player_id" => $destination_player_id,
@@ -762,5 +837,67 @@ class Utils
       }
     }
 
+  }
+
+  public static function checkPlayerHasTrap($check_player_id)
+  {
+    $trap = Utils::findPlayerWithSurpriseInHand(317);
+    return $trap != null && $check_player_id == $trap["player_id"];
+  }
+
+  public static function checkBeamUsUpCouldTeleportBeingsFrom($check_player_id)
+  {
+    // https://faq.looneylabs.com/question/1621
+    // It's A Trap can be used to counter Beam Us Up, *if* the Teleporter is in play
+    // and the player holding the It's A Trap card in hand actually has any beings that
+    // would be affected by Beam Us Up (= keepers with brains)
+    $game = Utils::getGame();
+
+    // Teleporter must be in play with some other player
+    $keeperTeleporter = 16;
+    $teleporter_player = Utils::findPlayerWithKeeper($keeperTeleporter);
+    if ($teleporter_player == null || $teleporter_player["player_id"] == $check_player_id)
+    {
+      return false;
+    }
+    // Teleporter must be working (no Malfunction)
+    if (Utils::checkForMalfunction($teleporter_player["keeper_card"]["id"]))
+    {
+      return false;
+    }
+    // This player must have keepers in play that have brains
+    $player_cards = $game->cards->getCardsInLocation("keepers", $check_player_id);
+    foreach ($player_cards as $card_id => $card) {
+      // "beings" = keepers with brains, see https://faq.looneylabs.com/question/462
+      if ($card["type"] == "keeper") {
+        $card_definition = $game->getCardDefinitionFor($card);
+        if ($card_definition->getKeeperType() == "brains") {
+          // Yes, this player could loose keepers to the Teleporter when BeamUsUp is played
+          return true;
+        }
+      }
+    }
+
+    // No, this player would not loose keepers to the Teleporter by BeamUsUp
+    return false;
+  }
+
+  public static function checkCounterTrapForKeeperStolen($target_player_id, $target_keeper_id)
+  {
+    $game = Utils::getGame();
+    $hasTrap = Utils::checkPlayerHasTrap($target_player_id);
+
+    if ($hasTrap)
+    {
+      $game->setGameStateValue("cardIdStolenKeeper", $target_keeper_id);
+      $game->setGameStateValue("cardIdSurpriseTarget", $target_keeper_id);
+  
+      // @TODO: check and make sure no creepers should be attached to the stolen keeper
+      // until it is decided that no surprise trap will be played on it
+
+      return "checkForSurprises";
+    }
+
+    return null;
   }
 }

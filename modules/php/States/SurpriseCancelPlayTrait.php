@@ -8,22 +8,23 @@ trait SurpriseCancelPlayTrait
 {
   public function st_allowSurpriseCancelSurprise()
   {
-    $playersForSurprise = self::loadPlayersBasicInfos();
-    // Only other players can Cancel the last Surprise card played
     $game = Utils::getGame();
+    $gamestate = Utils::getGame()->gamestate;
+
+    // Only other players can Cancel the last Surprise card played
     $last_surprise_player_id = self::getActivePlayerId();
 
-    $surprise_cards = $game->cards->getCardsInLocation("surprises");
+    $surprise_cards = $game->cards->getCardsInLocation("surprises", null, "location_arg");
     $last_surprise = array_pop($surprise_cards);
     if ($last_surprise != null) {
-      $last_surprise_player_id = $last_surprise["location_arg"];
+      $last_surprise_player_id = $last_surprise["location_arg"] % OFFSET_PLAYER_LOCATION_ARG;
     }
+
+    $playersForSurprise = Utils::listPlayersWithSurpriseInHandFor($last_surprise);
 
     if (array_key_exists($last_surprise_player_id, $playersForSurprise)) {
       unset($playersForSurprise[$last_surprise_player_id]);
     }
-
-    $gamestate = Utils::getGame()->gamestate;
 
     // Activate all players that might choose to Surprise cancel the previous Surprise
     $stateTransition = "surpriseCancelChecked";
@@ -43,7 +44,7 @@ trait SurpriseCancelPlayTrait
     $card_definition = $game->getCardDefinitionFor($card);
 
     // include all cards in the Surprise Queue
-    $surprise_cards = $game->cards->getCardsInLocation("surprises");
+    $surprise_cards = $game->cards->getCardsInLocation("surprises", null, "location_arg");
     array_unshift($surprise_cards, $card);
 
     return [
@@ -68,6 +69,7 @@ trait SurpriseCancelPlayTrait
     {
       // the Surprise card used must be in player's hand
       $handCards = $game->cards->getCardsInLocation("hand", $player_id);
+
       if (!array_key_exists($card_id, $handCards)) {
         Utils::throwInvalidUserAction(
           starfluxx::totranslate("You do not have this card in hand")
@@ -81,7 +83,11 @@ trait SurpriseCancelPlayTrait
         );
       }
       // move card to surprises queue, but keep it registered for this player
-      $game->cards->moveCard($card_id, "surprises", $player_id);
+      $countPrefix = 1+$game->cards->countCardsInLocation("surprises");
+      // we need location_arg to keep ordered queue, but still be able to determine the player from it
+      // HACK here because deck component uses location_arg differently for
+      // "hand" style locations and "pile" style locations, here we want a bit of both
+      $game->cards->insertCard($card_id, "surprises", ($countPrefix * OFFSET_PLAYER_LOCATION_ARG) + $player_id);
 
       // notification
       $players = $game->loadPlayersBasicInfos();
@@ -103,8 +109,11 @@ trait SurpriseCancelPlayTrait
       // this player decided to play Surprise already: all others can be skipped
       $game->gamestate->setAllPlayersNonMultiactive($stateTransition);
     }
-    // else: current player doesn't have Surprise or decided not to play it    
-    $game->gamestate->setPlayerNonMultiactive($player_id, $stateTransition);
+    else
+    {
+      // else: current player doesn't have Surprise or decided not to play it    
+      $game->gamestate->setPlayerNonMultiactive($player_id, $stateTransition);
+    }
   }
 
   private function checkCardIsValidSurpriseCancel($surprise_card_id)

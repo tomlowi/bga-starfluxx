@@ -88,6 +88,7 @@ class starfluxx extends Table
       "tmpActionPhase" => 56,
       "cardIdSurpriseTarget" => 57,
       "cardIdSurpriseCounter" => 58,
+      "cardIdStolenKeeper" => 59,
       "playerTurnUsedWormhole" => 60,
       "playerTurnUsedCaptain" => 61,
       "playerTurnUsedScientist" => 62,
@@ -97,7 +98,8 @@ class starfluxx extends Table
       "playerTurnUsedComputerBonus" => 66,
       "playerTurnLoggedComputerBonus" => 67,
       "playerTurnUsedTeleporter" => 68,
-      //"optionCreeperPack" => 101,
+      "playerIdTrapper" => 70,
+      "playerIdTrappedTarget" => 71,
     ]);
     $this->cards = self::getNew("module.common.deck");
     $this->cards->init("card");
@@ -227,6 +229,9 @@ class starfluxx extends Table
     self::setGameStateInitialValue("tmpActionPhase", 0);
     self::setGameStateInitialValue("cardIdSurpriseTarget", -1);
     self::setGameStateInitialValue("cardIdSurpriseCounter", -1);
+    self::setGameStateInitialValue("cardIdStolenKeeper", -1);
+    self::setGameStateInitialValue("playerIdTrapper", -1);
+    self::setGameStateInitialValue("playerIdTrappedTarget", -1);
 
     // Initialize game statistics
     // (note: statistics used in this file must be defined in your stats.inc.php file)
@@ -257,17 +262,22 @@ class starfluxx extends Table
     // Check who should be the first active player
     $this->activeNextPlayer();
     $first_player_id = $this->getActivePlayerId();
-
+    $other_player_id = $first_player_id;
     // If creepers are included, they must already be played when drawn:
     // so we need activated players for that!
     foreach ($players as $player_id => $player) {
       $this->gamestate->changeActivePlayer($player_id);
       $this->performDrawCards($player_id, $startingHand, true);
+      $other_player_id = $player_id;
     }
 
-    // $this->testForceCardDrawFor("action", 313, $first_player_id);
+    // $this->testForceCardDrawFor("keeper", 16, $first_player_id);
+    // $this->testForceCardDrawFor("keeper", 17, $first_player_id);
+    // $this->testForceCardDrawFor("action", 308, $first_player_id);
+    // $this->testForceCardDrawFor("keeper", 12, $other_player_id);
+    // $this->testForceCardDrawFor("action", 317, $other_player_id);
     // $this->testForceCardDrawFor("rule", 202, $first_player_id);
-    // $this->testForceCardDrawFor("rule", 207, $first_player_id);
+    //$this->testForceCardDrawFor("rule", 207, $first_player_id);
 
     // reset to start with correct first active player
     $this->gamestate->changeActivePlayer($first_player_id);
@@ -321,6 +331,7 @@ class starfluxx extends Table
         52 => $this->getGameStateValue("creeperEvilAttachedTo"),
         53 => $this->getGameStateValue("creeperMalfunctionAttachedTo"),
       ],
+      "offsetPlayerLocationArg" => OFFSET_PLAYER_LOCATION_ARG,
     ];
 
     foreach ($players as $player_id => $player) {

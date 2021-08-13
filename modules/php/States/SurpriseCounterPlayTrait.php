@@ -11,9 +11,20 @@ trait SurpriseCounterPlayTrait
     return self::getGameStateValue("cardIdSurpriseTarget");
   }
 
+  private function getLastKeeperStolen()
+  {
+    return self::getGameStateValue("cardIdStolenKeeper");
+  }
+
   public function st_allowSurpriseCounterPlay()
   {
-    $playersForSurprise = self::loadPlayersBasicInfos();
+    $game = Utils::getGame();
+    $gamestate = Utils::getGame()->gamestate;
+
+    $targetCardId = $this->getSurpriseTarget();
+    $card = $game->cards->getCard($targetCardId);
+
+    $playersForSurprise = Utils::listPlayersWithSurpriseInHandFor($card);
     // Only other players can Suprise the card played by the active player.
     $active_player_id = self::getActivePlayerId();
 
@@ -21,9 +32,15 @@ trait SurpriseCounterPlayTrait
       unset($playersForSurprise[$active_player_id]);
     }
 
-    $gamestate = Utils::getGame()->gamestate;
-
     // Activate all players that might choose to Surprise counter the card played
+    // Normally, activate all but the active player that actually has any valid Surprise counter in hand
+    // Unless Keeper Steal + It's A Trap => only activate the player with the Trap    
+    $lastKeeperStolen = $this->getLastKeeperStolen();
+    if ($targetCardId == $lastKeeperStolen) {
+      $trap = Utils::findPlayerWithSurpriseInHand(317);
+      $playersForSurprise = [ $trap["player_id"] => $trap ];
+    }
+
     $stateTransition = "surprisePlayChecked";
     if (empty($playersForSurprise)) {
       $gamestate->setAllPlayersNonMultiactive($stateTransition);
@@ -69,7 +86,9 @@ trait SurpriseCounterPlayTrait
       }
       // Validate this card is a Surprise that can be used on the played card
       $target_card_id = self::getGameStateValue("cardIdSurpriseTarget");
-      if (!$this->checkCardIsValidSurpriseCounterFor($card_id, $target_card_id))
+      $surprise_card = $game->cards->getCard($card_id);
+      $target_card = $game->cards->getCard($target_card_id);
+      if (!Utils::checkCardIsValidSurpriseCounterFor($surprise_card, $target_card))
       {
         Utils::throwInvalidUserAction(
           starfluxx::totranslate("This is not a valid Surprise counter action")
@@ -78,7 +97,11 @@ trait SurpriseCounterPlayTrait
       self::setGameStateValue("cardIdSurpriseCounter", $card_id);
 
       // move card to surprises queue, but keep it registered for this player
-      $game->cards->moveCard($card_id, "surprises", $player_id);
+      $countPrefix = 1+$game->cards->countCardsInLocation("surprises");
+      // we need location_arg to keep ordered queue, but still be able to determine the player from it
+      // HACK here because deck component uses location_arg differently for
+      // "hand" style locations and "pile" style locations, here we want a bit of both
+      $game->cards->insertCard($card_id, "surprises", ($countPrefix * OFFSET_PLAYER_LOCATION_ARG) + $player_id);
 
       // check if other players have more Surprises that might cancel this
       if (Utils::otherPlayersWithSurpriseInHand($player_id)) {
@@ -100,45 +123,13 @@ trait SurpriseCounterPlayTrait
       // this player decided to play Surprise already: all others can be skipped
       $game->gamestate->setAllPlayersNonMultiactive($stateTransition);
     }
-    // else: current player doesn't have Surprise or decided not to play it    
-    $game->gamestate->setPlayerNonMultiactive($player_id, $stateTransition);
-  }
-
-  private function checkCardIsValidSurpriseCounterFor($surprise_card_id, $target_card_id)
-  {
-    $game = Utils::getGame();
-    $surprise_card = $game->cards->getCard($surprise_card_id);
-    $surprise_card_def = $game->getCardDefinitionFor($surprise_card);
-
-    if ($surprise_card["type"] != "action"
-      || $surprise_card_def->getActionType() != "surprise") {
-        return false;
-      }
-
-    $target_card = $game->cards->getCard($target_card_id);
-    $target_type = $target_card["type"];
-    
-    $valid_surprise = false;
-    switch ($target_type)
+    else
     {
-      case "keeper":
-        // That's Mine = 318
-        $valid_surprise = $surprise_card_def->getUniqueId() == 318;
-        break;
-      case "goal":
-        // Canceled Plans = 321
-        $valid_surprise = $surprise_card_def->getUniqueId() == 321;
-        break;
-      case "rule":
-        // Veto = 319
-        $valid_surprise = $surprise_card_def->getUniqueId() == 319;
-        break;
-      case "action":
-        // BelayThat = 320
-        $valid_surprise = $surprise_card_def->getUniqueId() == 320;
-        break;
+      // else: current player doesn't have Surprise or decided not to play it    
+      $game->gamestate->setPlayerNonMultiactive($player_id, $stateTransition);
     }
 
-    return $valid_surprise;
   }
+
+  
 }

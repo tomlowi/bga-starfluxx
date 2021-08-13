@@ -22,8 +22,27 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
         that.addActionButton(
           "button_confirm",
           _("Done"),
-          "onResolveActionForOtherByCardSelection"
+          "onResolveActionForOtherByHandCardSelection"
         );
+      },
+
+      keeperSelectionOther: function (that, action_name, args) {
+        for (var player_id in that.keepersStock) {
+          if (player_id != that.player_id) {
+            var stock = that.keepersStock[player_id];
+            stock.setSelectionMode(1);
+
+            if (that._listeners["keepers_" + player_id] !== undefined) {
+              dojo.disconnect(that._listeners["keepers_" + player_id]);
+            }
+            that._listeners["keepers_" + player_id] = dojo.connect(
+              stock,
+              "onChangeSelection",
+              that,
+              "onResolveActionForOtherByStockCardSelection"
+            );
+          }
+        }
       },
       
     },
@@ -34,7 +53,7 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
       this.handStock.setSelectionMode(0);
     },
 
-    onResolveActionForOtherByCardSelection: function () {
+    onResolveActionForOtherByHandCardSelection: function () {
       var action = "resolveActionForOtherByCardSelection";
       var items = this.handStock.getSelectedItems();
 
@@ -45,6 +64,25 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
       this.ajaxAction("resolveActionForOtherByCardSelection", {
         card_id: card_id_selected
       });
+    },
+
+    onResolveActionForOtherByStockCardSelection: function (control_name, item_id) {
+      var stock = this._allStocks[control_name];
+
+      var action = "resolveActionForOtherByCardSelection";
+      var items = stock.getSelectedItems();
+
+      if (items.length == 0) return;
+
+      if (this.checkAction(action)) {
+        // Play a card
+        this.ajaxAction(action, {
+          card_id: items[0].id,
+          lock: true,
+        });
+      }
+
+      stock.unselectAll();
     },
 
   });

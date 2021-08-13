@@ -80,14 +80,18 @@ trait PlayCardTrait
   {
     $game = Utils::getGame();
     // first discard all
-    foreach ($surprise_cards as $card_id => $card) {
-      if ($except_id != null && $except_id == $card_id)
+    foreach ($surprise_cards as $card) {      
+      if ($except_id != null && $except_id == $card["id"])
         continue;
-      $game->cards->playCard($card_id);
+
+      $game->cards->playCard($card["id"]);
     }
+    
     // then get total discard count once and notify per player 
-    $discardCount =$game->cards->countCardInLocation("discard");
-    foreach ($surprise_cards as $card_id => $card) {
+    $discardCount = $game->cards->countCardInLocation("discard");
+    foreach ($surprise_cards as $card) {
+      // restore the correct player_id
+      $card["location_arg"] = $card["location_arg"] % OFFSET_PLAYER_LOCATION_ARG;
       $player_id = $card["location_arg"];
       $game->notifyAllPlayers("handDiscarded", "", [
         "player_id" => $player_id,
@@ -108,11 +112,14 @@ trait PlayCardTrait
     }      
 
     $surpriseCounterId = $game->getGameStateValue("cardIdSurpriseCounter");
+    // surprise on played card, or on stolen keeper?
+    $lastStolenKeeperId = $game->getGameStateValue("cardIdStolenKeeper");
+    $trapStolenKeeper = ($lastStolenKeeperId == $surpriseTargetId);
 
     // check how many surprise cards are in the Surprise queue
     // if even => all Surprises canceled each other out
     if ($surpriseCounterId != -1) {
-      $surprise_cards = $game->cards->getCardsInLocation("surprises");
+      $surprise_cards = $game->cards->getCardsInLocation("surprises", null, "location_arg");
       if (count($surprise_cards) % 2 == 0) {
         // reset counter surprise, so original card can be played
         $game->setGameStateValue("cardIdSurpriseCounter", -1);
@@ -132,9 +139,8 @@ trait PlayCardTrait
       $targetCard = $game->cards->getCard($surpriseTargetId);
       $surpriseCard = $game->cards->getCard($surpriseCounterId);
       $surpriseCardDef = $game->getCardDefinitionFor($surpriseCard);
+      $surpriseCard["location_arg"] = $surpriseCard["location_arg"]  % OFFSET_PLAYER_LOCATION_ARG;
       $surprisePlayerId = $surpriseCard["location_arg"];
-
-      $surpriseCardDef->outOfTurnCounterPlay($surpriseTargetId);
 
       $players = $game->loadPlayersBasicInfos();
       $game->notifyAllPlayers("surprise", 
@@ -146,23 +152,35 @@ trait PlayCardTrait
           "card_target" => $game->getCardDefinitionFor($targetCard)->getName(),
         ]);
 
+      $stateTransition = $surpriseCardDef->outOfTurnCounterPlay($surpriseTargetId);
+
       // make sure we don't keep looping back in here (so reset *before* nextstate)
       $game->setGameStateValue("cardIdSurpriseTarget", -1);
       $game->setGameStateValue("cardIdSurpriseCounter", -1);
     
       // the Surprised card does still count as played
-      $game->incGameStateValue("playedCards", 1);
+      if (!$trapStolenKeeper)
+      {
+        $game->incGameStateValue("playedCards", 1);
+      }
       // and we should force refresh args for PlayCard state
-      $game->gamestate->nextstate("continuePlay");
+      if ($stateTransition != null)
+        $game->gamestate->nextstate($stateTransition);
+      else
+        $game->gamestate->nextstate("continuePlay");
     }
     // no Surprise, it is allowed to play: just do it again from active player hand
+    // (except when not-countering a Stolen Keeper)
     else {
-      $player_id = $game->getActivePlayerId();
-      self::_action_playCard($surpriseTargetId, $player_id, true);
-
+      $player_id = $game->getActivePlayerId();      
+      if (!$trapStolenKeeper)
+      {
+        self::_action_playCard($surpriseTargetId, $player_id, true);
+      }
       // make sure we don't keep looping back in here (but only reset *after* play)
       $game->setGameStateValue("cardIdSurpriseTarget", -1);
       $game->setGameStateValue("cardIdSurpriseCounter", -1);
+
     }
 
     return true;
@@ -390,30 +408,22 @@ trait PlayCardTrait
       return null;
     }
 
-    $card_type = $card["type"];
-    $surprise = null;
-    switch ($card_type) {
-      case "keeper":
-        // That's Mine = 318
-        $surprise = Utils::findPlayerWithSurpriseInHand(318);
-        break;
-      case "goal":
-        // Canceled Plans = 321
-        $surprise = Utils::findPlayerWithSurpriseInHand(321);
-        break;
-      case "rule":
-        // Veto = 319
-        $surprise = Utils::findPlayerWithSurpriseInHand(319);
-        break;
-      case "action":
-        // BelayThat = 320
-        $surprise = Utils::findPlayerWithSurpriseInHand(320);
-        break;
-      default:
-        break;
-    }
+    $surprise_players = Utils::listPlayersWithSurpriseInHandFor($card);
+    $surprise_player_ids = array_keys($surprise_players);
+    $possibleSurprises = count($surprise_player_ids) > 1
+      || (count($surprise_player_ids) == 1 && $surprise_player_ids[0] != $player_id);
 
-    if ($surprise != null && $surprise["player_id"] != $player_id) {
+    // It's a Trap is special: this should also be checked again after resolving some Actions,
+    // and after resolving any Keeper special ability that might steal another keeper.
+    // BeamUsUp: allow cancel when played if It's A Trap player has keepers with brains and Teleporter in play
+    // Steal a Keeper: yes, after resolving, if the target player has It's A Trap
+    // That's Mine: yes, after resolving, if the target player has It's A Trap
+    // Exchange Keepers: no, Exchange is not stealing (https://faq.looneylabs.com/question/465)
+    //  => likewise, Brain Transference also not
+    // Sonic Sledgehammer: no, Trashing is not stealing (https://faq.looneylabs.com/question/907)
+    // + all Keeper abilities that take Keeper from target player with It's A Trap 
+
+    if ($possibleSurprises) {
       self::setGameStateValue("cardIdSurpriseTarget", $card_id);
 
       $game = Utils::getGame();
@@ -460,9 +470,6 @@ trait PlayCardTrait
       $game->gamestate->nextstate($stateTransition);
       return;
     }
-
-    // @TODO: It's a Trap is special: this should also be checked again after resolving Actions,
-    // and after resolving any Free Rule/Keeper plays that might steal keepers.
 
     $card_type = $card["type"];
     $stateTransition = null;
