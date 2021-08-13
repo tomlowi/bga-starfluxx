@@ -14,10 +14,10 @@ trait SurpriseCancelPlayTrait
     // Only other players can Cancel the last Surprise card played
     $last_surprise_player_id = self::getActivePlayerId();
 
-    $surprise_cards = $game->cards->getCardsInLocation("surprises");
+    $surprise_cards = $game->cards->getCardsInLocation("surprises", null, "location_arg");
     $last_surprise = array_pop($surprise_cards);
     if ($last_surprise != null) {
-      $last_surprise_player_id = $last_surprise["location_arg"];
+      $last_surprise_player_id = $last_surprise["location_arg"] % 100000000000;
     }
 
     $playersForSurprise = Utils::listPlayersWithSurpriseInHandFor($last_surprise);
@@ -44,7 +44,7 @@ trait SurpriseCancelPlayTrait
     $card_definition = $game->getCardDefinitionFor($card);
 
     // include all cards in the Surprise Queue
-    $surprise_cards = $game->cards->getCardsInLocation("surprises");
+    $surprise_cards = $game->cards->getCardsInLocation("surprises", null, "location_arg");
     array_unshift($surprise_cards, $card);
 
     return [
@@ -82,7 +82,11 @@ trait SurpriseCancelPlayTrait
         );
       }
       // move card to surprises queue, but keep it registered for this player
-      $game->cards->moveCard($card_id, "surprises", $player_id);
+      $countPrefix = 1+$game->cards->countCardsInLocation("surprises");
+      // we need location_arg to keep ordered queue, but still be able to determine the player from it
+      // HACK here because deck component uses location_arg differently for
+      // "hand" style locations and "pile" style locations, here we want a bit of both
+      $game->cards->insertCard($card_id, "surprises", ($countPrefix * 100000000000) + $player_id);
 
       // notification
       $players = $game->loadPlayersBasicInfos();

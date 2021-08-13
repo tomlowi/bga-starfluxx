@@ -88,7 +88,7 @@ trait PlayCardTrait
     // then get total discard count once and notify per player 
     $discardCount =$game->cards->countCardInLocation("discard");
     foreach ($surprise_cards as $card_id => $card) {
-      $player_id = $card["location_arg"];
+      $player_id = $card["location_arg"] % 100000000000;
       $game->notifyAllPlayers("handDiscarded", "", [
         "player_id" => $player_id,
         "cards" => [$card],
@@ -115,7 +115,7 @@ trait PlayCardTrait
     // check how many surprise cards are in the Surprise queue
     // if even => all Surprises canceled each other out
     if ($surpriseCounterId != -1) {
-      $surprise_cards = $game->cards->getCardsInLocation("surprises");
+      $surprise_cards = $game->cards->getCardsInLocation("surprises", null, "location_arg");
       if (count($surprise_cards) % 2 == 0) {
         // reset counter surprise, so original card can be played
         $game->setGameStateValue("cardIdSurpriseCounter", -1);
@@ -135,6 +135,7 @@ trait PlayCardTrait
       $targetCard = $game->cards->getCard($surpriseTargetId);
       $surpriseCard = $game->cards->getCard($surpriseCounterId);
       $surpriseCardDef = $game->getCardDefinitionFor($surpriseCard);
+      $surpriseCard["location_arg"] = $surpriseCard["location_arg"]  % 100000000000;
       $surprisePlayerId = $surpriseCard["location_arg"];
 
       $players = $game->loadPlayersBasicInfos();

@@ -22,7 +22,8 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
 
       for (var card_index in args.surpriseCards) {
         var card = args.surpriseCards[card_index];
-        this.display_surpriseCardOwner(tmpStockId, card.id, card.location_arg);
+        var owner_id = card.location_arg % 100000000000;
+        this.display_surpriseCardOwner(tmpStockId, card.id, owner_id);
       }      
     },
 
@@ -44,7 +45,7 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
 
         this.addActionButton(
           "button_1",
-          _("No Surprise"),
+          _("Retain Surprise"),
           "onNoSurpriseCancelSurprise"
         );
       }
