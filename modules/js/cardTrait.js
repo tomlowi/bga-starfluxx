@@ -245,11 +245,7 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
         this.discardCards(cards, undefined, player_id);
       }
 
-      if (player_id > this.gamedatas.offsetPlayerLocationArg) {
-        debugger;
-      } else {
-        this.handCounter[player_id].toValue(notif.args.handCount);
-      }
+      this.handCounter[player_id].toValue(notif.args.handCount);
       this.discardCounter.toValue(notif.args.discardCount);
     },
 

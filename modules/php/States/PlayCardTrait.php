@@ -86,11 +86,6 @@ trait PlayCardTrait
 
       $game->cards->playCard($card["id"]);
     }
-
-    self::dump("===DISCARDCANCELED===", [
-      "surprises" => $surprise_cards,
-      "except" => $except_id
-    ]);
     
     // then get total discard count once and notify per player 
     $discardCount = $game->cards->countCardInLocation("discard");
@@ -158,11 +153,6 @@ trait PlayCardTrait
         ]);
 
       $stateTransition = $surpriseCardDef->outOfTurnCounterPlay($surpriseTargetId);
-      self::dump("===SURPRISE===", [
-        "surprise" => $surpriseCard,
-        "target" => $targetCard,
-        "stateTransition" => $stateTransition,
-      ]);
 
       // make sure we don't keep looping back in here (so reset *before* nextstate)
       $game->setGameStateValue("cardIdSurpriseTarget", -1);
@@ -464,10 +454,6 @@ trait PlayCardTrait
     $card = $game->cards->getCard($card_id);
 
     if ($card["location"] != "hand" or $card["location_arg"] != $player_id) {
-      self::dump("===INVALID===", [
-        "player" => $player_id,
-        "card" => $card,
-      ]);
       Utils::throwInvalidUserAction(
         starfluxx::totranslate("You do not have this card in hand")
       );

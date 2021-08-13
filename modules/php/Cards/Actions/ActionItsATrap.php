@@ -194,12 +194,6 @@ class ActionItsATrap extends ActionCard
 
     $targetPlayerId = $game->getGameStateValue("playerIdTrappedTarget");
 
-    self::dump("===TRAP===", [
-      "args" => $args,
-      "card" => $card,
-      "target" => $targetPlayerId,
-    ]);
-
     if (
       $card_type != "keeper" ||
       $card_location != "keepers" ||
