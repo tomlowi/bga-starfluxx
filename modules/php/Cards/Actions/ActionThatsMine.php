@@ -34,6 +34,7 @@ class ActionThatsMine extends ActionCard
     $targetCard = $game->cards->getCard($surpriseTargetId);
     $targetPlayerId = $targetCard["location_arg"];
     $surpriseCard = $game->cards->getCard($surpriseCounterId);
+    $surpriseCard["location_arg"] = $surpriseCard["location_arg"]  % OFFSET_PLAYER_LOCATION_ARG;
     $surprisePlayerId = $surpriseCard["location_arg"];
 
     // Intercept the Keeper played, goes to surprise player instead of original player, then discard this card

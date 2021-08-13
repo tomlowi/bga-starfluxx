@@ -21,7 +21,7 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
 
       for (var card_index in args.surpriseCards) {
         var card = args.surpriseCards[card_index];
-        var owner_id = card.location_arg % 100000000000;
+        var owner_id = card.location_arg % this.gamedatas.offsetPlayerLocationArg;
         this.display_surpriseCardOwner(tmpStockId, card.id, owner_id);
       }      
     },

@@ -80,15 +80,24 @@ trait PlayCardTrait
   {
     $game = Utils::getGame();
     // first discard all
-    foreach ($surprise_cards as $card_id => $card) {
-      if ($except_id != null && $except_id == $card_id)
+    foreach ($surprise_cards as $card) {      
+      if ($except_id != null && $except_id == $card["id"])
         continue;
-      $game->cards->playCard($card_id);
+
+      $game->cards->playCard($card["id"]);
     }
+
+    self::dump("===DISCARDCANCELED===", [
+      "surprises" => $surprise_cards,
+      "except" => $except_id
+    ]);
+    
     // then get total discard count once and notify per player 
-    $discardCount =$game->cards->countCardInLocation("discard");
-    foreach ($surprise_cards as $card_id => $card) {
-      $player_id = $card["location_arg"] % 100000000000;
+    $discardCount = $game->cards->countCardInLocation("discard");
+    foreach ($surprise_cards as $card) {
+      // restore the correct player_id
+      $card["location_arg"] = $card["location_arg"] % OFFSET_PLAYER_LOCATION_ARG;
+      $player_id = $card["location_arg"];
       $game->notifyAllPlayers("handDiscarded", "", [
         "player_id" => $player_id,
         "cards" => [$card],
@@ -135,7 +144,7 @@ trait PlayCardTrait
       $targetCard = $game->cards->getCard($surpriseTargetId);
       $surpriseCard = $game->cards->getCard($surpriseCounterId);
       $surpriseCardDef = $game->getCardDefinitionFor($surpriseCard);
-      $surpriseCard["location_arg"] = $surpriseCard["location_arg"]  % 100000000000;
+      $surpriseCard["location_arg"] = $surpriseCard["location_arg"]  % OFFSET_PLAYER_LOCATION_ARG;
       $surprisePlayerId = $surpriseCard["location_arg"];
 
       $players = $game->loadPlayersBasicInfos();

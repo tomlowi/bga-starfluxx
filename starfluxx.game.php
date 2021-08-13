@@ -331,6 +331,7 @@ class starfluxx extends Table
         52 => $this->getGameStateValue("creeperEvilAttachedTo"),
         53 => $this->getGameStateValue("creeperMalfunctionAttachedTo"),
       ],
+      "offsetPlayerLocationArg" => OFFSET_PLAYER_LOCATION_ARG,
     ];
 
     foreach ($players as $player_id => $player) {

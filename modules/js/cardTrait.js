@@ -60,7 +60,7 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
         [card.type_arg]: this.discardStock.count() + 1000,
       });
 
-      var origin;
+      var origin = "player_boards";
       var originStock = null;
       if (typeof stock !== "undefined") {
         originStock = stock.getItemDivId(card.id);
@@ -69,7 +69,10 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
       }
       
       if (originStock == null && typeof player_id !== "undefined") {
-        origin = "player_board_" + player_id;
+        if (player_id > this.gamedatas.offsetPlayerLocationArg)
+          console.log("invalid player arg in discard", player_id, card);
+        else
+          origin = "player_board_" + player_id;
       }
 
       this.discardStock.addToStockWithId(card.type_arg, card.id, origin);
@@ -242,7 +245,11 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
         this.discardCards(cards, undefined, player_id);
       }
 
-      this.handCounter[player_id].toValue(notif.args.handCount);
+      if (player_id > this.gamedatas.offsetPlayerLocationArg) {
+        debugger;
+      } else {
+        this.handCounter[player_id].toValue(notif.args.handCount);
+      }
       this.discardCounter.toValue(notif.args.discardCount);
     },
 

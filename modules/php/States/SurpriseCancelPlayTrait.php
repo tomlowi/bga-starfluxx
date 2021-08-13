@@ -17,7 +17,7 @@ trait SurpriseCancelPlayTrait
     $surprise_cards = $game->cards->getCardsInLocation("surprises", null, "location_arg");
     $last_surprise = array_pop($surprise_cards);
     if ($last_surprise != null) {
-      $last_surprise_player_id = $last_surprise["location_arg"] % 100000000000;
+      $last_surprise_player_id = $last_surprise["location_arg"] % OFFSET_PLAYER_LOCATION_ARG;
     }
 
     $playersForSurprise = Utils::listPlayersWithSurpriseInHandFor($last_surprise);
@@ -69,6 +69,13 @@ trait SurpriseCancelPlayTrait
     {
       // the Surprise card used must be in player's hand
       $handCards = $game->cards->getCardsInLocation("hand", $player_id);
+
+      self::dump("===OHOH===", [
+        "player" => $player_id,
+        "hands" => $handCards,
+        "card" => $card_id,
+      ]);
+
       if (!array_key_exists($card_id, $handCards)) {
         Utils::throwInvalidUserAction(
           starfluxx::totranslate("You do not have this card in hand")
@@ -86,7 +93,7 @@ trait SurpriseCancelPlayTrait
       // we need location_arg to keep ordered queue, but still be able to determine the player from it
       // HACK here because deck component uses location_arg differently for
       // "hand" style locations and "pile" style locations, here we want a bit of both
-      $game->cards->insertCard($card_id, "surprises", ($countPrefix * 100000000000) + $player_id);
+      $game->cards->insertCard($card_id, "surprises", ($countPrefix * OFFSET_PLAYER_LOCATION_ARG) + $player_id);
 
       // notification
       $players = $game->loadPlayersBasicInfos();

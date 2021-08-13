@@ -101,7 +101,7 @@ trait SurpriseCounterPlayTrait
       // we need location_arg to keep ordered queue, but still be able to determine the player from it
       // HACK here because deck component uses location_arg differently for
       // "hand" style locations and "pile" style locations, here we want a bit of both
-      $game->cards->insertCard($card_id, "surprises", ($countPrefix * 100000000000) + $player_id);
+      $game->cards->insertCard($card_id, "surprises", ($countPrefix * OFFSET_PLAYER_LOCATION_ARG) + $player_id);
 
       // check if other players have more Surprises that might cancel this
       if (Utils::otherPlayersWithSurpriseInHand($player_id)) {
