@@ -273,7 +273,7 @@ class starfluxx extends Table
 
     // $this->testForceCardDrawFor("keeper", 16, $first_player_id);
     // $this->testForceCardDrawFor("keeper", 17, $first_player_id);
-    // $this->testForceCardDrawFor("action", 308, $first_player_id);
+    // $this->testForceCardDrawFor("action", 302, $first_player_id);
     // $this->testForceCardDrawFor("keeper", 12, $other_player_id);
     // $this->testForceCardDrawFor("action", 317, $other_player_id);
     // $this->testForceCardDrawFor("rule", 202, $first_player_id);

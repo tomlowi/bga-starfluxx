@@ -138,7 +138,6 @@ class ActionTimePortal extends ActionCard
         $game->cards->playCard($card["id"]);
         // draw pile should get re-shuffled after player looked at it
         $game->cards->shuffle("deck");
-        $game->deckAutoReshuffle();
       } else {
         if (
           $card["location"] != "discard" ||
