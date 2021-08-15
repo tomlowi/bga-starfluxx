@@ -487,7 +487,9 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
       var creeperItem = dojo.byId(creeperDivId);
       var creeperAttach = dojo.clone(creeperItem);
       dojo.attr(creeperAttach, "id", creeperDivId + "-attach");
-      dojo.place(creeperAttach, keeperCardId);
+
+      var parentNode = dojo.query('.flx-card-overlay .flx-card-creeper-attach', keeperCardId)[0];
+      dojo.place(creeperAttach, parentNode);
     },
 
     notif_creeperDetached: function (notif) {

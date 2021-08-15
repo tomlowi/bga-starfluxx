@@ -158,9 +158,10 @@ var jstpl_cardOverlay_text = `<div class="flx-card-overlay">
 			<div class="card-overlay">
         <div class="card-name card-name-\${nameLength}">\${name}</div>
         <div class="card-subtitle">\${subtitle}</div>
-				<div class="card-description card-desc-\${descLength}"">\${description}</div>
+				<div class="card-description card-desc-\${descLength}"">\${description}</div>      
 			</div>
 		</div>
+    <div class="flx-card-creeper-attach"></div>
 </div>`;
 
 var jstpl_panel_keeper = `

@@ -300,3 +300,14 @@ $color-flx-brown: #f6821f;
   font-size: 14px;
   padding: 1px;
 }
+
+.flx-card-creeper-attach {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .flx-board-panel-keeper {
+    transform: scale(1.4);
+    margin: auto;
+  }
+}
