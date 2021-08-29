@@ -275,9 +275,12 @@ class starfluxx extends Table
     // $this->testForceCardDrawFor("keeper", 17, $first_player_id);
     // $this->testForceCardDrawFor("action", 302, $first_player_id);
     // $this->testForceCardDrawFor("keeper", 12, $other_player_id);
-    // $this->testForceCardDrawFor("action", 317, $other_player_id);
+    // $this->testForceCardDrawFor("action", 318, $first_player_id);
+    // $this->testForceCardDrawFor("action", 319, $first_player_id);
+    // $this->testForceCardDrawFor("action", 320, $other_player_id);
+    // $this->testForceCardDrawFor("action", 321, $other_player_id);
     // $this->testForceCardDrawFor("rule", 202, $first_player_id);
-    //$this->testForceCardDrawFor("rule", 207, $first_player_id);
+    // $this->testForceCardDrawFor("rule", 207, $first_player_id);
 
     // reset to start with correct first active player
     $this->gamestate->changeActivePlayer($first_player_id);

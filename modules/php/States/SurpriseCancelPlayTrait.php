@@ -69,8 +69,10 @@ trait SurpriseCancelPlayTrait
     {
       // the Surprise card used must be in player's hand
       $handCards = $game->cards->getCardsInLocation("hand", $player_id);
+      // so it may also not be the original surprised card (that is still "waiting" in hand)!
+      $target_card_id = self::getGameStateValue("cardIdSurpriseTarget");
 
-      if (!array_key_exists($card_id, $handCards)) {
+      if (!array_key_exists($card_id, $handCards) || ($target_card_id == $card_id)) {
         Utils::throwInvalidUserAction(
           starfluxx::totranslate("You do not have this card in hand")
         );

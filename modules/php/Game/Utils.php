@@ -370,8 +370,12 @@ class Utils
     $action_card = array_values(
       $game->cards->getCardsOfType("action", $actionUniqueId)
     )[0];
+
+    // surprise card must not be the original surprised card (that is still "waiting" in hand)!
+    $target_card_id = $game->getGameStateValue("cardIdSurpriseTarget");
     // if nobody, nothing to do
-    if ($action_card["location"] != "hand") {
+    if ($action_card["location"] != "hand"
+        || $target_card_id == $action_card["id"]) {
       return null;
     }
 
