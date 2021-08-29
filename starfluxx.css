@@ -703,6 +703,47 @@ body {
   }
 }
 
+#flx-zoom-wrapper {
+  position: relative;
+}
+
+#flx-zoom-wrapper #flx-zoom-controls {
+  z-index: 300;
+  background-color: #F6F6F6;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+#flx-zoom-wrapper #flx-zoom-controls button {
+  width: 40px;
+  height: 40px;
+  background: url("img/zoom.svg");
+  background-size: auto 220%;
+}
+
+#flx-zoom-wrapper #flx-zoom-controls button:not(.disabled) {
+  cursor: pointer;
+}
+
+#flx-zoom-wrapper #flx-zoom-controls button.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+#flx-zoom-wrapper #flx-zoom-controls #flx-zoom-in {
+  background-position: 6% 94%;
+}
+
+#flx-zoom-wrapper #flx-zoom-controls #flx-zoom-out {
+  background-position: 82% 94%;
+}
+
+#flx-zoom-wrapper #flx-zoom-table {
+  -webkit-transform-origin: left top;
+          transform-origin: left top;
+}
+
 .flx-other-players {
   display: -webkit-box;
   display: -ms-flexbox;
