@@ -85,6 +85,10 @@ define([
         };
 
         this._allStocks = [];
+
+        this.ZOOM_LEVELS = [0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1, 1.125];
+        this.ZOOM_LEVELS_MARGIN = [-300, -166, -100, -60, -33, -14, 0, 10];
+        this.zoomLevel = 1;
       },
 
       /*
@@ -254,6 +258,10 @@ define([
 
         // Setup game notifications to handle (see "setupNotifications" method below)
         this.setupNotifications();
+
+        // prepare Zoom actions
+        dojo.connect( $('flx-zoom-out'), 'onclick', this, 'onZoomOut' );
+        dojo.connect( $('flx-zoom-in'), 'onclick', this, 'onZoomIn' );
 
         console.log("Setup completed!");
       },
@@ -743,6 +751,56 @@ define([
         for (var player_id in notif.args.newScores) {
           this.scoreCtrl[player_id].toValue(notif.args.newScores[player_id]);
         }
+      },
+
+      onZoomIn: function( evt ) {
+          evt.preventDefault();
+          if (this.zoomLevel >= this.ZOOM_LEVELS[this.ZOOM_LEVELS.length - 1]) {
+              this.showMessage("This is the maximum in-game zoom available. Please note that you can also use your browser zoom if needed.", "info");
+              return;
+          }
+          
+          var newIndex = this.ZOOM_LEVELS.indexOf(this.zoomLevel) + 1;
+          this.applyZoom(newIndex);
+      },
+      
+      onZoomOut: function( evt )
+      {
+          evt.preventDefault();
+          if (this.zoomLevel <= this.ZOOM_LEVELS[0]) {
+              this.showMessage("This is the minimum in-game zoom available. Please note that you can also use your browser zoom if needed.", "info");
+              return;
+          }
+          
+          var newIndex = this.ZOOM_LEVELS.indexOf(this.zoomLevel) - 1;
+          this.applyZoom(newIndex);
+      },
+
+      applyZoom: function(zoomIndex) {
+
+          if (zoomIndex < 0 || zoomIndex > this.ZOOM_LEVELS.length -1) { 
+            zoomIndex = this.ZOOM_LEVELS.indexOf(1);
+          }
+          this.zoomLevel = this.ZOOM_LEVELS[zoomIndex];
+          
+          dojo.style('flx-zoom-table', 'transform', 'scale('+this.zoomLevel+')');
+          dojo.style('flx-zoom-table', 'margin', 
+            '0 ' + this.ZOOM_LEVELS_MARGIN[zoomIndex] + '% ' + (1 - this.zoomLevel) * -100 + '% 0');
+          this.onScreenWidthChange();
+          
+          // Overall play zone height
+          var tableHeight = dojo.byId('flx-zoom-table').getBoundingClientRect().height;
+          dojo.style('flx-zoom-wrapper', 'height', tableHeight + 'px');
+          
+          // Update display for all stocks
+          this.updateStocksDisplay();
+          
+      },
+
+      updateStocksDisplay: function( evt ) {
+          for (var stock in this._allStocks) {
+            this._allStocks[stock].updateDisplay();
+          }
       },
     }
   );
