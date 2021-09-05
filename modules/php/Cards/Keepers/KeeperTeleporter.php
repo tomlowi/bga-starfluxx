@@ -69,7 +69,7 @@ class KeeperTeleporter extends KeeperCard
 
     // move this keeper to the active player
     $notificationMsg = clienttranslate(
-      '${player_name} teleported <b>${card_name}</b> to ${player_name2}'
+      '${player_name} teleported <b>${card_name}</b> to ${player_name3}'
     );
     Utils::moveKeeperToPlayer($player_id, $card,
       $player_id, $selected_player_id, $notificationMsg);
