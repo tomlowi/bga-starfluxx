@@ -159,7 +159,9 @@ trait PlayCardTrait
       $game->setGameStateValue("cardIdSurpriseCounter", -1);
     
       // the Surprised card does still count as played
-      if (!$trapStolenKeeper)
+      // (unless it was a stolen keepr, or if it was coming from a temporary hand)
+      $tmpHandActive = Utils::getActiveTempHandWithPlays();
+      if (!$trapStolenKeeper && $tmpHandActive == 0)
       {
         $game->incGameStateValue("playedCards", 1);
       }
