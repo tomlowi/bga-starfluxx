@@ -89,6 +89,7 @@ define([
         this.ZOOM_LEVELS = [0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1, 1.125];
         this.ZOOM_LEVELS_MARGIN = [-300, -166, -100, -60, -33, -14, 0, 10];
         this.zoomLevel = 1;
+        this.LOCAL_STORAGE_ZOOM_KEY = 'BGA-StarFluxx-zoom';
       },
 
       /*
@@ -262,6 +263,12 @@ define([
         // prepare Zoom actions
         dojo.connect( $('flx-zoom-out'), 'onclick', this, 'onZoomOut' );
         dojo.connect( $('flx-zoom-in'), 'onclick', this, 'onZoomIn' );
+
+        var zoomStr = localStorage.getItem(this.LOCAL_STORAGE_ZOOM_KEY);
+        if (zoomStr) {
+          var zoomIndex = Number(zoomStr);
+          this.applyZoom(zoomIndex);
+        }
 
         console.log("Setup completed!");
       },
@@ -782,6 +789,7 @@ define([
             zoomIndex = this.ZOOM_LEVELS.indexOf(1);
           }
           this.zoomLevel = this.ZOOM_LEVELS[zoomIndex];
+          localStorage.setItem(this.LOCAL_STORAGE_ZOOM_KEY, ''+ zoomIndex);
           
           dojo.style('flx-zoom-table', 'transform', 'scale('+this.zoomLevel+')');
           dojo.style('flx-zoom-table', 'margin', 
