@@ -17,6 +17,10 @@ class KeeperCardFactory extends CardFactory
   {
     $keeperDefinitions = [];
 
+    // markers to enable client translations
+    $keeperSubTypeBrains = clienttranslate("brains");
+    $keeperSubTypeEquipment = clienttranslate("equipment");
+
     foreach (self::$classes as $definitionId => $class) {
       $card = self::getCard(0, $definitionId);
 
