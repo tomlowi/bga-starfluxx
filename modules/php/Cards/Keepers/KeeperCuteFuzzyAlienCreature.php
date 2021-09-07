@@ -63,7 +63,7 @@ class KeeperCuteFuzzyAlienCreature extends KeeperCard
     $destination_player_id = $directionTable[$origin_player_id];
 
     $notificationMsg = clienttranslate(
-      'Turn end: <b>${card_name}</b> moves to ${player_name2}'
+      'Turn end: <b>${card_name}</b> moves to ${player_name3}'
     );
     Utils::moveKeeperToPlayer($origin_player_id, $card,
       $origin_player_id, $destination_player_id, $notificationMsg); 
