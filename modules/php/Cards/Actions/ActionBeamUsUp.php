@@ -66,7 +66,9 @@ class ActionBeamUsUp extends ActionCard
       }
     }
 
-    return parent::immediateEffectOnPlay($player_id);
+    // some cards are put back in player hands: 
+    // we must check Hand Limit rule again
+    return "handLimitRulePlayed";
   }
 
 }
