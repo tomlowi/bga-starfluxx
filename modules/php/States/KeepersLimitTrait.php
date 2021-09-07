@@ -2,6 +2,7 @@
 namespace StarFluxx\States;
 
 use StarFluxx\Game\Utils;
+use starfluxx;
 
 trait KeepersLimitTrait
 {
