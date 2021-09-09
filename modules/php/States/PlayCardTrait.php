@@ -133,6 +133,10 @@ trait PlayCardTrait
       }
     }
 
+    // should the card played have been counted for player nr plays?
+    // (not if it was a stolen keeper, or if it was coming from a temporary hand or forced play like Wormhole)
+    $incPlayedCards = $game->getGameStateValue("playedCardsToIncAfterSurprise");
+
     // some Surprise countered the card played (and was not canceled by another Surprise)
     if ($surpriseCounterId != -1) {
 
@@ -158,10 +162,8 @@ trait PlayCardTrait
       $game->setGameStateValue("cardIdSurpriseTarget", -1);
       $game->setGameStateValue("cardIdSurpriseCounter", -1);
     
-      // the Surprised card does still count as played
-      // (unless it was a stolen keepr, or if it was coming from a temporary hand)
-      $tmpHandActive = Utils::getActiveTempHandWithPlays();
-      if (!$trapStolenKeeper && $tmpHandActive == 0)
+      // the Surprised card does still count as played, even if countered
+      if ($incPlayedCards)
       {
         $game->incGameStateValue("playedCards", 1);
       }
@@ -177,13 +179,15 @@ trait PlayCardTrait
       $player_id = $game->getActivePlayerId();      
       if (!$trapStolenKeeper)
       {
-        self::_action_playCard($surpriseTargetId, $player_id, true);
+        self::_action_playCard($surpriseTargetId, $player_id, $incPlayedCards);
       }
       // make sure we don't keep looping back in here (but only reset *after* play)
       $game->setGameStateValue("cardIdSurpriseTarget", -1);
       $game->setGameStateValue("cardIdSurpriseCounter", -1);
 
     }
+
+    $game->setGameStateValue("playedCardsToIncAfterSurprise", 0);
 
     return true;
   }
@@ -402,7 +406,7 @@ trait PlayCardTrait
     self::_action_playCard($card_id, $player_id, false, true);
   }
 
-  private function _action_playCard_checkForSurprises($player_id, $card)
+  private function _action_playCard_checkForSurprises($player_id, $card, $incrementPlayedCards)
   {
     $card_id = $card["id"];
     $alreadyChecked = self::getGameStateValue("cardIdSurpriseTarget");
@@ -439,6 +443,10 @@ trait PlayCardTrait
         "card_name" => $game->getCardDefinitionFor($card)->getName(),
       ]);
 
+      if ($incrementPlayedCards) {
+        $game->setGameStateValue("playedCardsToIncAfterSurprise", 1);
+      }
+
       return "checkForSurprises";
     }
 
@@ -467,7 +475,7 @@ trait PlayCardTrait
     // = state "checkForSurprises"
     // If no Surprise, only then let the play go through
     // If Surprised, allow more Surprise-cancelling-Surprise until decided if the card can be played
-    $stateTransition = self::_action_playCard_checkForSurprises($player_id, $card);
+    $stateTransition = self::_action_playCard_checkForSurprises($player_id, $card, $incrementPlayedCards);
     if ($stateTransition != null) {
       $game->gamestate->nextstate($stateTransition);
       return;

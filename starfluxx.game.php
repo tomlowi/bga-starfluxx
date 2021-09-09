@@ -66,6 +66,7 @@ class starfluxx extends Table
       "drawnCards" => 20,
       "playedCards" => 21,
       "forcedTurnEnd" => 22,
+      "playedCardsToIncAfterSurprise" => 23,
       "lastGoalBeforeDoubleAgenda" => 30,
       "activeDoubleAgenda" => 31,
       "activeInflation" => 32,
@@ -194,6 +195,7 @@ class starfluxx extends Table
     self::setGameStateInitialValue("keepersLimit", -1);
     self::setGameStateInitialValue("drawnCards", 0);
     self::setGameStateInitialValue("playedCards", 0);
+    self::setGameStateInitialValue("playedCardsToIncAfterSurprise", 0);
     self::setGameStateInitialValue("forcedTurnEnd", 0);
     self::setGameStateInitialValue("anotherTurnMark", 0);
     self::setGameStateInitialValue("lastGoalBeforeDoubleAgenda", -1);
@@ -277,10 +279,10 @@ class starfluxx extends Table
     // $this->testForceCardDrawFor("keeper", 12, $other_player_id);
     // $this->testForceCardDrawFor("action", 318, $first_player_id);
     // $this->testForceCardDrawFor("action", 319, $first_player_id);
-    // $this->testForceCardDrawFor("action", 320, $other_player_id);
-    // $this->testForceCardDrawFor("action", 321, $other_player_id);
-    // $this->testForceCardDrawFor("rule", 202, $first_player_id);
-    // $this->testForceCardDrawFor("rule", 207, $first_player_id);
+    //  $this->testForceCardDrawFor("action", 320, $first_player_id);
+    //  $this->testForceCardDrawFor("action", 321, $first_player_id);
+    //  $this->testForceCardDrawFor("rule", 203, $first_player_id);
+    //  $this->testForceCardDrawFor("rule", 214, $first_player_id);
 
     // reset to start with correct first active player
     $this->gamestate->changeActivePlayer($first_player_id);
@@ -912,6 +914,7 @@ class starfluxx extends Table
 
     // reset everything for turn of next player
     self::setGameStateValue("playedCards", 0);
+    self::setGameStateValue("playedCardsToIncAfterSurprise", 0);
     self::setGameStateValue("forcedTurnEnd", 0);
     self::setGameStateValue("playerTurnUsedWormhole", 0);
     self::setGameStateValue("playerTurnUsedCaptain", 0);
