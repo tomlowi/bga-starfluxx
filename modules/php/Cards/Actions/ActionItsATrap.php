@@ -126,6 +126,10 @@ class ActionItsATrap extends ActionCard
     $surpriseCard["location_arg"] = $surpriseCard["location_arg"]  % OFFSET_PLAYER_LOCATION_ARG;
     $surprisePlayerId = $surpriseCard["location_arg"];
 
+    // Only if a Keeper was stolen, or if some Steal a Keeper action was prevented,
+    // we are allowed to steal back. So not if the countered card was some other Surprise that doesn't steal!
+    $noStealBackAllowed = false;
+
     if ($targetCard["type"] == "action")
     {
       $game->cards->playCard($surpriseTargetId);
@@ -136,7 +140,13 @@ class ActionItsATrap extends ActionCard
         "cards" => [$targetCard],
         "discardCount" => $discardCount,
         "handCount" => $game->cards->countCardInLocation("hand", $targetPlayerId),
-      ]);      
+      ]);
+
+      // check if it was some surprise we countered
+      $target_card_definition = $game->getCardDefinitionFor($targetCard);
+      if ($target_card_definition->getActionType() == "surprise") {
+        $noStealBackAllowed = true;
+      }
     } 
     else if ($targetCard["type"] == "keeper")
     {
@@ -156,6 +166,11 @@ class ActionItsATrap extends ActionCard
       "discardCount" => $game->cards->countCardInLocation("discard"),
       "handCount" => $game->cards->countCardInLocation("hand", $surprisePlayerId),
     ]);
+
+    if ($noStealBackAllowed)
+    {
+      return null;
+    }
 
     // Steal a Keeper from the player that tried to steal from you
     // That is either the active Player, or the player with Teleporter (for BeamUsUp)!
