@@ -793,12 +793,15 @@ define([
           
           dojo.style('flx-zoom-table', 'transform', 'scale('+this.zoomLevel+')');
           dojo.style('flx-zoom-table', 'margin', 
-            '0 ' + this.ZOOM_LEVELS_MARGIN[zoomIndex] + '% ' + (1 - this.zoomLevel) * -100 + '% 0');
+            '0 ' + this.ZOOM_LEVELS_MARGIN[zoomIndex] + '% ' + (1 - this.zoomLevel) * 0.625 * -100 + '% 0');
           this.onScreenWidthChange();
           
           // Overall play zone height
-          var tableHeight = dojo.byId('flx-zoom-table').getBoundingClientRect().height;
-          dojo.style('flx-zoom-wrapper', 'height', tableHeight + 'px');
+          // Should be resized for the new inner content, but still also be responsive to content changes!
+           //var tableHeight = dojo.byId('flx-zoom-table').getBoundingClientRect().height;
+           //dojo.style('flx-zoom-wrapper', 'height', tableHeight + 'px');
+          dojo.style('flx-zoom-wrapper', 'height', 'auto');
+          dojo.style('flx-zoom-wrapper', 'min-height', '100%');
           
           // Update display for all stocks
           this.updateStocksDisplay();
