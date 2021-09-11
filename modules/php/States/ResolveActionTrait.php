@@ -49,19 +49,8 @@ trait ResolveActionTrait
 
     $game = Utils::getGame();
 
-    // If we have a forced move, we cannot win yet
-    if ($game->getGameStateValue("forcedCard") == -1) {
-      // An action has been resolved: several things might be changed
-
-      // creeper abilities to trigger (need to check this before victory)
-      if ($game->checkCreeperResolveNeeded($card)) {
-        return;
-      }
-      //  do we have a new winner?
-      $game->checkWinConditions();
-      // if not, maybe the card played had effect for any of the bonus conditions?
-      $game->checkBonusConditions($player_id);
-    }
+    // no point in doing creeper/win checks here, gamestate overwritten anyway
+    // these checks will be done at start of PlayCardTrait before each play
 
     if ($stateTransition != null) {
       $game->gamestate->nextstate($stateTransition);

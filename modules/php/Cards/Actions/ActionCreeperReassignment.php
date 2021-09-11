@@ -84,5 +84,14 @@ class ActionCreeperReassignment extends ActionCard
     Utils::moveKeeperToPlayer($player_id, $card,
       $other_player_id, $selected_player_id, $notificationMsg); 
 
+    // if creeper should be attached for the target player, the active player gets to do it
+    $stateTransition = $card_definition->onCheckResolveKeepersAndCreepers($card);
+    if ($stateTransition != null)
+    { // overrule default behavior: this player gets to choose where to attach
+      $game->setGameStateValue("creeperToResolvePlayerId", $player_id);
+      return $stateTransition;
+    }
+
+    return null;
   }
 }

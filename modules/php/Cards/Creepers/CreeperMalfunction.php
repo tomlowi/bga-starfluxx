@@ -17,7 +17,7 @@ class CreeperMalfunction extends CreeperCard
     );
 
     $this->help = clienttranslate(
-      "Select any of your equipment Keepers in play to get Malfunction."
+      "Select any of the equipment Keepers in play from the player that gets Malfunction."
     );
   }
 
@@ -46,7 +46,7 @@ class CreeperMalfunction extends CreeperCard
     $game->setGameStateValue("creeperMalfunctionAttachedTo", -1);
   }
 
-  public $interactionNeeded = "keeperSelectionSelf";
+  public $interactionNeeded = "keeperSelectionForCreeper";
 
   public function onCheckResolveKeepersAndCreepers($lastPlayedCard)
   {
@@ -85,17 +85,23 @@ class CreeperMalfunction extends CreeperCard
     $card_type = $card["type"];
     $card_location = $card["location"];
     $origin_player_id = $card["location_arg"];
+
+    $creeper_player_id = $player_id;
+    $creeper_player = $this->findPlayerWithThisCreeper();
+    if ($creeper_player != null) {
+      $creeper_player_id = $creeper_player["player_id"];
+    }
     
     // Malfunction can only be attached to a Keeper equipment in play for this player
     if (
       ($card_type != "keeper") ||
       $card_location != "keepers" ||
-      $origin_player_id != $player_id ||
+      $origin_player_id != $creeper_player_id ||
       $card_definition->getKeeperType() != "equipment"
     ) {
       Utils::throwInvalidUserAction(
         starfluxx::totranslate(
-          "You must select a keeper equipment you have in play"
+          "You must select a keeper equipment in play from the player with this creeper"
         )
       );
     }

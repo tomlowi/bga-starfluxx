@@ -101,9 +101,10 @@ class ActionWhatDoYouWant extends ActionCard
       $creeper_card_id = $actionPhase;
       $selected_player_id = $args["selected_player_id"];
 
-      $this->giveCreeperToPlayer($creeper_card_id, $selected_player_id);
+      $stateTransition = $this->giveCreeperToPlayer($creeper_card_id, $selected_player_id, $player_id);
       $game->setGameStateValue("tmpActionPhase", 0);
-      return null;
+
+      return $stateTransition;
     }
 
     // default resolving: we selected a card from the discard pile that we want
@@ -138,7 +139,7 @@ class ActionWhatDoYouWant extends ActionCard
         $game->setGameStateValue("forcedTurnEnd", 1);
         return null;
       // Creeper: select another player to give it to.
-      // @TODO: if it needs to be resolved, actually this player should resolve instead of the receiver
+      // if it needs to be resolved, actually this player should resolve instead of the receiver
       case "creeper":
         $game->setGameStateValue("tmpActionPhase", $card["id"]);
         // keep resolving further
@@ -189,7 +190,7 @@ class ActionWhatDoYouWant extends ActionCard
     ]);
   }
 
-  private function giveCreeperToPlayer($creeper_card_id, $selected_player_id)
+  private function giveCreeperToPlayer($creeper_card_id, $selected_player_id, $active_player_id)
   {
     $game = Utils::getGame();
     $card = $game->cards->getCard($creeper_card_id);
@@ -203,5 +204,13 @@ class ActionWhatDoYouWant extends ActionCard
     ]);
     // force play the creeper for the target player
     $game->action_forced_playCard_forOtherPlayer($card["id"], $selected_player_id);
+
+    // if creeper should be attached for the target player, the active player gets to do it
+    $stateTransition = $card_definition->onCheckResolveKeepersAndCreepers($card);
+    if ($stateTransition != null)
+    { // overrule default behavior: this player gets to choose where to attach
+      $game->setGameStateValue("creeperToResolvePlayerId", $active_player_id);
+      return $stateTransition;
+    }
   }
 }

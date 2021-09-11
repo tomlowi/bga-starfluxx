@@ -34,9 +34,10 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
     },
 
     updateActionButtonsCreeperResolve: {
-      keeperSelectionSelf: function (that, args) {
+      keeperSelectionForCreeper: function (that, args) {
         for (var player_id in that.keepersStock) {
-          if (player_id == that.player_id) {
+          // sometimes active player chooses how to attach creeper for other player!
+          //if (player_id == that.player_id) {
             var stock = that.keepersStock[player_id];
             stock.setSelectionMode(1);
 
@@ -49,7 +50,7 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
               that,
               "onResolveCreeperCardSelection"
             );
-          }
+          //}
         }
       },
       playerSelection: function (that, args) {
