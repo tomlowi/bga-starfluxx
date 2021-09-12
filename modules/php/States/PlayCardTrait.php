@@ -57,6 +57,9 @@ trait PlayCardTrait
       return;
     }
 
+    // if not, maybe the card played had effect for any of the bonus conditions?
+    $game->checkBonusConditions($player_id);
+
     // If anything happened during previous plays that forces this player to end turn immediately
     $forcedTurnEnd = $game->getGameStateValue("forcedTurnEnd");
     if ($forcedTurnEnd > 0) {
@@ -523,9 +526,6 @@ trait PlayCardTrait
 
     // A card has been played: do we have a new winner?
     $game->checkWinConditions();
-
-    // if not, maybe the card played had effect for any of the bonus conditions?
-    $game->checkBonusConditions($player_id);
 
     if ($stateTransition != null) {
       // player must resolve something before continuing to play more cards

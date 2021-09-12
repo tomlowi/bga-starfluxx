@@ -22,7 +22,8 @@ class KeeperTheComputer extends KeeperCard
   public function immediateEffectOnPlay($player_id)
   {
     // Draw rule is adapted immediately, so current player draws an extra card
-    Utils::checkForDrawComputerBonus($player_id);
+    // But don't do it here, instead do it just before next card play - creeper attach might have to be resolved first!
+    //Utils::checkForDrawComputerBonus($player_id);
   }
 
   public static function notifyActiveFor($player_id)
