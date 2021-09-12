@@ -111,14 +111,14 @@ class CreeperEvil extends CreeperCard
     $game->setGameStateValue("creeperEvilAttachedTo", $card["id"]);
 
     $players = $game->loadPlayersBasicInfos();
-    $player_name = $players[$origin_player_id]["player_name"];
+    $player_name = $players[$player_id]["player_name"];
 
     $game->notifyAllPlayers(
       "creeperAttached",
       clienttranslate('${player_name} attaches <b>${creeper_name}</b> to <b>${keeper_name}</b>'),
       [
         "i18n" => ["creeper_name", "keeper_name"],
-        "player_id" => $origin_player_id,
+        "player_id" => $player_id,
         "player_name" => $player_name,
         "creeper_name" => $this->getName(),
         "keeper_name" => $card_definition->getName(),
