@@ -143,6 +143,7 @@ $machinestates = [
     "possibleactions" => ["discardHandCardsExcept"],
     "transitions" => [
       "handLimitChecked" => STATE_ENFORCE_KEEPERS_LIMIT_OTHERS,
+      "zombiePass" => STATE_ENFORCE_KEEPERS_LIMIT_OTHERS,
       "endGame" => STATE_GAME_END,
     ],
   ],
@@ -161,6 +162,7 @@ $machinestates = [
     "possibleactions" => ["discardKeepers"],
     "transitions" => [
       "keeperLimitChecked" => STATE_PLAY_CARD,
+      "zombiePass" => STATE_PLAY_CARD,
       "endOfTurn" => STATE_ENFORCE_HAND_LIMIT_SELF,
       "endGame" => STATE_GAME_END,
     ],
@@ -180,6 +182,7 @@ $machinestates = [
     "possibleactions" => ["discardHandCardsExcept"],
     "transitions" => [
       "handLimitChecked" => STATE_ENFORCE_KEEPERS_LIMIT_SELF,
+      "zombiePass" => STATE_ENFORCE_KEEPERS_LIMIT_SELF,
       "endGame" => STATE_GAME_END,
     ],
   ],
@@ -198,6 +201,7 @@ $machinestates = [
     "possibleactions" => ["discardKeepers"],
     "transitions" => [
       "keeperLimitChecked" => STATE_NEXT_PLAYER,
+      "zombiePass" => STATE_NEXT_PLAYER,
       "endGame" => STATE_GAME_END,
     ],
   ],
@@ -211,6 +215,7 @@ $machinestates = [
     "possibleactions" => ["discardGoal"],
     "transitions" => [
       "continuePlay" => STATE_PLAY_CARD,
+      "zombiePass" => STATE_PLAY_CARD,
       "endOfTurn" => STATE_ENFORCE_HAND_LIMIT_SELF,
       "endGame" => STATE_GAME_END,
     ],
