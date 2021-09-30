@@ -511,7 +511,7 @@ class Utils
 
         $game->notifyAllPlayers(
           "expendableCrewman", 
-          '<b>${card_name}</b> takes the hit for ${player_name}',
+          clienttranslate('<b>${card_name}</b> takes the hit for ${player_name}'),
           [
             "i18n" => ["card_name"],
             "player_name" => $origin_player_name,
