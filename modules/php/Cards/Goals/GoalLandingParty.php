@@ -12,6 +12,7 @@ class GoalLandingParty extends GoalTwoKeepers
     $this->name = clienttranslate("Landing Party");
     $this->subtitle = clienttranslate("Expendable Crewman + any 2 of: The Captain, Engineer, Doctor, or Scientist");
 
+    $this->keeperHolograph = 8;
     $this->expendable = 12;
     $this->crew1 = 17;
     $this->crew2 = 18;
@@ -43,7 +44,7 @@ class GoalLandingParty extends GoalTwoKeepers
     $active_player_id = $game->getActivePlayerId();
     $holograph_player_id = null;
     $player_with_holograph = Utils::findPlayerWithKeeper($this->keeperHolograph);
-    if ($player_with_holograph != null && $holograph_player_id == $active_player_id) {
+    if ($player_with_holograph != null && $player_with_holograph["player_id"] == $active_player_id) {
       if (!Utils::checkForMalfunction($player_with_holograph["keeper_card"]["id"]))
       {
         $holograph_player_id = $player_with_holograph["player_id"];
@@ -70,7 +71,7 @@ class GoalLandingParty extends GoalTwoKeepers
     {
       $winner_id = $tester_id;
     }
-        
+   
     return $winner_id;
   }
 
@@ -113,6 +114,6 @@ class GoalLandingParty extends GoalTwoKeepers
       }
     }
 
-    return $winner_id;
+    return $winner_id != null;
   }
 }
