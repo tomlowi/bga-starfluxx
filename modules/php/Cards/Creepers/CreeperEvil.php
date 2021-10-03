@@ -118,6 +118,7 @@ class CreeperEvil extends CreeperCard
       clienttranslate('${player_name} attaches <b>${creeper_name}</b> to <b>${keeper_name}</b>'),
       [
         "i18n" => ["creeper_name", "keeper_name"],
+        "creeper_player_id" => $creeper_player_id,
         "player_id" => $player_id,
         "player_name" => $player_name,
         "creeper_name" => $this->getName(),

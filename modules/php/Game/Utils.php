@@ -619,6 +619,7 @@ class Utils
           '',
           [
             "player_id" => $destination_player_id,
+            "creeper_player_id" => $destination_player_id,
             "card" => $keeper_card,
             "creeper" => $creeper,
           ]

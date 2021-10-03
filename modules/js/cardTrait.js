@@ -449,11 +449,12 @@ define(["dojo", "dojo/_base/declare"], (dojo, declare) => {
     },
 
     notif_creeperAttached: function (notif) {
-      var player_id = notif.args.player_id;
+      var player_id = notif.args.player_id;      
       var keeper_card = notif.args.card;
       var creeper = notif.args.creeper;
+      var creeper_player_id = notif.args.creeper_player_id;
 
-      this.display_creeperAttached(player_id, keeper_card["id"], creeper);
+      this.display_creeperAttached(creeper_player_id, keeper_card["id"], creeper);
     },
 
     display_creeperAttached: function (
