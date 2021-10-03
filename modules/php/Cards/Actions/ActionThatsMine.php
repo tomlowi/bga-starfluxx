@@ -37,20 +37,39 @@ class ActionThatsMine extends ActionCard
     $surpriseCard["location_arg"] = $surpriseCard["location_arg"]  % OFFSET_PLAYER_LOCATION_ARG;
     $surprisePlayerId = $surpriseCard["location_arg"];
 
-    // Intercept the Keeper played, goes to surprise player instead of original player, then discard this card
+    // Normal case: we are countering a Keeper played
+    // But it could also be we are countering any other Surprise action here
+    if ($targetCard["type"] != "keeper")
+    {
+      // in that case, just discard the countered card and then this card
+      $game->cards->playCard($surpriseTargetId);
+        
+      $discardCount = $game->cards->countCardInLocation("discard");
+      $game->notifyAllPlayers("handDiscarded", "", [
+        "player_id" => $targetPlayerId,
+        "cards" => [$targetCard],
+        "discardCount" => $discardCount,
+        "handCount" => $game->cards->countCardInLocation("hand", $targetPlayerId),
+      ]);
+    }
+    else 
+    {
+      // Intercept the Keeper played, goes to surprise player instead of original player, then discard this card
 
-    // so, first transfer the Keeper from playing hand to surprise player hand
-    $game->notifyPlayer($targetPlayerId, "cardsSentToPlayer", "", [
-      "cards" => [$targetCard],
-      "player_id" => $surprisePlayerId,
-    ]);
-    $game->notifyPlayer($surprisePlayerId, "cardsReceivedFromPlayer", "", [
-      "cards" => [$targetCard],
-      "player_id" => $targetPlayerId,
-    ]);
-    $game->sendHandCountNotifications();
-    // then play it as normal
-    $game->playKeeperCard($surprisePlayerId, $targetCard);
+      // so, first transfer the Keeper from playing hand to surprise player hand
+      $game->notifyPlayer($targetPlayerId, "cardsSentToPlayer", "", [
+        "cards" => [$targetCard],
+        "player_id" => $surprisePlayerId,
+      ]);
+      $game->notifyPlayer($surprisePlayerId, "cardsReceivedFromPlayer", "", [
+        "cards" => [$targetCard],
+        "player_id" => $targetPlayerId,
+      ]);
+      $game->sendHandCountNotifications();
+      // then play it as normal
+      $game->playKeeperCard($surprisePlayerId, $targetCard);
+            
+    }
 
     // finally discard the surprise card
     $game->cards->playCard($surpriseCounterId);
