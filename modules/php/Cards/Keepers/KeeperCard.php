@@ -51,6 +51,16 @@ class KeeperCard extends Card
     return null;
   }
 
+  public function onMalfunction()
+  {
+    return null;
+  }
+
+  public function onMoveAwayFromPlayer($origin_player_id)
+  {
+    return null;
+  }
+
   protected function findPlayerWithThisKeeper()
   {
     return Utils::findPlayerWithKeeper($this->uniqueId);

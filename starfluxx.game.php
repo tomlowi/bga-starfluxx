@@ -67,6 +67,7 @@ class starfluxx extends Table
       "playedCards" => 21,
       "forcedTurnEnd" => 22,
       "playedCardsToIncAfterSurprise" => 23,
+      "forcedLimitsCheck" => 24,
       "lastGoalBeforeDoubleAgenda" => 30,
       "activeDoubleAgenda" => 31,
       "activeInflation" => 32,
@@ -197,6 +198,7 @@ class starfluxx extends Table
     self::setGameStateInitialValue("playedCards", 0);
     self::setGameStateInitialValue("playedCardsToIncAfterSurprise", 0);
     self::setGameStateInitialValue("forcedTurnEnd", 0);
+    self::setGameStateInitialValue("forcedLimitsCheck", 0);
     self::setGameStateInitialValue("anotherTurnMark", 0);
     self::setGameStateInitialValue("lastGoalBeforeDoubleAgenda", -1);
     self::setGameStateInitialValue("activeDoubleAgenda", 0);
@@ -273,9 +275,10 @@ class starfluxx extends Table
       $other_player_id = $player_id;
     }
 
-    // $this->testForceCardDrawFor("keeper", 12, $first_player_id);
-    // $this->testForceCardDrawFor("action", 317, $first_player_id);
-    // $this->testForceCardDrawFor("action", 318, $other_player_id);
+    // $this->testForceCardDrawFor("creeper", 53, $first_player_id);
+    // $this->testForceCardDrawFor("action", 316, $first_player_id);
+    // $this->testForceCardDrawFor("keeper", 3, $other_player_id);
+    // $this->testForceCardDrawFor("rule", 209, $other_player_id);
 
     // reset to start with correct first active player
     $this->gamestate->changeActivePlayer($first_player_id);
@@ -910,6 +913,7 @@ class starfluxx extends Table
     self::setGameStateValue("playedCards", 0);
     self::setGameStateValue("playedCardsToIncAfterSurprise", 0);
     self::setGameStateValue("forcedTurnEnd", 0);
+    self::setGameStateValue("forcedLimitsCheck", 0);
     self::setGameStateValue("playerTurnUsedWormhole", 0);
     self::setGameStateValue("playerTurnUsedCaptain", 0);
     self::setGameStateValue("playerTurnUsedScientist", 0);

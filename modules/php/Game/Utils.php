@@ -627,11 +627,15 @@ class Utils
       }
     }
 
-    // finally, if keeper is moved to the active player,
+    // finally, if keeper is moved to the active player, the origin player might lose benefits, and
     // maybe it has an effect that should immediately apply to this new owner (like The Computer)
-    if ($keeper_card != null && $destination_player_id == $active_player_id) {
-      $keeperCard = $game->getCardDefinitionFor($keeper_card);
-      $keeperCard->immediateEffectOnPlay($active_player_id);
+    if ($keeper_card != null) {
+      $keeper_card_definition = $game->getCardDefinitionFor($keeper_card);
+
+      $keeper_card_definition->onMoveAwayFromPlayer($origin_player_id);
+      if ($destination_player_id == $active_player_id) {
+        $keeper_card_definition->immediateEffectOnPlay($active_player_id);
+      }      
     }
   }
 
@@ -840,6 +844,12 @@ class Utils
 
         $game->playCreeperCard($destination_player_id, $creeper_card);
       }
+    }
+
+    // finally, if keeper is moved back to hand, the origin player might lose benefits
+    if ($keeper_card != null) {
+      $keeper_card_definition = $game->getCardDefinitionFor($keeper_card);
+      $keeper_card_definition->onMoveAwayFromPlayer($origin_player_id);
     }
 
   }

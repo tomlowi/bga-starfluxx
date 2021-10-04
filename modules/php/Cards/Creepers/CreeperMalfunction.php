@@ -108,6 +108,8 @@ class CreeperMalfunction extends CreeperCard
 
     $game->setGameStateValue("creeperMalfunctionAttachedTo", $card["id"]);
 
+    $card_definition->onMalfunction($player_id);
+
     $players = $game->loadPlayersBasicInfos();
     $player_name = $players[$player_id]["player_name"];
 

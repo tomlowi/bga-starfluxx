@@ -42,13 +42,20 @@ trait PlayCardTrait
       return;
     }
 
-    $forceRecheck = $game->getGameStateValue("creeperForcedRecheckNeeded");
+    $forceRecheckCreepers = $game->getGameStateValue("creeperForcedRecheckNeeded");
     $lastCardPlayed = null;
-    if ($forceRecheck) {
+    if ($forceRecheckCreepers) {
       $lastCardPlayed = ["type" => "goal", "id" => 0, "type_arg" => 0];
     }    
     // check if any creepers should be checked again because of the cards just drawn    
     if ($game->checkCreeperResolveNeeded($lastCardPlayed)) {
+      return;
+    }
+
+    $forceRecheckLimits = $game->getGameStateValue("forcedLimitsCheck");
+    if ($forceRecheckLimits) {
+      $game->setGameStateValue("forcedLimitsCheck", 0);
+      $game->gamestate->nextstate("handLimitRulePlayed");
       return;
     }
 

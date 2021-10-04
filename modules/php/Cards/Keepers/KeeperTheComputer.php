@@ -26,6 +26,24 @@ class KeeperTheComputer extends KeeperCard
     //Utils::checkForDrawComputerBonus($player_id);
   }
 
+  public function immediateEffectOnDiscard($player_id)
+  {
+    // Computer got discarded => we will need to recheck Hand & Keeper Limit
+    Utils::getGame()->setGameStateValue("forcedLimitsCheck", 1);
+  }
+
+  public function onMalfunction()
+  {
+    // Computer became Malfunctioning => we will need to recheck Hand & Keeper Limit
+    Utils::getGame()->setGameStateValue("forcedLimitsCheck", 1);
+  }
+
+  public function onMoveAwayFromPlayer($origin_player_id)
+  {
+    // Computer moved to other player or hand => we will need to recheck Hand & Keeper Limit
+    Utils::getGame()->setGameStateValue("forcedLimitsCheck", 1);
+  }
+
   public static function notifyActiveFor($player_id)
   {
     $game = Utils::getGame();
