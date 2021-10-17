@@ -84,8 +84,12 @@ class ActionSonicSledgehammer extends ActionCard
         )
       );
 
-      if ($playersKeepersInPlay > 0 && count($player_selected_cards[$from_player_id]) != 1
-          || $player_selected_cards[$from_player_id][0]["type"] != "keeper") {
+      if ($playersKeepersInPlay > 0 && 
+          (count($player_selected_cards[$from_player_id]) != 1
+          || (count($player_selected_cards[$from_player_id]) == 1 
+              && $player_selected_cards[$from_player_id][0]["type"] != "keeper")
+          )
+        ) {
         Utils::throwInvalidUserAction(
           starfluxx::totranslate(
             "You must select exactly 1 Keeper card from each player"
