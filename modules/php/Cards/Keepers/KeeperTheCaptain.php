@@ -81,10 +81,10 @@ class KeeperTheCaptain extends KeeperCard
     $notificationMsg = clienttranslate(
       '${player_name} stole <b>${card_name}</b> from ${player_name2}'
     );
-    Utils::moveKeeperToPlayer($player_id, $card,
+    $stolen_card_id = Utils::moveKeeperToPlayer($player_id, $card,
       $other_player_id, $player_id, $notificationMsg);
 
     // check if target player could counter this keeper steal
-    return Utils::checkCounterTrapForKeeperStolen($other_player_id, $card["id"]);
+    return Utils::checkCounterTrapForKeeperStolen($other_player_id, $stolen_card_id);
   }
 }

@@ -635,8 +635,14 @@ class Utils
       $keeper_card_definition->onMoveAwayFromPlayer($origin_player_id);
       if ($destination_player_id == $active_player_id) {
         $keeper_card_definition->immediateEffectOnPlay($active_player_id);
-      }      
+      }
+
+      // return card if of the actually moved/stolen keeper,
+      // since this might be different from the original target
+      return $keeper_card["id"];
     }
+
+    return null;
   }
 
   public static function discardKeeperFromPlay($active_player_id, $card,
