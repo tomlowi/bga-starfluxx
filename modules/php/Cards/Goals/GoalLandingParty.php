@@ -34,8 +34,9 @@ class GoalLandingParty extends GoalTwoKeepers
     if ($expendable_keeper_card["location"] == "keepers") {
       $tester_id = $expendable_keeper_card["location_arg"];
     }
-
-    if ($tester_id == null) {
+    // if nobody has it, or there is a creeper on the ExpendableCrewman, nobody can win this
+    // (because that creeper is holographed together so prevents win)
+    if ($tester_id == null || Utils::countNumberOfCreeperAttached($expendable_keeper_card["id"]) > 0) {
       return null;
     }
 
