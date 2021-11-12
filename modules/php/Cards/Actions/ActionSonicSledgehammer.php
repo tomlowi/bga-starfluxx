@@ -59,6 +59,9 @@ class ActionSonicSledgehammer extends ActionCard
 
     foreach ($cards as $card_id => $card) {
       $card_owner = $card["location_arg"];
+      // ignore selected creepers, if player has no keepers
+      if ($card["type"] != "keeper")
+        continue;
       $player_selected_cards[$card_owner][] = $card;
     }
 
