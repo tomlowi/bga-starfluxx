@@ -34,6 +34,19 @@ class GoalCreeperWithKeeper extends GoalCard
     return ($countCreepers == 1);
   }
 
+  private function checkCreeperIsAttachedAlone($creeper_card)
+  {
+    $game = Utils::getGame();
+    $creeper_def = $game->getCardDefinitionFor($creeper_card);
+    // this creeper should be attached to some keeper
+    $creeper_attachedTo = $creeper_def->isAttachedTo();
+    if ($creeper_attachedTo < 0)
+      return false;
+    // and it should be the only creeper attached to that keeper
+    $countCreepers = Utils::countNumberOfCreeperAttached($creeper_attachedTo);
+    return ($countCreepers == 1);
+  }
+
   function checkCreeperWithKeeper($creeper, $keeper)
   {
     $game = Utils::getGame();
@@ -70,13 +83,22 @@ class GoalCreeperWithKeeper extends GoalCard
     $creeper_player_id = $creeper_card["location_arg"];
     $keeper_player_id = $keeper_card["location_arg"];
 
-    if ($holograph_player_id != null && $holograph_player_id == $active_player_id
-        && $holograph_player_id != $keeper_player_id) {
-      // Holograph player can win by owning the creeper and projecting the keeper
+    if ($holograph_player_id != null && $holograph_player_id == $active_player_id) {
+      // Holograph player can win by owning the creeper and projecting the keeper,
+      // or by owning the keeper and projecting some keeper with that creeper attached (and only that creeper)
       // But if the creeper and keeper are attached, they can also win because both are holographed together!
       // (providing no other creepers are attached to the same keeper also, preventing the win)
-      if ($holograph_player_id == $creeper_player_id
-          || $this->checkKeeperHasOnlyThisCreeperAttached($keeper_card, $creeper_card)) {
+      if (
+        // Holograph player has creeper, someone else has keeper without attached creepers
+        ($holograph_player_id == $creeper_player_id && $holograph_player_id != $keeper_player_id
+          && Utils::countNumberOfCreeperAttached($keeper_card["id"]) == 0)
+        // someone else has keeper and creeper attached together
+        || ($holograph_player_id != $keeper_player_id
+          && $this->checkKeeperHasOnlyThisCreeperAttached($keeper_card, $creeper_card))
+        // Holograph player has keeper, someone else has only this creeper attached to some keeper 
+        || ($holograph_player_id == $keeper_player_id && $holograph_player_id != $creeper_player_id
+          && $this->checkCreeperIsAttachedAlone($creeper_card))
+          ) {
 
         $players = $game->loadPlayersBasicInfos();
         $holograph_player_name = $players[$holograph_player_id]["player_name"];
