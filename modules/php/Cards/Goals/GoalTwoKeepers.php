@@ -66,9 +66,9 @@ class GoalTwoKeepers extends GoalCard
       // Holograph can win with other player's keeper, unless that has a creeper attached!
       // (because that creeper is holographed together so prevents win)
       if ( ($first_keeper_player_id == $holograph_player_id 
-            && Utils::countNumberOfCreeperAttached($first_keeper_card["id"]) == 0)
-          || ($second_keeper_player_id == $holograph_player_id
             && Utils::countNumberOfCreeperAttached($second_keeper_card["id"]) == 0)
+          || ($second_keeper_player_id == $holograph_player_id
+            && Utils::countNumberOfCreeperAttached($first_keeper_card["id"]) == 0)
           ) {
 
         $players = $game->loadPlayersBasicInfos();
