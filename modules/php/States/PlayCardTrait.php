@@ -247,6 +247,9 @@ trait PlayCardTrait
     $game = Utils::getGame();
     $player_id = $game->getActivePlayerId();
 
+    // maybe the previous card played had effect for any of the bonus conditions?
+    $game->checkBonusConditions($player_id);
+
     $alreadyPlayed = $game->getGameStateValue("playedCards");
     $mustPlay = Utils::calculateCardsMustPlayFor($player_id, true);
 
