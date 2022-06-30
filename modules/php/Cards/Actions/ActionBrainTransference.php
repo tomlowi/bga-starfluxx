@@ -95,7 +95,7 @@ class ActionBrainTransference extends ActionCard
         $player_id, $selected_player_id);
 
     // force hand limit checks, but then also need to force end of turn
-    $game->setGameStateValue("forcedTurnEnd", 1);
+    Utils::setForcedTurnEnd();
     return "handsExchangeOccured";
   }
 

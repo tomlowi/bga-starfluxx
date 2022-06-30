@@ -160,7 +160,7 @@ class ActionTimePortal extends ActionCard
 
       // force end of turn,
       // but can't transition "endOfTurn" here, as other "Temp Hand" actions might still be resolving
-      $game->setGameStateValue("forcedTurnEnd", 1);
+      Utils::setForcedTurnEnd();
       return null;
     } else {
       $direction = $args["value"];

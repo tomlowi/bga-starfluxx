@@ -206,6 +206,20 @@ class Utils
     return 0;
   }
 
+  public static function setForcedTurnEnd() {
+    $game = Utils::getGame();
+    $game->setGameStateValue("forcedTurnEnd", 1);
+    // https://faq.looneylabs.com/question/967
+    // when playing some Action that forces a turn end,
+    // any ongoing "temp hand" plays should also be ended immediately,
+    // discarding any cards remaining in your temporary hand(s)
+    $game->setGameStateValue("tmpHand3ToPlay", 0);
+    $game->setGameStateValue("tmpHand2ToPlay", 0);
+    $game->setGameStateValue("tmpHand1ToPlay", 0);
+    // resetting the above states will ensure that the next st_playCard
+    // will discard remaining temp hand cards
+  }
+
   public static function getActiveTempHandWithPlays()
   {
     if (Utils::getGame()->getGameStateValue("tmpHand3ToPlay") > 0) {
