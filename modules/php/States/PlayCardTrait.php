@@ -25,7 +25,7 @@ trait PlayCardTrait
 
     // If any card is a force move, play it
     $forcedCardId = $game->getGameStateValue("forcedCard");
-
+    
     if ($forcedCardId != -1) {
       $game->setGameStateValue("forcedCard", -1);
       // But forced play cards should not really be counted for play rule
@@ -190,11 +190,17 @@ trait PlayCardTrait
       if (!$trapStolenKeeper)
       {
         self::_action_playCard($surpriseTargetId, $player_id, $incPlayedCards);
-      }
+      }     
       // make sure we don't keep looping back in here (but only reset *after* play)
       $game->setGameStateValue("cardIdSurpriseTarget", -1);
       $game->setGameStateValue("cardIdSurpriseCounter", -1);
 
+      if ($trapStolenKeeper)
+      {// stolen keeper was allowed to go through
+        // bug #73773: just let player continue playing cards
+        // but explicitly set state again to force args refresh
+        $game->gamestate->nextstate("continuePlay");
+      }
     }
 
     $game->setGameStateValue("playedCardsToIncAfterSurprise", 0);
