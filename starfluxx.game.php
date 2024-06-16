@@ -175,7 +175,7 @@ class starfluxx extends Table
         addslashes($player["player_avatar"]) .
         "')";
     }
-    $sql .= implode($values, ",");
+    $sql .= implode(",", $values);
     self::DbQuery($sql);
     self::reattributeColorsBasedOnPreferences(
       $players,
