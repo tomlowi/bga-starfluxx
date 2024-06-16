@@ -472,7 +472,7 @@ trait PlayCardTrait
     return null;
   }
 
-  private function _action_playCard(
+  public function _action_playCard(
     $card_id,
     $player_id,
     $incrementPlayedCards,
