@@ -188,7 +188,7 @@ class Utils
   {
     $computerBonus = Utils::calculateDrawComputerBonus($player_id);
     if ($computerBonus > 0) {
-      Utils::getGame()->performDrawCards($player_id, $computerBonus);
+      Utils::getGame()->performDrawCards($player_id, $computerBonus, true);
     }
   }
 
