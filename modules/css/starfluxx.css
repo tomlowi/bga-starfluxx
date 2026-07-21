@@ -836,4 +836,24 @@ body {
 .flx-keepers .flx-board-panel-keeper {
   margin-top: -48px;
 }
+
+html[data-theme=dark] #flx-zoom-controls {
+  background-color: var(--dark-20) !important;
+}
+
+html[data-theme=dark] #flx-zoom-out,
+html[data-theme=dark] #flx-zoom-in {
+  -webkit-filter: invert(0.7);
+          filter: invert(0.7);
+}
+
+html[data-theme=dark] #pagesection_gameview .whiteblock {
+  color: #000;
+}
+
+html[data-theme=dark] .flx-table .flx-deck .flx-deck-wrap .flx-toggle,
+html[data-theme=dark] .flx-table .flx-deck .flx-deck-wrap .flx-card-count {
+  color: #fff;
+  background: var(--dark-back);
+}
 /*# sourceMappingURL=starfluxx.css.map */
