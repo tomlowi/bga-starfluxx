@@ -37,8 +37,7 @@ class view_starfluxx_starfluxx extends game_view
     $template = self::getGameName() . "_" . self::getGameName();
 
     // Get current player ID & all players info
-    global $g_user;
-    $current_player_id = $g_user->get_id();
+    $current_player_id = $this->getCurrentPlayerId();
     $players = $this->game->loadPlayersBasicInfos();
 
     // Translations

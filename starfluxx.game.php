@@ -34,7 +34,6 @@ $swdNamespaceAutoload = function ($class) {
 };
 spl_autoload_register($swdNamespaceAutoload, true, true);
 
-require_once APP_GAMEMODULE_PATH . "module/table/table.game.php";
 require_once "modules/php/constants.inc.php";
 
 use StarFluxx\Cards\Keepers\KeeperCardFactory;
@@ -44,7 +43,7 @@ use StarFluxx\Cards\Actions\ActionCardFactory;
 use StarFluxx\Cards\Creepers\CreeperCardFactory;
 use StarFluxx\Game\Utils;
 
-class starfluxx extends Table
+class starfluxx extends Bga\GameFramework\Table
 {
   public static $instance = null;
   public function __construct()
@@ -123,12 +122,6 @@ class starfluxx extends Table
   public static function totranslate($text)
   {
     return self::$instance->_($text);
-  }
-
-  protected function getGameName()
-  {
-    // Used for translations and stuff. Please do not modify.
-    return "starfluxx";
   }
 
   // for testing purposes only

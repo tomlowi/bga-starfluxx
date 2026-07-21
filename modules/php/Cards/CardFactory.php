@@ -5,7 +5,7 @@ namespace StarFluxx\Cards;
 /*
  * CardFactory: how to create Cards
  */
-abstract class CardFactory extends \APP_GameClass
+abstract class CardFactory
 {
   public static function listCardDefinitions()
   {

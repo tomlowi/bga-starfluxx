@@ -4,7 +4,7 @@ namespace StarFluxx\Cards;
 /*
  * Card: base class for all playable Card types
  */
-abstract class Card extends \APP_GameClass
+abstract class Card
 {
   public function __construct($cardId, $uniqueId)
   {
